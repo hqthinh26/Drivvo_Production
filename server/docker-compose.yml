@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: postgres:10
-    container_name: company_db_1
+    container_name: company_db_2
     ports:
       - 5432:5432
     environment:
@@ -13,7 +13,7 @@ services:
     depends_on:
       - db
     image: company_server
-    container_name: company_server_1
+    container_name: company_server_2
     build: ./server
     command:  bash -c "sequelize db:migrate && yarn start"
     ports:
