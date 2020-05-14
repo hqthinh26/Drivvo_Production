@@ -6,5 +6,4 @@ module.exports = {
         console.log(result)
         res.status(200).send({all: result.rows});
     },
-    getsomething: 1,
 }
