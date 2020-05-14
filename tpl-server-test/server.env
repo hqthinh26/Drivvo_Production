@@ -1,0 +1,2 @@
+CORS_ALLOW_ORIGINS=http://localhost:3001
+PORT=3000

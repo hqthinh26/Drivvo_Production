@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    image: postgres:10
+    container_name: company_db_1
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: company
+      POSTGRES_USER: company
+      POSTGRES_PASSWORD: abcdef1234
+  server:    
+    depends_on:
+      - db
+    image: company_server
+    container_name: company_server_1
+    build: ./server
+    command:  bash -c "sequelize db:migrate && yarn start"
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      GRAPHQL: http://company:abcdef1234@db:5432/company
+      DATABASE_URL: postgres://company:abcdef1234@db:5432/company
+      SECRET_KEY: SuperSecret2018
+      NODE_ENV: production
+    env_file: server.env
+    volumes:
+      - ./server/database:/usr/app/database
+      - ./server/models:/usr/app/models
+      - ./server/routes:/usr/app/routes
+      - ./server/utils:/usr/app/utils
