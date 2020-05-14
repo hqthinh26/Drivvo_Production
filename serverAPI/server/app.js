@@ -31,7 +31,7 @@ const Access_Tokens = [];
 app.post('/', (req, res) => {
   console.log('someone has called')
   res.json({
-    msg: 'hello from nodejs express api'
+    msg: 'hello from nodejs express apiX'
   });
 })
 
@@ -80,7 +80,7 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 })
 
 
-//app.post('/data', GetChiPhi.getAllChiPhi);
+app.post('/data', GetChiPhi.getAllChiPhi);
 
 app.post('/products',GetChiPhi.getProducts);
 
