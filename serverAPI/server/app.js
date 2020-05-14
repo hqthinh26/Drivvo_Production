@@ -80,7 +80,14 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 })
 
 
-app.post('/data', GetChiPhi.getAllChiPhi);
+//app.post('/data', GetChiPhi.getAllChiPhi);
+
+app.post('/products',GetChiPhi.getProducts);
+
+app.get('/test', (req,res) => {
+  res.send("test");
+})
+
 
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);
