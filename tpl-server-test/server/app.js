@@ -9,6 +9,7 @@ const app = express();
 
 //From database folder
 const dataMethod = require('./database/dataMethod');
+const napNLMethod = require('./database/napNLMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
@@ -93,10 +94,11 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 });*/
 
 
-app.post('/logindata', dataMethod.login);
+app.get('/logindata', dataMethod.login);
 
-app.post('/napnhienlieu', dataMethod.getNapNhienLieu);
+app.get('/napnhienlieu', dataMethod.getNapNhienLieu);
 
+app.post('/insert',napNLMethod.insert);
 
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);
