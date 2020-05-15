@@ -40,17 +40,17 @@ module.exports = {
         ('Đồ trang sức'),
         ('Khác');
 
-      create table products(
-        ProID bigserial primary key,
-        ProName text,
-        TinyDes text,
-        FullDes text,
-        Price int,
-        CatID int,
-        Quantity int,
-        created_at timestamp default now(),
-        updated_at timestamp
-      );
+        create table products(
+          ProID bigserial primary key,
+          ProName text,
+          TinyDes text,
+          FullDes text,
+          Price int,
+          CatID int,
+          Quantity int,
+          created_at timestamp default now(),
+          updated_at timestamp
+        );
 
       INSERT INTO products(ProName, TinyDes, FullDes, Price, CatID, Quantity) VALUES ('Freshwater Cultured Pearl', 'Freshwater Cultured Pearl, Citrine, Peridot & Amethyst Bracelet, 7.5\"', '<UL>\r\n    <LI>Metal stamp: 14k </LI>\r\n    <LI>Metal: yellow-ld</LI>\r\n    <LI>Material Type: amethyst, citrine, ld, pearl, peridot</LI>\r\n    <LI>Gem Type: citrine, peridot, amethyst</LI>\r\n    <LI>Length: 7.5 inches</LI>\r\n    <LI>Clasp Type: filigree-box</LI>\r\n    <LI>Total metal weight: 0.6 Grams</LI>\r\n</UL>\r\n<STRONG>Pearl Information</STRONG><BR>\r\n<UL>\r\n    <LI>Pearl type: freshwater-cultured</LI>\r\n</UL>\r\n<STRONG>Packaging Information</STRONG><BR>\r\n<UL>\r\n    <LI>Package: Regal Blue Sueded-Cloth Pouch</LI>\r\n</UL>', 1500000, 6, 83);
       INSERT INTO products(ProName, TinyDes, FullDes, Price, CatID, Quantity) VALUES ('Pink Sapphire Sterling Silver', '14 1/2 Carat Created Pink Sapphire Sterling Silver Bracelet w/ Diamond Accents', '<P><STRONG>Jewelry Information</STRONG></P>\r\n<UL>\r\n    <LI>Loại hàng: Hàng trong nước</LI>\r\n</UL>\r\n', 300000, 6, 64);
@@ -82,15 +82,6 @@ module.exports = {
       INSERT INTO products(ProName, TinyDes, FullDes, Price, CatID, Quantity) VALUES ('CK005', 'Tinh xảo - sang trọng', '<UL>\r\n    <LI>Kim cương luôn là đồ trang sức thể hiện đẳng cấp của người sử dụng.</LI>\r\n    <LI>Không phải nói nhiều về những kiểu nhẫn dưới đây, chỉ có thể gói gọn trong cụm từ: tinh xảo và sang trọng</LI>\r\n    <LI>Thông tin nhà sản xuất: Torrini</LI>\r\n    <LI>Thông tin chi tiết: Cái này rất phù hợp cho bạn khi tặng nàng</LI>\r\n</UL>\r\n', 1800000000, 6, 29);
       INSERT INTO products(ProName, TinyDes, FullDes, Price, CatID, Quantity) VALUES ('NV01TT', 'Tinh tế đến không ngờ', '<UL>\r\n    <LI>Tinh xảo và sang trọng</LI>\r\n    <LI>Thông tin nhà sản xuất: Torrini</LI>\r\n    <LI>Không chỉ có kiểu dáng truyền thống chỉ có một hạt kim cương ở giữa, các nhà thiết kế đã tạo những những chiếc nhẫn vô cùng độc đáo và tinh tế.</LI>\r\n    <LI>Tuy nhiên, giá của đồ trang sức này thì chỉ có dân chơi mới có thể kham được</LI>\r\n</UL>\r\n', 500000000, 6, 49);
       INSERT INTO products(ProName, TinyDes, FullDes, Price, CatID, Quantity) VALUES ('Motorola W377', 'Nữ tính - trẻ trung', '<UL>\r\n    <LI>General: 2G Network, GSM 900 / 1800 / 1900</LI>\r\n    <LI>Size:&nbsp; 99 x 45 x 18.6 mm, 73 cc</LI>\r\n    <LI>Weight: 95 g</LI>\r\n    <LI>Display: type TFT, 65K colors</LI>\r\n    <LI>Size: 128 x 160 pixels, 28 x 35 mm</LI>\r\n</UL>\r\n', 2400000, 2, 0);
-
-      create table orders(
-        OrderID bigserial primary key,
-        OrderDate timestamp,
-        UserID int,
-        Total int,
-        created_at timestamp default now(),
-        updated_at timestamp
-      );
 
       create table orderdetails(
         ID bigserial primary key,

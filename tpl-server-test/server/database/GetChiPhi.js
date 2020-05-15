@@ -6,5 +6,8 @@ module.exports = {
         console.log(result)
         res.status(200).send({all: result.rows});
     },
-    getsomething: 1,
+    login: async (req,res) => {
+        const result = await pool.query("select * from logindata");
+        res.send({results: result.rows});
+    }
 }

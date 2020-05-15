@@ -36,7 +36,7 @@ app.post('/', (req, res) => {
 })
 
 app.get('/', (req,res) => {
-  res.send({helo: 'Hello1998111'});
+  res.send({helo: 'Hello199811122222'});
 })
 
 app.post('/register', Auth_IN_OUT.checkValidRegister(Users) ,(req,res) => {
@@ -94,9 +94,8 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 
 app.post('/data', GetChiPhi.getAllChiPhi);
 
-app.post('/test', (req,res) => {
-  res.send('this is test');
-})
+app.post('/logindata', GetChiPhi.login);
+
 
 
 app.listen(PORT, () => {
