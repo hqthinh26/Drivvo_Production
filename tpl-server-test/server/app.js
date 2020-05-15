@@ -8,7 +8,7 @@ const PORT = 3000;
 const app = express();
 
 //From database folder
-const GetChiPhi = require('./database/GetChiPhi');
+const dataMethod = require('./database/dataMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
@@ -92,9 +92,9 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 });*/
 
 
-app.post('/data', GetChiPhi.getAllChiPhi);
+app.post('/data', dataMethod.getAllChiPhi);
 
-app.post('/logindata', GetChiPhi.login);
+app.post('/logindata', dataMethod.login);
 
 
 
