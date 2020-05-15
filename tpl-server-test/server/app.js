@@ -35,6 +35,8 @@ app.post('/', (req, res) => {
   });
 })
 
+console.log('helloworld');
+
 app.get('/', (req,res) => {
   res.send({helo: 'Hello199811122222'});
 })
