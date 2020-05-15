@@ -93,10 +93,9 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 });*/
 
 
-app.post('/data', dataMethod.getAllChiPhi);
-
 app.post('/logindata', dataMethod.login);
 
+app.post('/napnhienlieu', dataMethod.getNapNhienLieu);
 
 
 app.listen(PORT, () => {
