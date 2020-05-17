@@ -12,4 +12,8 @@ module.exports = {
             res.sendStatus(403);
         }
     },
+    getNapNhienLieu: async (req,res) => {
+        const result = await pool.query("select * from napnhienlieu");
+        res.send(result.rows);
+    },
 }

@@ -96,7 +96,7 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 
 app.get('/logindata', dataMethod.login);
 
-app.get('/napnhienlieu', dataMethod.getNapNhienLieu);
+app.get('/napnhienlieu', napNLMethod.getNapNhienLieu);
 
 app.post('/insert',napNLMethod.insert);
 
