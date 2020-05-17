@@ -7,7 +7,7 @@ router.get('/', (req,res) => {
     res.status(200).send("Hello, this is chiphi Route");
 })
 
-router.get('/printall', chiphiMethod.getAll);
+router.get('/printall', chiphiMethod.printall);
 
 router.post('/insert',chiphiMethod.insert);
 

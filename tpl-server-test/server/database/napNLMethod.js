@@ -12,7 +12,7 @@ module.exports = {
             res.sendStatus(403);
         }
     },
-    getAllTable: async (req,res) => {
+    printall: async (req,res) => {
         const result = await pool.query("select * from napnhienlieu");
         res.send(result.rows);
     },

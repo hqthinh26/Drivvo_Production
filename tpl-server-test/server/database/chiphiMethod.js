@@ -1,7 +1,7 @@
 const pool = require('./pooling');
 
 module.exports = {
-    getAll: async (req,res) => {
+    printall: async (req,res) => {
         try {
             const results = await pool.query('select * from chiphi');
             return res.status(200).send(results.rows);

@@ -7,6 +7,6 @@ router.get('/', (req,res) => {
     res.status(200).send('this is nap nhien lieu route');
 })
 
-router.get('/printall',napNLMethod.getAllTable);
+router.get('/printall',napNLMethod.printall);
 
 module.exports = router;
