@@ -27,6 +27,13 @@ const Users = [
   {fullname: 'vhaquan', phone: '034567', email: 'vhaquan_sv@gmail.com', pw: '034567quan'},
 ];
 
+//Router
+app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
+app.use('/chiphi',require('./routers/chiphiRoute'));
+app.use('/thunhap',require('./routers/thunhapRoute'));
+app.use('/dichvu',require('./routers/dichvuRoute'));
+
+
 const Access_Tokens = [];
 
 app.post('/', (req, res) => {
@@ -84,6 +91,18 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
   })
 })
 
+
+app.get('/logindata', dataMethod.login);
+
+
+
+app.listen(PORT, () => {
+  console.log(`API is running at http://localhost:${PORT}`);
+})
+
+
+
+
 /*app.post('/register',(req,res) => {
   console.log('someone has called register')
   const account = {usernameInternal: 'drivvo', pwInternal: '2020'};
@@ -92,19 +111,6 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
     return res.status(200).send({message: 'successful'});
   throw createError(401,'account not valid');
 });*/
-
-
-app.get('/logindata', dataMethod.login);
-
-app.get('/napnhienlieu', dataMethod.getNapNhienLieu);
-
-app.post('/insert',napNLMethod.insert);
-
-app.listen(PORT, () => {
-  console.log(`API is running at http://localhost:${PORT}`);
-})
-
-
 
 /*app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/users', require('./routes/user.route'));
