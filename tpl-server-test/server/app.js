@@ -27,6 +27,11 @@ const Users = [
   {fullname: 'vhaquan', phone: '034567', email: 'vhaquan_sv@gmail.com', pw: '034567quan'},
 ];
 
+//Router
+app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
+app.use('/chiphi',require('./routers/chiphiRoute'));
+
+
 const Access_Tokens = [];
 
 app.post('/', (req, res) => {
@@ -87,9 +92,6 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 
 app.get('/logindata', dataMethod.login);
 
-//Router
-app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
-app.use('/chiphi',require('./routers/chiphiRoute'));
 
 
 app.listen(PORT, () => {
