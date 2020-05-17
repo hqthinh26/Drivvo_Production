@@ -9,7 +9,7 @@ module.exports = {
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
         create table napnhienlieu(
-            id uuid PRIMARY KEY default uuid_generate_v4(),
+            d uuid PRIMARY KEY default uuid_generate_v4(),
             filling_date date default now(),
             filling_hour timetz default now(),
             odometer decimal(7,1) NOT NULL,
@@ -22,7 +22,8 @@ module.exports = {
         );
         
         insert into napnhienlieu(odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location)
-        values (123.4,'gasoline',20000, 50000, 2.5, true, 'dongnai');
+        values (123.4, 'gasoline', 20000,  50000, 2.5, true, 'dongnai'),
+               (12333.5, 'refine oil', 11500, 231000, 3.4, true, 'America');
 
         ` ,{raw: true});
     },
