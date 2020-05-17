@@ -84,6 +84,19 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
   })
 })
 
+
+
+app.get('/logindata', dataMethod.login);
+
+app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
+
+app.listen(PORT, () => {
+  console.log(`API is running at http://localhost:${PORT}`);
+})
+
+
+
+
 /*app.post('/register',(req,res) => {
   console.log('someone has called register')
   const account = {usernameInternal: 'drivvo', pwInternal: '2020'};
@@ -92,19 +105,6 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
     return res.status(200).send({message: 'successful'});
   throw createError(401,'account not valid');
 });*/
-
-
-app.get('/logindata', dataMethod.login);
-
-app.get('/napnhienlieu', napNLMethod.getNapNhienLieu);
-
-app.post('/insert',napNLMethod.insert);
-
-app.listen(PORT, () => {
-  console.log(`API is running at http://localhost:${PORT}`);
-})
-
-
 
 /*app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/users', require('./routes/user.route'));
