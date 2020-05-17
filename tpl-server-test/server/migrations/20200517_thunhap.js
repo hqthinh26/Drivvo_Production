@@ -6,6 +6,8 @@ module.exports = {
         
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+
         CREATE TABLE thunhap(
             id uuid PRIMARY KEY default uuid_generate_v4(),
             date date NOT NULL default now(),

@@ -4,6 +4,8 @@ module.exports = {
     up: async (queryInterface,Sequelize) => {
         queryInterface.sequelize.query(`
 
+        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+        
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
         CREATE TABLE chiphi (
