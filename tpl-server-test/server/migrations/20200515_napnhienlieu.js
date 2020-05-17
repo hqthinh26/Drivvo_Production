@@ -6,8 +6,10 @@ module.exports = {
 
         ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
 
+        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
         create table napnhienlieu(
-            id bigserial PRIMARY KEY,
+            id uuid PRIMARY KEY default uuid_generate_v4(),
             filling_date date default now(),
             filling_hour time default now(),
             odometer decimal(6,1) NOT NULL,

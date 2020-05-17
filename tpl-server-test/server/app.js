@@ -85,10 +85,12 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
 })
 
 
-
 app.get('/logindata', dataMethod.login);
 
+//Router
 app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
+app.use('/chiphi',require('./routers/chiphiRoute'));
+
 
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);
