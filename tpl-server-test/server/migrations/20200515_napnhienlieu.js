@@ -9,7 +9,7 @@ module.exports = {
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
         create table napnhienlieu(
-            d uuid PRIMARY KEY default uuid_generate_v4(),
+            id uuid PRIMARY KEY default uuid_generate_v4(),
             filling_date date default now(),
             filling_hour time default now(),
             odometer decimal(7,1) NOT NULL,

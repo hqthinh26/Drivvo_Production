@@ -8,8 +8,7 @@ const PORT = 3000;
 const app = express();
 
 //From database folder
-const dataMethod = require('./database/dataMethod');
-const napNLMethod = require('./database/napNLMethod');
+const tokenMethod = require('./database/tokenMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
@@ -21,11 +20,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //Predefined User Array
 
-let Users = [
+/*let Users = [
   {fullname: 'tploc',   phone: '012345', email: 'tploc_gv@gmail.com',  pw: '012345loc'},
   {fullname: 'hqthinh', phone: '023456', email: 'hqthinh_sv@gmail.com', pw: '023456thinh'},
   {fullname: 'vhaquan', phone: '034567', email: 'vhaquan_sv@gmail.com', pw: '034567quan'},
-];
+];*/
 
 
 let Access_Tokens = [];
@@ -35,6 +34,8 @@ app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
 app.use('/chiphi',require('./routers/chiphiRoute'));
 app.use('/thunhap',require('./routers/thunhapRoute'));
 app.use('/dichvu',require('./routers/dichvuRoute'));
+app.use('/users',require('./routers/usersRoute'));
+
 
 
 app.post('/', (req, res) => {
@@ -49,15 +50,21 @@ app.get('/', (req,res) => {
   res.send({helo: 'Hello199811122222'});
 })
 
-app.post('/register', Auth_IN_OUT.checkValidRegister(Users) ,(req,res) => {
+
+
+
+//app.get('/register',)
+
+
+/*app.post('/register', Auth_IN_OUT.checkValidRegister(Users) ,(req,res) => {
   Users.push(req.registeredUser);
   console.table(Users);
   console.log('Successful');
   //return res.sendStatus(200);
   return res.status(200).send({mess: 'Yees'});
-});
+});*/
 
-app.post('/login', async (req,res) => {
+/*app.post('/login', async (req,res) => {
   const {email,pw} = req.body;
   const userPayload = {email,pw};
   const checkExist = Users.find(user => user.email === email && user.pw === pw);
@@ -88,10 +95,7 @@ app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
     //return res.status(200).send('ok');
     return res.sendStatus(200)
   })
-})
-
-
-app.get('/logindata', dataMethod.login);
+})*/
 
 
 
