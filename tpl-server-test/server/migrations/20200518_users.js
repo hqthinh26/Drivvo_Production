@@ -12,7 +12,7 @@ module.exports = {
             u_id uuid PRIMARY KEY default uuid_generate_v4(),
             u_fullname text NOT NULL,
             u_phone text NOT NULL,
-            u_email text NOT NULL,
+            u_email text NOT NULL UNIQUE,
             u_pw text NOT NULL
         );
 

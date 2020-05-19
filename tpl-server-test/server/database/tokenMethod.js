@@ -13,9 +13,19 @@ module.exports = {
         try {
             await pool.query(`insert into token(token_value)
         values ($1)`,[token]);
-            console.log('successful')
+            console.log('import token successfully')
         } catch (err) {
             console.log(err);
+        }
+    },
+    delete: async (token) => {
+        try {
+            await pool.query(`delete from token where token_value = $1`, [token]);
+            console.log('successfully delete a row from token');
+            return true;
+        } catch (err) {
+            console.log('failed to execute delete query');
+            return false;
         }
     }
 }
