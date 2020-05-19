@@ -50,7 +50,7 @@ app.get('/', (req,res) => {
   res.send({helo: 'Hello199811122222'});
 })
 
-
+app.post('/register', )
 
 
 //app.get('/register',)
