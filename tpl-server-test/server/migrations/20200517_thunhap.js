@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        queryInterface.sequelize.query(`
+        await queryInterface.sequelize.query(`
         
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -25,7 +25,7 @@ module.exports = {
         `, {raw: true});
     },
     down: async (queryInterface, Sequelize) => {  
-        queryInterface.sequelize.query(`
+        await queryInterface.sequelize.query(`
         
         
         `, {raw: true});

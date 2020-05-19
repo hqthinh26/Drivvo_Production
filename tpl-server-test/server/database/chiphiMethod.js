@@ -12,7 +12,7 @@ module.exports = {
     },
     insert: async (req,res) => {
         try {
-            await pool.query(`insert into chiphi(Type_of_expense, Location, Reason) 
+            await pool.query(`insert into chiphi(Type_of_expense, Location, Reason);
             values ('food booking', 'Trung Chanh', 'Have no reason' )`);
             return res.sendStatus(200);
         }
@@ -21,4 +21,5 @@ module.exports = {
         }
         
     }
+
 }

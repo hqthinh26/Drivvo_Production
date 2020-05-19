@@ -22,9 +22,9 @@ module.exports = {
     ,
     extractToken: (req,res,next) => {
         const header = req.headers['authorization'];
-        console.log(`Au: ${header}`);
-        if(header) return res.send(400);
+        if(!header) return res.send(400);
         const token = header.split(' ')[1];
+        console.log(token);
         req.token = token;
         next();
     }

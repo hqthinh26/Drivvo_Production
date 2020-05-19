@@ -4,17 +4,6 @@ module.exports = {
     await queryInterface.sequelize.query(`
       ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
       
-      create table users(
-        f_ID bigserial primary key,
-        f_Username text unique,
-        f_Password text,
-        f_Name text,
-        f_Email text,
-        f_DOB date,
-        f_Permission int,
-        created_at timestamp default now(),
-        updated_at timestamp
-      );
 
       create table userRefreshTokenExt(
         ID bigserial primary key,

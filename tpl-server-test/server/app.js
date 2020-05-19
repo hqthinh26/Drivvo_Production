@@ -21,11 +21,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //Predefined User Array
 
-const Users = [
+let Users = [
   {fullname: 'tploc',   phone: '012345', email: 'tploc_gv@gmail.com',  pw: '012345loc'},
   {fullname: 'hqthinh', phone: '023456', email: 'hqthinh_sv@gmail.com', pw: '023456thinh'},
   {fullname: 'vhaquan', phone: '034567', email: 'vhaquan_sv@gmail.com', pw: '034567quan'},
 ];
+
+
+let Access_Tokens = [];
 
 //Router
 app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
@@ -33,8 +36,6 @@ app.use('/chiphi',require('./routers/chiphiRoute'));
 app.use('/thunhap',require('./routers/thunhapRoute'));
 app.use('/dichvu',require('./routers/dichvuRoute'));
 
-
-const Access_Tokens = [];
 
 app.post('/', (req, res) => {
   console.log('someone has called')
@@ -59,10 +60,7 @@ app.post('/register', Auth_IN_OUT.checkValidRegister(Users) ,(req,res) => {
 app.post('/login', async (req,res) => {
   const {email,pw} = req.body;
   const userPayload = {email,pw};
-  const checkExist = Users.find(user => user.email === email);
-  console.log(email);
-  console.table(Users);
-  console.log(checkExist);
+  const checkExist = Users.find(user => user.email === email && user.pw === pw);
   if(checkExist){
     const token = await jwt.sign(userPayload,'highlands');
     Access_Tokens.push(token);
@@ -78,16 +76,17 @@ app.post('/login', async (req,res) => {
 
 app.post('/logout', Auth_IN_OUT.extractToken, (req,res) => {
   //Print the pre-modified Token Array
-  console.table(Access_Tokens);
+  //console.table(Access_Tokens);
 
   jwt.verify(req.token,'highlands', (err,decoded) => {
     if (err) return res.sendStatus(403);
     console.log(decoded);
     //Delete token of the Access_Tokens Array
-    Access_Tokens.filter(token => token !== req.token)
+    Access_Tokens = Access_Tokens.filter(token => token !== req.token)
     //Print out the Access_Token 
     console.table(Access_Tokens);
-    return res.sendStatus(200);
+    //return res.status(200).send('ok');
+    return res.sendStatus(200)
   })
 })
 

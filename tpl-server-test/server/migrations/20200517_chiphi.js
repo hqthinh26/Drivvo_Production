@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface,Sequelize) => {
-        queryInterface.sequelize.query(`
+        await queryInterface.sequelize.query(`
 
         ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
         
@@ -25,7 +25,7 @@ module.exports = {
         `,{raw: true});
     },
     down: async (queryInterface,Sequelize) => {
-        queryInterface.sequelize.query(`
+        await queryInterface.sequelize.query(`
         
         
         
