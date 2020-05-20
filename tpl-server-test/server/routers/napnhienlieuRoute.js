@@ -18,10 +18,10 @@ router.post('/add', Auth_IN_OUT.extractToken, async (req,res) => {
     const user_email = Auth_IN_OUT.emailFromToken(req.token);
 
     //get u_id of the user based on their login email
+    //Napnhienlieu table has a foreign key that links to User's ID
     const u_id = await usersMethod.getUID_byEmail(user_email);
 
     const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = req.body;
-
     
     try {
         await napNLMethod.insert(inputFromClient,u_id);
