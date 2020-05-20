@@ -1,4 +1,5 @@
 'use strict';
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     extractToken: (req,res,next) => {
@@ -8,5 +9,13 @@ module.exports = {
         console.log('extracted token: ' + token);
         req.token = token;
         next();
+    },
+    emailFromToken: (token) => {
+        try {
+            const decoded = jwt.verify(token, 'drivvo');
+            return decoded.email;
+        } catch (err) {
+            throw new Error('failed to verify');
+        }
     }
 }

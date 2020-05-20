@@ -10,6 +10,7 @@ module.exports = {
 
         CREATE TABLE chiphi (
             id uuid PRIMARY KEY default uuid_generate_v4(),
+            u_id uuid REFERENCES users (u_id),
             date date NOT NULL default now(),
             hour timetz NOT NULL default now(),
             odometer decimal(7,1),

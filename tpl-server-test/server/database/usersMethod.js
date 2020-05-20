@@ -49,5 +49,14 @@ module.exports = {
         } catch (err) {
             console.log('failed to execute checkValid Email & Pw');
         }
-    }
+    }, 
+    
+    getUID_byEmail: async (email) => {
+        try {
+            const result = await pool.query(`select u_id from users where u_email = $1`, [email]);
+            return u_id = result.rows[0].u_id;
+        } catch (err) {
+            throw new Error('failed to getU_ID');
+        }
+    },
 }

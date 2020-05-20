@@ -8,6 +8,7 @@ module.exports = {
 
         CREATE TABLE token(
             id bigserial PRIMARY KEY,
+            u_id uuid REFERENCES users (u_id),
             token_value text NOT NULL,
             created_at timestamptz default now()
         );
