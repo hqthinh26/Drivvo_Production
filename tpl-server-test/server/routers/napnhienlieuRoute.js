@@ -22,12 +22,12 @@ router.post('/add', Auth_IN_OUT.extractToken, async (req,res) => {
     const u_id = await usersMethod.getUID_byEmail(user_email);
 
     const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = req.body;
+    console.log(inputFromClient);
     
     try {
         await napNLMethod.insert(inputFromClient,u_id);
     }  
     catch (err) {throw new Error('Failed at post add NLL');}
-    console.log(inputFromClient);
     
     return  res.send('successful');
    
