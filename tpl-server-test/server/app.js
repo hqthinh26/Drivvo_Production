@@ -33,16 +33,8 @@ app.use('/dichvu',require('./routers/dichvuRoute'));
 app.use('/users',require('./routers/usersRoute'));
 
 
-app.post('/', (req, res) => {
-  console.log('someone has called')
-  res.json({
-    msg: 'hello from nodejs express apidasa1sdadasdas19981111',
-  });
-})
-
-
 app.get('/', (req,res) => {
-  res.send({helo: 'Hello199811122222'});
+  res.send('This is drivvo project');
 })
 
 //Check if this users has existed in the system or not? before the registration process
