@@ -8,15 +8,10 @@ module.exports = {
         const total_costI = parseInt(total_cost);
         const total_unitsF = parseFloat(total_units);
         //change text to boolean
-        const full_tankB = false;
-        if (full_tank === 'true')
-            full_tankB = true;
         
-
-        console.log(typeof(odometerF));
         try{
-            return await pool.query(`insert into napnhienlieu(odometer, u_id,type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location)
-        values ($1,$2,$3,$4,$5,$6,$7,$8)`, [odometerF, user_id, type_of_fuel, price_per_unitI, total_costI, total_unitsF, full_tankB, location]);
+            await pool.query(`insert into napnhienlieu(odometer, u_id,type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location)
+        values ($1,$2,$3,$4,$5,$6,$7,$8)`, [odometerF, user_id, type_of_fuel, price_per_unitI, total_costI, total_unitsF, full_tank, location]);
         } catch (err) {
             throw new Error('Failed to insert NapNL');
         }
