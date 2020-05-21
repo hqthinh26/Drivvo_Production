@@ -1,0 +1,5 @@
+module.exports = {
+    tpl_token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRwbG9jX2d2QGdtYWlsLmNvbSIsInB3IjoiMDEyMzQ1bG9jIiwiaWF0IjoxNTg5OTU2NTIyfQ.Q68UHaVPaid6dHgz9mwXJ3wvZ44irfMzWLaS9jiY1WE',
+    hqt_token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhxdGhpbmhfc3ZAZ21haWwuY29tIiwicHciOiIwMjM0NTZ0aGluaCIsImlhdCI6MTU5MDAzMzk4Nn0._UKwyHMkYV3-XHPNaOlLTMs48daa6kYRezG3aGc3WoE',
+    vhaq_token : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZoYXF1YW5fc3ZAZ21haWwuY29tIiwicHciOiIwMzQ1NjdxdWFuIiwiaWF0IjoxNTkwMDM0MDQ2fQ.F5gLnvWoaIgaSUelr4TBfInJ1KEfg5N4QntVEOznmCk',
+}
