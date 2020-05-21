@@ -14,14 +14,14 @@ module.exports = {
             date date NOT NULL default now(),
             hour timetz NOT NULL default now(),
             odometer decimal(7,1) NOT NULL,
-            amount integer NOT NULL,
             type_of_income text NOT NULL,
+            amount integer NOT NULL,
             note text
         );
 
-        INSERT INTO thunhap (odometer, amount, type_of_income, note)
-        VALUES (123456.7, 100000, 'Package Handling Service', 'Good amount of quick money'),
-               (234567.8, 200000, 'AirBnB', 'Customers are really dirty and mean');
+        INSERT INTO thunhap (odometer, type_of_income, amount, note)
+        VALUES (123456.7, 'Package Handling Service', 100000, 'Good amount of quick money'),
+               (234567.8, 'AirBnB', 200000, 'Customers are really dirty and mean');
                
         `, {raw: true});
     },

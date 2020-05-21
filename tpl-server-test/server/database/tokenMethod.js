@@ -9,23 +9,24 @@ module.exports = {
             res.sendStatus(403);
         }
     },
+
     insert: async (token) => {
-        try {
             await pool.query(`insert into token(token_value)
-        values ($1)`,[token]);
-            console.log('import token successfully')
-        } catch (err) {
-            console.log(err);
-        }
+            values ($1)`,[token]);
+            console.log('import token successfully');
     },
+
     delete: async (token) => {
-        try {
             await pool.query(`delete from token where token_value = $1`, [token]);
             console.log('successfully delete a row from token');
             return true;
-        } catch (err) {
-            console.log('failed to execute delete query');
-            return false;
-        }
+    },
+
+    tokenExist: async (token) => {
+        const result = await pool.query(`select token_value from token where token_value = $1`,[token]);
+
+        //If rowCount === 1 -> we found the token which is predefined to be UNIQUE
+        console.log(result.rowCount);
+        return result.rowCount === 1? true: false;
     }
 }

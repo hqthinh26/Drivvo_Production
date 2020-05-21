@@ -12,14 +12,15 @@ module.exports = {
     },
 
     insert: async (inputFromClient,u_id) => {
-        const {odometer,type_of_expense, location, reason} = inputFromClient;
+        const {odometer,type_of_expense, amount, location, reason} = inputFromClient;
         const odometerF = parseFloat(odometer);
+        const amountI = parseInt(amount);
         console.log(odometer);
 
         await pool.query(`
-            insert into chiphi (u_id, odometer, type_of_expense, location, reason) 
-            values ($1,$2,$3,$4,$5)
-        `, [u_id, odometerF, type_of_expense, location, reason]);
+            insert into chiphi (u_id, odometer, type_of_expense, amount, location, reason) 
+            values ($1,$2,$3,$4,$5,$6)
+        `, [u_id, odometerF, type_of_expense, amount, location, reason]);
         
     }
 

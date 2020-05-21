@@ -15,13 +15,14 @@ module.exports = {
             hour timetz NOT NULL default now(),
             odometer decimal(7,1) NOT NULL,
             type_of_service text NOT NULL,
+            amount int NOT NULL,
             location text NOT NULL,
             note text
         );
 
-        INSERT INTO dichvu (odometer, type_of_service, location, note) 
-        VALUES (45677.4, 'Car-washing', 'Cong Hoa Tan Binh', 'Good service - The employees are friendly and helping'),
-               (53643.1, 'Wheel replacement', 'Trung Chanh Intersection', 'The replacement parts are overpriced. 1 star for the service');
+        INSERT INTO dichvu (odometer, type_of_service, amount, location, note) 
+        VALUES (45677.4, 'Car-washing', 500000,'Cong Hoa Tan Binh', 'Good service - The employees are friendly and helping'),
+               (53643.1, 'Wheel replacement', 400000,'Trung Chanh Intersection', 'The replacement parts are overpriced. 1 star for the service');
         
         `, {raw: true});
     },

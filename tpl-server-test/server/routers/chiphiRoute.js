@@ -12,21 +12,21 @@ router.get('/', (req,res) => {
 
 router.get('/printall', chiphiMethod.printall);
 
-router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
+router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     const u_email = Auth_IN_OUT.emailFromToken(token);
 
     try {
         const u_id = await usersMethod.getUID_byEmail(u_email);
-        const inputFromClient = {odometer, type_of_expense, location, reason} = req.body;
+        const inputFromClient = {odometer, type_of_expense, amount, location, reason} = req.body;
 
         //import new row to the table chiphi
         await chiphiMethod.insert(inputFromClient, u_id);
         return res.sendStatus(200);
     }
     catch (err) {
-        console.log(` errorrr: ${err}`);
-        return res.sendStatus(403);
+        console.log(err.detail);
+        return res.status(403).send({message: 'something is wrong in the insert route', detail: err.detail});
     }
 });
 

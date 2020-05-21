@@ -1,26 +1,37 @@
 'use strict';
 const jwt = require('jsonwebtoken');
+const tokenMethod = require('../database/tokenMethod');
 
 module.exports = {
-    extractToken: (req,res,next) => {
+    /*extractToken: (req,res,next) => {
         const header = req.headers['authorization'];
-        if(!header) {
-            res.send('You must send token');
-            throw new Error('cannot find token');
-        }
+        if(!header) return res.status(403).send('pls send token');
         const token = header.split(' ')[1];
-        console.log('extracted token: ' + token);
-            
-        jwt.verify(token, 'drivvo', (err,decoded) => {
-            if(err) { 
-                res.send('invalid token');
-                throw Error('invalid token');
-            }
+        
+        try {
+            const decoded = jwt.verify(token, 'drivvo');
             req.token = token;
-            next();
-        });
-        return;
+        } catch (err) {
+            console.log(err.message)
+            res.status(403).send(err);
+        }
+        
+    },*/
+
+    extractToken: async (req, res, next) => {
+        const header = req.headers['authorization'];
+        if(!header) return res.status(403).send({message: 'Authorization: token is empty'})
+        const rawToken = header.split(' ')[1];
+
+        //check the database to confirm that the token exists - meaning that the user has loggined
+        const exist = await tokenMethod.tokenExist(rawToken);
+        if (exist) {
+            req.token = rawToken;
+            return next();
+        }
+        return res.status(403).send('the token is not valid becuz the user has logout');
     },
+
     emailFromToken: (token) => {
         try {
             const decoded = jwt.verify(token, 'drivvo');

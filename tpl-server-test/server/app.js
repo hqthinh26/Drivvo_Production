@@ -22,8 +22,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-//Predefined User Array
-
 
 //Router
 app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
