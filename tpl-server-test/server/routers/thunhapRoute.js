@@ -14,7 +14,7 @@ router.get('/printall', thunhapMethod.printall);
 router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     const u_email = Auth_IN_OUT.emailFromToken(token);
-    const inputFromClient = {odometer, type_of_income, amount, note} = req.body;
+    const inputFromClient = {date, time, odometer, type_of_income, amount, note} = req.body;
     try {
        const u_id =  await usersMethod.getUID_byEmail(u_email);
     

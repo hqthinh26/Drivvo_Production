@@ -11,7 +11,7 @@ module.exports = {
     },
 
     insert: async (inputFromClient, u_id) => {
-        const {odometer, type_of_service, amount, location, note} = inputFromClient;
+        const {date, time, dometer, type_of_service, amount, location, note} = inputFromClient;
         
         console.log(inputFromClient);
         //conver odometer(string) to odometerF(float)
@@ -20,8 +20,9 @@ module.exports = {
         //convert amount(string) to amountI(Integer)
         const amountI = parseInt(amount);
     
-        await pool.query(`insert into dichvu (u_id, odometer, type_of_service, amount, location, note)
-            values ($1,$2,$3,$4,$5,$6)`, [u_id, odometerF, type_of_service, amountI, location, note]);
+        await pool.query(`insert into dichvu (u_id, date, time, odometer, type_of_service, amount, location, note)
+            values ($1,$2,$3,$4,$5,$6,$7,$8)`
+            , [u_id, date, time, odometerF, type_of_service, amountI, location, note]);
     }
 }
 

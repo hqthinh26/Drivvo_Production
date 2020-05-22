@@ -14,23 +14,22 @@ module.exports = {
     },
 
     login: async (req,res) => {
-        const {email, pw} = req.body;
-       
-        //Check if the user has alr been existing in the system
-        if (await userMethod.checkValidEmailPw(email,pw))
-        {
+
+        const {email,pw} = req.body;
+        try {
+            if(! await userMethod.checkValidEmailPw(email,pw)) {
+                console.log('wrong email/pw') 
+                return res.status(403).send('Invalid user/password');
+            }
             const payload = {email,pw};
             const token = jwt.sign(payload, 'drivvo');
-            console.log('login token: '+ token);
-            try {
-                await tokenMethod.insert(token);
-            } catch (err) {
-                console.log('Failed await insert token');
-            }
-            return res.status(200).send({token: token});
+            await tokenMethod.insert(token);
+            res.status(200).send({message: 'ok', token: token});
+        } catch (err) {
+            console.log({errMess: err});
+            res.status(403).send({err: err});
         }
-        else return res.sendStatus(403);
-        
+
     },
     logout: async (req,res) => {
         const token = req.token;
@@ -38,10 +37,10 @@ module.exports = {
         try {
             const checkSuccess = await tokenMethod.delete(token);
             if (checkSuccess) return res.sendStatus(200);
-            else res.sendStatus(403);
         }
         catch (err) {
             console.log(err + 'logout');
+            return res.sendStatus(403);
         }
         
     }

@@ -3,20 +3,6 @@ const jwt = require('jsonwebtoken');
 const tokenMethod = require('../database/tokenMethod');
 
 module.exports = {
-    /*extractToken: (req,res,next) => {
-        const header = req.headers['authorization'];
-        if(!header) return res.status(403).send('pls send token');
-        const token = header.split(' ')[1];
-        
-        try {
-            const decoded = jwt.verify(token, 'drivvo');
-            req.token = token;
-        } catch (err) {
-            console.log(err.message)
-            res.status(403).send(err);
-        }
-        
-    },*/
 
     extractToken: async (req, res, next) => {
         const header = req.headers['authorization'];

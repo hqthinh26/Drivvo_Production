@@ -41,10 +41,12 @@ module.exports = {
         try {
             const result = await pool.query(`select u_email, u_pw from users`);
             console.table(result.rows);
-            
+        
             const userArray = result.rows;
             const valid = userArray.find(user => user.u_email === email && user.u_pw === pw);
-            if (valid !== undefined) return true;
+            
+            //if the user exits. the find method will return the infor of that user.
+            if (valid) return true;
             else return false;
         } catch (err) {
             console.log('failed to execute checkValid Email & Pw');

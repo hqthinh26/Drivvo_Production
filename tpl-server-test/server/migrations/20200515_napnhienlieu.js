@@ -11,8 +11,8 @@ module.exports = {
         create table napnhienlieu(
             id uuid PRIMARY KEY default uuid_generate_v4(),
             u_id uuid REFERENCES users (u_id),
-            filling_date date default now(),
-            filling_hour time default now(),
+            date date default now(),
+            time timetz default now(),
             odometer decimal(7,1) NOT NULL,
             type_of_fuel text NOT NULL,
             price_per_unit int NOT NULL,

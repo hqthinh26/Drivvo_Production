@@ -13,7 +13,7 @@ router.get('/printall',napNLMethod.printall);
 
 //token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRwbG9jX2d2QGdtYWlsLmNvbSIsInB3IjoiMDEyMzQ1bG9jIiwiaWF0IjoxNTg5OTU2NTIyfQ.Q68UHaVPaid6dHgz9mwXJ3wvZ44irfMzWLaS9jiY1WE
 
-router.post('/add', Auth_IN_OUT.extractToken, async (req,res) => {
+router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     //Get email from the token
     const user_email = Auth_IN_OUT.emailFromToken(req.token);
 
@@ -21,7 +21,7 @@ router.post('/add', Auth_IN_OUT.extractToken, async (req,res) => {
     //Napnhienlieu table has a foreign key that links to User's ID
     const u_id = await usersMethod.getUID_byEmail(user_email);
 
-    const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = req.body;
+    const inputFromClient = {date, time, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = req.body;
     console.log(inputFromClient);
     
     try {
