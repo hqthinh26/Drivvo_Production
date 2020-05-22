@@ -20,7 +20,7 @@ module.exports = {
         await pool.query(`
             insert into chiphi (u_id, odometer, type_of_expense, amount, location, reason) 
             values ($1,$2,$3,$4,$5,$6)
-        `, [u_id, odometerF, type_of_expense, amount, location, reason]);
+        `, [u_id, odometerF, type_of_expense, amountI, location, reason]);
         
     }
 
