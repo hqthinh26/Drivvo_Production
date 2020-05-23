@@ -23,7 +23,8 @@ module.exports = {
             }
             const payload = {email,pw};
             const token = jwt.sign(payload, 'drivvo');
-            await tokenMethod.insert(token);
+            const u_id = await userMethod.getUID_byEmail(email);
+            await tokenMethod.insert(u_id,token);
             res.status(200).send({message: 'ok', token: token});
         } catch (err) {
             console.log({errMess: err});

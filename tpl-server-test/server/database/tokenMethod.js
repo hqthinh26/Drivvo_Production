@@ -10,9 +10,9 @@ module.exports = {
         }
     },
 
-    insert: async (token) => {
-            await pool.query(`insert into token(token_value)
-            values ($1)`,[token]);
+    insert: async (u_id, token) => {
+            await pool.query(`insert into token(u_id,token_value)
+            values ($1,$2)`,[u_id, token]);
             console.log('import token successfully');
     },
 
