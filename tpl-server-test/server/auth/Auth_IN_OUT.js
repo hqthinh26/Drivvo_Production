@@ -1,5 +1,6 @@
 'use strict';
 const jwt = require('jsonwebtoken');
+// @ts-ignore
 const tokenMethod = require('../database/tokenMethod');
 
 module.exports = {
