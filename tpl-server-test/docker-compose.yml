@@ -26,5 +26,6 @@ services:
       NODE_ENV: production
     env_file: server.env
     volumes:
-      - ./server:/usr/app
       - /usr/app/node_modules
+      - ./server:/usr/app/
+
