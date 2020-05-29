@@ -14,11 +14,6 @@ module.exports = {
         u_pw text NOT NULL
     );
 
-    INSERT INTO users(u_fullname, u_phone, u_email, u_pw) 
-    VALUES ('tploc', '012345', 'tploc_gv@gmail.com', '012345loc'),
-           ('hqthinh', '023456', 'hqthinh_sv@gmail.com', '023456thinh'),
-           ('vhaquan', '034567', 'vhaquan_sv@gmail.com', '034567quan');
-
       create table userRefreshTokenExt(
         ID bigserial primary key,
         refreshToken text,
