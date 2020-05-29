@@ -22,7 +22,7 @@ module.exports = {
                 return res.status(403).send('Invalid user/password');
             }
             const payload = {email,pw};
-            const token = jwt.sign(payload, 'drivvo');
+            const token = jwt.sign(payload,process.env.SECRET_KEY2);
             const u_id = await userMethod.getUID_byEmail(email);
             await tokenMethod.insert(u_id,token);
             res.status(200).send({message: 'ok', token: token});

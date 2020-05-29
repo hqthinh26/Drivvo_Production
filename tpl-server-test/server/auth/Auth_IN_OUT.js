@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken');
 // @ts-ignore
 const tokenMethod = require('../database/tokenMethod');
-
 module.exports = {
 
     extractToken: async (req, res, next) => {
@@ -21,7 +20,7 @@ module.exports = {
 
     emailFromToken: (token) => {
         try {
-            const decoded = jwt.verify(token, 'drivvo');
+            const decoded = jwt.verify(token, process.env.SECRET_KEY2);
             return decoded.email;
         } catch (err) {
             throw new Error('failed to verify');

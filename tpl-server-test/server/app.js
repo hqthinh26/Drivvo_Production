@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const createError = require('http-errors');
@@ -7,6 +8,7 @@ const bodyParser = require('body-parser');
 const PORT = 3000;
 const app = express();
 const pool = require('./database/pooling');
+const bcryptjs = require('bcryptjs');
 
 //From database folder
 const tokenMethod = require('./database/tokenMethod');
