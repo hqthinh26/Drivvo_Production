@@ -1,33 +1,25 @@
-//@ts-ignore
+
 require('dotenv').config();
-// @ts-ignore
+
 const express = require('express');
-// @ts-ignore
+
 const morgan = require('morgan');
-// @ts-ignore
+
 const createError = require('http-errors');
-// @ts-ignore
 const jwt = require('jsonwebtoken');
-// @ts-ignore
 require('express-async-errors');
-// @ts-ignore
 const bodyParser = require('body-parser');
 const PORT = 3000;
 const app = express();
-// @ts-ignore
 const pool = require('./database/pooling');
-// @ts-ignore
 const bcryptjs = require('bcryptjs');
 
 //From database folder 
-// @ts-ignore
 const tokenMethod = require('./database/tokenMethod');
 
-//@ts-ignore
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
 
-//@ts-ignore
 //From basicMethod folder
 const Regis_In_Out = require('./basicMethod/Regis_In_Out');
 
@@ -36,16 +28,11 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-//@ts-ignore
 //Router
 app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
-// @ts-ignore
 app.use('/chiphi',require('./routers/chiphiRoute'));
-// @ts-ignore
 app.use('/thunhap',require('./routers/thunhapRoute'));
-// @ts-ignore
 app.use('/dichvu',require('./routers/dichvuRoute'));
-// @ts-ignore
 app.use('/users',require('./routers/usersRoute'));
 
 

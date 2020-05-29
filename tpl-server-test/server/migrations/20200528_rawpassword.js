@@ -6,9 +6,11 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.sequelize.query(`
 
-        create table rawpassword(
-            id uuid PRIMARY KEY,
-            userID uuid REFERENCES users(u_id),
+        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+        CREATE TABLE rawpassword(
+            id uuid PRIMARY KEY default uuid_generate_v4(),
+            u_id uuid REFERENCES users(u_id),
             raw_pw text NOT NULL
         );
 

@@ -1,28 +1,33 @@
-// @ts-ignore
 const jwt = require('jsonwebtoken');
-// @ts-ignore
 const userMethod = require('../database/usersMethod');
-// @ts-ignore
 const tokenMethod = require('../database/tokenMethod');
+const rawpwMethod = require('../database/rawpwMethod');
 
-// @ts-ignore
+
 const bcryptJS = require('bcryptjs');
 
 module.exports = {
-    // @ts-ignore
     register:  async (req,res) => {
+         //There are 2 steps needed to be done 
+        // +1: Insert new user to the USER TABLE with HASHED password
+        // +1: Insert new user's raw_password to RAWPASSWORD TABLE.
+        
         const {fullname, phone, email, pw} = req.body;
-        //the method return TRUE => Can create user | False => Can't create user
-        console.log('dau tien: ', fullname, phone, email, pw);
+        console.log({message: 'User info', fullname,phone,email,pw});
+
         try {
             if (await userMethod.doesExist(email) === true)
-            return res.sendStatus(404);
-        
-            //using brypyJS
-            //const salt = await bcryptJS.genSalt(10);
-            //const hashedPw = await bcryptJS.hash(pw, salt);
-            //await userMethod.insert(fullname,phone,email,hashedPw);
-            await userMethod.insert(fullname,phone,email,pw);
+                return res.sendStatus(404);
+            const salt = await bcryptJS.genSalt(10);
+            const hashedPw = await bcryptJS.hash(pw,salt);
+
+            //Step 1
+            await userMethod.insert(fullname,phone,email,hashedPw);
+            const u_id = await userMethod.getUID_byEmail(email); //return new u_id to insert to table rawpw
+            console.log(u_id);
+            //Step 2
+            await rawpwMethod.insert(u_id,pw);
+
             return res.sendStatus(200);
         }
         catch (err) {
@@ -30,9 +35,9 @@ module.exports = {
         }
     },
 
-    // @ts-ignore
     login: async (req,res) => {
 
+        //Making sure that the email exists and the password is valid
         const {email,pw} = req.body;
         try {
             if(! await userMethod.checkValidEmailPw(email,pw)) {
@@ -50,7 +55,7 @@ module.exports = {
         }
 
     },
-    // @ts-ignore
+    
     logout: async (req,res) => {
         const token = req.token;
         console.log('this is logout method token: ' + token);
@@ -60,7 +65,7 @@ module.exports = {
             return res.status(403).send('failed to delete token');
         }
         catch (err) {
-            console.log(err + 'logout');
+            console.log({message: err});
             return res.sendStatus(403);
         }
         
