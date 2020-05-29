@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+    //@ts-ignore
     up: async (queryInterface, Sequelize) => {
         await queryInterface.sequelize.query(`
         
@@ -25,6 +26,8 @@ module.exports = {
                
         `, {raw: true});
     },
+
+    //@ts-ignore
     down: async (queryInterface, Sequelize) => {  
         await queryInterface.sequelize.query(`
         
