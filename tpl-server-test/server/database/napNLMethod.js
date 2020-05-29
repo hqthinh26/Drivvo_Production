@@ -1,6 +1,7 @@
 const pool = require('./pooling');
 
 module.exports = {
+    //@ts-ignore
     insert: async (inputFromClient,user_id) => {
         const {date, time, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = inputFromClient;
         const odometerF = parseFloat(odometer);
@@ -17,6 +18,8 @@ module.exports = {
             throw new Error('Failed to insert NapNL');
         }
     },
+
+    // @ts-ignore
     printall: async (req,res) => {
         const result = await pool.query("select * from napnhienlieu");
         res.send(result.rows);

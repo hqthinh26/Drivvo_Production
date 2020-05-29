@@ -29,7 +29,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }  
     catch (err) {throw new Error('Failed at post add NLL');}
     
-    return  res.send('successful');
+    return  res.sendStatus(200);
    
 });
 

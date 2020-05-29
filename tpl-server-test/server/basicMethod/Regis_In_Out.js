@@ -5,16 +5,29 @@ const userMethod = require('../database/usersMethod');
 // @ts-ignore
 const tokenMethod = require('../database/tokenMethod');
 
+// @ts-ignore
+const bcryptJS = require('bcryptjs');
+
 module.exports = {
     // @ts-ignore
     register:  async (req,res) => {
         const {fullname, phone, email, pw} = req.body;
         //the method return TRUE => Can create user | False => Can't create user
         console.log('dau tien: ', fullname, phone, email, pw);
-        if (await userMethod.doesExist(email) === true)
+        try {
+            if (await userMethod.doesExist(email) === true)
             return res.sendStatus(404);
-        await userMethod.insert(fullname,phone,email,pw);
-        return res.sendStatus(200);
+        
+            //using brypyJS
+            //const salt = await bcryptJS.genSalt(10);
+            //const hashedPw = await bcryptJS.hash(pw, salt);
+            //await userMethod.insert(fullname,phone,email,hashedPw);
+            await userMethod.insert(fullname,phone,email,pw);
+            return res.sendStatus(200);
+        }
+        catch (err) {
+            console.log({message: err});
+        }
     },
 
     // @ts-ignore
