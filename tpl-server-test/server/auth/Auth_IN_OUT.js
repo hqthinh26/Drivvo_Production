@@ -1,9 +1,10 @@
 'use strict';
 const jwt = require('jsonwebtoken');
 // @ts-ignore
+
 const tokenMethod = require('../database/tokenMethod');
 module.exports = {
-
+// @ts-ignore
     extractToken: async (req, res, next) => {
         const header = req.headers['authorization'];
         if(!header) return res.status(403).send({message: 'Authorization: token is empty'})
@@ -18,6 +19,7 @@ module.exports = {
         return res.status(403).send('the token is not valid becuz the user has logout');
     },
 
+    // @ts-ignore
     emailFromToken: (token) => {
         try {
             const decoded = jwt.verify(token, process.env.SECRET_KEY2);

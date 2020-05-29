@@ -1,8 +1,12 @@
+// @ts-ignore
 const jwt = require('jsonwebtoken');
+// @ts-ignore
 const userMethod = require('../database/usersMethod');
+// @ts-ignore
 const tokenMethod = require('../database/tokenMethod');
 
 module.exports = {
+    // @ts-ignore
     register:  async (req,res) => {
         const {fullname, phone, email, pw} = req.body;
         //the method return TRUE => Can create user | False => Can't create user
@@ -13,6 +17,7 @@ module.exports = {
         return res.sendStatus(200);
     },
 
+    // @ts-ignore
     login: async (req,res) => {
 
         const {email,pw} = req.body;
@@ -32,6 +37,7 @@ module.exports = {
         }
 
     },
+    // @ts-ignore
     logout: async (req,res) => {
         const token = req.token;
         console.log('this is logout method token: ' + token);
