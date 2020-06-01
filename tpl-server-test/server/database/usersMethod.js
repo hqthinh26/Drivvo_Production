@@ -1,5 +1,6 @@
 const pool = require('./pooling');
 const bcryptjs = require('bcryptjs');
+const {uuid} = require('uuidv4');
 
 module.exports = {
     printall: async (req,res) => {
@@ -13,10 +14,12 @@ module.exports = {
         }
     },
     insert: async (fullname,phone,email,hashedPw) => {
+        
         try {
             //Step 1  
-            await pool.query(`insert into users(u_fullname, u_phone, u_email, u_pw)
-            values ($1,$2,$3,$4)`, [fullname,phone,email,hashedPw]);
+            const server_uuid = uuid();
+            await pool.query(`insert into users(u_id, u_fullname, u_phone, u_email, u_pw)
+            values ($1,$2,$3,$4,$5)`, [server_uuid,fullname,phone,email,hashedPw]);
         } catch (err) {
             console.log({message: 'insert at users failed', err});
         }

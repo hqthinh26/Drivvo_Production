@@ -18,7 +18,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
     try {
         const u_id = await usersMethod.getUID_byEmail(u_email);
-        const inputFromClient = {date, time, odometer, type_of_expense, amount, location, reason} = req.body;
+        const inputFromClient = {date, time, odometer, type_of_expense, amount, location, note} = req.body;
 
         //import new row to the table chiphi
         await chiphiMethod.insert(inputFromClient, u_id);

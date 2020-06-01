@@ -20,10 +20,8 @@ module.exports = {
             note text
         );
 
-        INSERT INTO thunhap (odometer, type_of_income, amount, note)
-        VALUES (123456.7, 'Package Handling Service', 100000, 'Good amount of quick money'),
-               (234567.8, 'AirBnB', 200000, 'Customers are really dirty and mean');
-               
+            
+    
         `, {raw: true});
     },
 

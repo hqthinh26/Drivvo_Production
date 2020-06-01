@@ -16,8 +16,10 @@ module.exports = {
         console.log({message: 'User info', fullname,phone,email,pw});
 
         try {
-            if (await userMethod.doesExist(email) === true)
-                return res.sendStatus(404);
+            if (await userMethod.doesExist(email) === true){
+                return res.status(404).send({message: 'User has alr existed'});
+            }
+                
             const salt = await bcryptJS.genSalt(10);
             const hashedPw = await bcryptJS.hash(pw,salt);
 

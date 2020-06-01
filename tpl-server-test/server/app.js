@@ -44,8 +44,7 @@ app.get('/', (req,res) => {
 //Check if this users has existed in the system or not? before the registration process
 //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
-
-
+8
 // Check if the user has exsited in the system or not? if it has, then send them to token
 //Related Folder: BasicMethod - User Method (check valid user)- Token Method (insert token)
 app.post('/login', Regis_In_Out.login);

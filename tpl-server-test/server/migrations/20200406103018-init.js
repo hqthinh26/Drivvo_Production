@@ -14,6 +14,8 @@ module.exports = {
         u_pw text NOT NULL
     );
 
+
+
       create table userRefreshTokenExt(
         ID bigserial primary key,
         refreshToken text,

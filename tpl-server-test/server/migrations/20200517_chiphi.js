@@ -17,12 +17,8 @@ module.exports = {
             type_of_expense text NOT NULL,
             amount int NOT NULL,
             location varchar(50),
-            reason text
+            note text
         );
-        
-        INSERT INTO chiphi (odometer, type_of_expense, amount, location, reason) 
-        VALUES (123456.9, 'Lunch Meal',1500000, 'Hoc Mon', 'Exhausted! must buy food'),
-               (456789.5, 'Milk tea', 2000000,'Nguyen Huu cau', 'Thirsty for milk tea');
                
         `,{raw: true});
     },
