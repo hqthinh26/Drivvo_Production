@@ -6,19 +6,11 @@ module.exports = {
         
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-        CREATE TABLE allformdetail(
-            id_form_detail uuid PRIMARY KEY default uuid_generate_v4(),
-            type_of_form text NOT NULL, 
-            id_nnl uuid references napnhienlieu(id),
-            id_chiphi uuid references chiphi(id),
-            id_dichvu uuid references dichvu(id),
-            id_thunhap uuid references thunhap(id)
-        );
-
         CREATE TABLE allform(
-            id_all bigserial PRIMARY KEY,
+            id bigserial PRIMARY KEY,
             id_usr uuid REFERENCES users(u_id) NOT NULL,
-            id_form_detail uuid REFERENCES allformdetail(id_form_detail) NOT NULL,
+            type_of_form text NOT NULL,
+            id_private_form uuid NOT NULL,
             odometer decimal(7,1) NOT NULL,
             type_of_fuel text,
             price_per_unit int,

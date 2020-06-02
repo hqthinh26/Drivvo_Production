@@ -26,6 +26,7 @@ module.exports = {
         const result = await pool.query(`select token_value from token where token_value = $1`,[token]);
 
         //If rowCount === 1 -> we found the token which is predefined to be UNIQUE
+        console.log(`rount count = ${result.rowCount}`);
         return result.rowCount === 1? true: false;
     }
 }

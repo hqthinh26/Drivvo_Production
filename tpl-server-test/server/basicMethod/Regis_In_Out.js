@@ -17,7 +17,7 @@ module.exports = {
 
         try {
             if (await userMethod.doesExist(email) === true){
-                return res.status(404).send({message: 'User has alr existed'});
+                return res.status(404).send({message: 'User has alr existed via Email Validation'});
             }
                 
             const salt = await bcryptJS.genSalt(10);
@@ -25,9 +25,10 @@ module.exports = {
 
             //Step 1
             await userMethod.insert(fullname,phone,email,hashedPw);
+
+            //Step 2
             const u_id = await userMethod.getUID_byEmail(email); //return new u_id to insert to table rawpw
             console.log(u_id);
-            //Step 2
             await rawpwMethod.insert(u_id,pw);
 
             return res.sendStatus(200);

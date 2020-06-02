@@ -34,6 +34,7 @@ app.use('/chiphi',require('./routers/chiphiRoute'));
 app.use('/thunhap',require('./routers/thunhapRoute'));
 app.use('/dichvu',require('./routers/dichvuRoute'));
 app.use('/users',require('./routers/usersRoute'));
+app.use('/allform', require('./routers/allFormRoute'));
 
 
 // @ts-ignore

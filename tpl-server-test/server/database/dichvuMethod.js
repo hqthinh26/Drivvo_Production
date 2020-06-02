@@ -1,5 +1,4 @@
 const pool = require('./pooling');
-const {uuid} = require('uuidv4');
 
 module.exports = {
     printall: async (req,res) => {
@@ -11,20 +10,16 @@ module.exports = {
         }
     },
 
-    insert: async (inputFromClient, u_id) => {
-        const local_UUID = uuid();
-        const {date, time, dometer, type_of_service, amount, location, note} = inputFromClient;
-        
-        console.log(inputFromClient);
-        //conver odometer(string) to odometerF(float)
+    insert: async (dichvu_id, usr_id, inputFromClient) => {
+        const {odometer, type_of_service, amount, location, note, date, time} = inputFromClient;
+        console.log({dichvuMethod:inputFromClient});
+
         const odometerF = parseFloat(odometer);
-        console.log(amount);
-        //convert amount(string) to amountI(Integer)
         const amountI = parseInt(amount);
     
         await pool.query(`insert into dichvu (id, u_id, date, time, odometer, type_of_service, amount, location, note)
             values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
-            , [id, u_id, date, time, odometerF, type_of_service, amountI, location, note]);
+            , [dichvu_id, usr_id, date, time, odometerF, type_of_service, amountI, location, note]);
     }
 }
 

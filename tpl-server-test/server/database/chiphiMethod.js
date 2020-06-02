@@ -1,5 +1,4 @@
 const pool = require('./pooling');
-const {uuid} = require('uuidv4');
 
 module.exports = {
     printall: async (req,res) => {
@@ -12,9 +11,8 @@ module.exports = {
         }
     },
 
-    insert: async (inputFromClient,u_id) => {
-        const local_UUID = uuid();
-        const {date, time, odometer,type_of_expense, amount, location, note} = inputFromClient;
+    insert: async (chiphi_id, usr_id, inputFromClient) => {
+        const {odometer,type_of_expense, amount, location, note, date, time, } = inputFromClient;
         const odometerF = parseFloat(odometer);
         const amountI = parseInt(amount);
         console.log(odometer);
@@ -22,7 +20,7 @@ module.exports = {
         await pool.query(`
             insert into chiphi (id, u_id, date, time, odometer, type_of_expense, amount, location, note) 
             values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-        `, [local_UUID, u_id, date, time, odometerF, type_of_expense, amountI, location, note]);
+        `, [chiphi_id, usr_id, date, time, odometerF, type_of_expense, amountI, location, note]);
         
     }
 

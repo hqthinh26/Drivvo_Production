@@ -9,7 +9,6 @@ module.exports = {
         const header = req.headers['authorization'];
         if(!header) return res.status(403).send({message: 'Authorization: token is empty'})
         const rawToken = header.split(' ')[1];
-
         //check the database to confirm that the token exists - meaning that the user has loggined
         const exist = await tokenMethod.tokenExist(rawToken);
         if (exist) {

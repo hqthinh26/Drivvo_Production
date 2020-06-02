@@ -22,10 +22,6 @@ module.exports = {
             location text
         );
         
-        insert into napnhienlieu(odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location)
-        values (123.4, 'gasoline', 20000,  50000, 2.5, true, 'dongnai'),
-               (12333.5, 'refine oil', 11500, 231000, 3.4, true, 'America');
-
         ` ,{raw: true});
     },
     down: async (queryInterface, Sequelize) => {

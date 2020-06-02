@@ -1,7 +1,9 @@
 const express = require('express');
+const {uuid} = require('uuidv4');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const napNLMethod = require('../database/napNLMethod');
 const usersMethod = require('../database/usersMethod');
+const allMethod = require('../database/allMethod');
 
 const router = express.Router();
 
@@ -16,16 +18,23 @@ router.get('/printall',napNLMethod.printall);
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     //Get email from the token
     const user_email = Auth_IN_OUT.emailFromToken(req.token);
-
-    //get u_id of the user based on their login email
-    //Napnhienlieu table has a foreign key that links to User's ID
-    const u_id = await usersMethod.getUID_byEmail(user_email);
-
-    const inputFromClient = {date, time, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location} = req.body;
-    console.log(inputFromClient);
-    
     try {
-        await napNLMethod.insert(inputFromClient,u_id);
+        //get u_id of the user based on their login email
+        //Napnhienlieu table has a foreign key that links to User's ID
+        const u_id = await usersMethod.getUID_byEmail(user_email);
+    
+        //This UUID will be used to insert into 3 tables: NNL Table, All_form_detail Table & All_form Table
+        const form_UUID = uuid();
+
+        const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location, date, time} = req.body;
+    
+        //Insert into NNL Table
+        await napNLMethod.insert(form_UUID, u_id, inputFromClient);
+
+        //Insert into All_form_detail Table
+        const type_of_form = 'napnhienlieu';
+        await allMethod._allform_Insert_napnhieulieu(u_id, type_of_form, form_UUID, inputFromClient);
+
     }  
     catch (err) {throw new Error('Failed at post add NLL');}
     
