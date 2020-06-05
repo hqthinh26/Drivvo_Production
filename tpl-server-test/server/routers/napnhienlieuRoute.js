@@ -42,4 +42,16 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
    
 });
 
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+    const {form_id, new_location} = req.body;
+
+    console.log({form_id,new_location});
+    try {
+        await napNLMethod._update(form_id,new_location);
+        res.status(200).send({message: 'successful'});
+    } catch (err) {
+        res.status(403).send({message: 'failed at update'});
+    }
+})
+
 module.exports = router;

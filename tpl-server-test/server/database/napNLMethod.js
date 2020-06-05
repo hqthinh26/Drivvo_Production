@@ -18,6 +18,16 @@ module.exports = {
         }
     },
 
+    _update: async (form_id,new_location) => {
+        console.log('im updating')
+        try {
+            await pool.query(`update napnhienlieu set location = $1 where id = $2`, [new_location, form_id]);
+        } catch (err) {
+            console.log({message: 'Failed at Update NLL', err});
+            throw new Error(err);
+        }
+    },
+
     printall: async (req,res) => {
         const result = await pool.query("select * from napnhienlieu");
         res.send(result.rows);

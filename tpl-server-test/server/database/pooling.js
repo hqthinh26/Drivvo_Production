@@ -6,6 +6,10 @@ const pool = new Pool({
     user: 'company',
     database: 'company',
     password: 'abcdef1234',
+    max: 10,
+    connectionTimeoutMillis: 0,
+    idleTimeoutMillis: 1000,
+    
 });
 
 module.exports = pool;

@@ -5,9 +5,8 @@ const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const usersMethod = require('../database/usersMethod');
 const allMethod = require('../database/allMethod');
 
-route.get('/selectall', Auth_IN_OUT.extractToken, async (req,res) => {
+route.get('/printall', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
-
     const user_email = Auth_IN_OUT.emailFromToken(token);
 
     try {
