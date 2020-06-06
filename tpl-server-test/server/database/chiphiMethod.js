@@ -18,9 +18,9 @@ module.exports = {
         console.log(odometer);
 
         await pool.query(`
-            insert into chiphi (id, u_id, date, time, odometer, type_of_expense, amount, location, note) 
+            insert into chiphi (id, u_id, odometer, type_of_expense, amount, location, note, date, time) 
             values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-        `, [chiphi_id, usr_id, date, time, odometerF, type_of_expense, amountI, location, note]);
+        `, [chiphi_id, usr_id, odometerF, type_of_expense, amountI, location, note, date, time]);
         
     }
 

@@ -3,7 +3,7 @@ const {uuid} = require('uuidv4');
 const dichvuMethod = require('../database/dichvuMethod');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const usersMethod = require('../database/usersMethod');
-const allMethod = require('../database/allMethod');
+const historyMethod = require('../database/historyMethod');
 
 route.get('/', (req,res) => {
     res.send('Hello, this is dich vu route');
@@ -24,7 +24,7 @@ route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         await dichvuMethod.insert(dichvu_UUID, usr_id, inputFromClient);
         
         //Second, Add a new row to All Form Table
-        await allMethod._all_form_insert_dichvu(usr_id, type_of_form, dichvu_UUID, inputFromClient);
+        await historyMethod._all_form_insert_dichvu(usr_id, type_of_form, dichvu_UUID, {time, date});
 
         res.sendStatus(200);
     } catch (err) {

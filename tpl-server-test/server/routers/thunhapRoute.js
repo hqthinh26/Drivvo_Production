@@ -2,7 +2,7 @@ const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const thunhapMethod = require('../database/thunhapMethod');
 const usersMethod = require('../database/usersMethod');
-const allMethod = require('../database/allMethod');
+const historyMethod = require('../database/historyMethod');
 const {uuid} = require('uuidv4');
 
 const router = express.Router();
@@ -26,7 +26,7 @@ router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
         await thunhapMethod.insert(thunhap_UUID,usr_id,inputFromUser);
 
         // Step 2: Add a new row to All Form Table 
-        await allMethod._all_form_insert_thunhap(usr_id, type_of_form, thunhap_UUID, inputFromUser)
+        await historyMethod._all_form_insert_thunhap(usr_id, type_of_form, thunhap_UUID, inputFromUser)
         
         return res.sendStatus(200);
     } catch (err) {

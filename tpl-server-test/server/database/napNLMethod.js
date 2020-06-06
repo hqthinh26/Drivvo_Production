@@ -10,9 +10,9 @@ module.exports = {
         //change text to boolean
         
         try{
-            await pool.query(`insert into napnhienlieu(id, date, time, odometer, u_id, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location)
+            await pool.query(`insert into napnhienlieu(id, u_id, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location,  date, time)
         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`
-        , [form_id, date, time, odometerF, user_id, type_of_fuel, price_per_unitI, total_costI, total_unitsF, full_tank, location]);
+        , [form_id, user_id, odometerF,  type_of_fuel, price_per_unitI, total_costI, total_unitsF, full_tank, location, date, time]);
         } catch (err) {
             throw new Error('Failed to insert NapNL');
         }
