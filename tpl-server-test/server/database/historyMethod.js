@@ -100,7 +100,4 @@ module.exports = {
         }
     },
 
-    _return_id_form_detail: () => {
-
-    }
 }

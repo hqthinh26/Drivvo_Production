@@ -13,7 +13,7 @@ route.get('/printall', dichvuMethod.printall);
 
 route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
-    const inputFromClient = {odometer, type_of_service, amount, location, note, date, time} = req.body;
+    const inputFromClient = {odometer, type_of_service, amount, location, note, time, date} = req.body;
     
     const dichvu_UUID = uuid();
     const type_of_form = 'dichvu';
@@ -30,6 +30,19 @@ route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         console.log({message: err.detail});
         return res.status(403).send({message: 'something is wrong in the /insert route', detail: err.detail});
     }
-})
+});
+
+route.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+    const inputFromClient
+    = {form_id, odometer, type_of_service, amount, location, note, time, date}
+    = req.body;
+
+    try {
+        await dichvuMethod._update(form_id, inputFromClient);
+        res.sendStatus(200);
+    } catch (err) {
+        res.status(500).send({message: 'failed at update dich vu route', err});
+    }
+});
 
 module.exports = route;

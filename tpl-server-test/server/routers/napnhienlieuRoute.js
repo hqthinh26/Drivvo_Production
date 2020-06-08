@@ -41,14 +41,15 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 });
 
 router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
-    const {form_id, new_location} = req.body;
+    const inputFromUser 
+    = {form_id, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location, time, date} 
+    = req.body;
 
-    console.log({form_id,new_location});
     try {
-        await napNLMethod._update(form_id,new_location);
-        res.status(200).send({message: 'successful'});
+        await napNLMethod._update(form_id, inputFromUser);
+        res.sendStatus(200);
     } catch (err) {
-        res.status(403).send({message: 'failed at update'});
+        res.status(500).send({message: 'failed at update nnl route', err});
     }
 })
 

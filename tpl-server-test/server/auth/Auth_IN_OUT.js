@@ -32,6 +32,7 @@ module.exports = {
         const {email} = decoded;
 
         const results = await pool.query(`select u_id from users where u_email = $1`, [email]);
-        return usr_id = results.rows[0].u_id;
+        const usr_id = results.rows[0].u_id;
+        return usr_id;
     }
 }

@@ -33,6 +33,18 @@ router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
         console.log(err.detail);
         return res.status(403).send({message: 'something is wrong in the insert route', detail: err.detail});
     }
-    
+});
+
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+    const inputFromUser 
+    = {form_id, odometer, type_of_income, amount, note, time, date}
+    = req.body;
+    console.log(inputFromUser);
+    try {
+        await thunhapMethod._update(form_id, inputFromUser);
+        res.sendStatus(200);
+    } catch (err) {
+        res.status(500).send({message: 'failed at update thu nhap route', err})
+    }
 })
 module.exports = router;

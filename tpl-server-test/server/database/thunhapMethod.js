@@ -24,7 +24,23 @@ module.exports = {
         values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_income, amountI, note]);
         } catch (err) {
             console.log({message: 'failed at thunhap insert method', err});
+        }   
+    },
+
+    _update: async (form_id, inputFromUser) => {
+        const {odometer, type_of_income, amount, note, time, date}
+        = inputFromUser;
+        const odometerF = parseFloat(odometer);
+        const amountI = parseInt(amount);
+
+        try {
+            await pool.query(`update thunhap
+            set odometer = $1, type_of_income = $2, amount = $3, note = $4, time = $5, date = $6
+            where id = $7`, [odometerF, type_of_income, amountI, note, time, date, form_id]);
+
+        } catch (err) {
+            console.log({err});
+            return err;
         }
-        
     }
 };
