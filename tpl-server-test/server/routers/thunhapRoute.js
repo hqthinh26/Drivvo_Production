@@ -15,11 +15,11 @@ router.get('/printall', thunhapMethod.printall);
 
 router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
-    const u_email = Auth_IN_OUT.emailFromToken(token);
     const inputFromUser = {odometer, type_of_income, amount, note, date, time} = req.body;
+    const thunhap_UUID = uuid();
     try {
-        const thunhap_UUID = uuid();
-        const usr_id =  await usersMethod.getUID_byEmail(u_email);
+        
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         const type_of_form = 'thunhap';
 
         // Step 1: Add a new row to Thu Nhap Table

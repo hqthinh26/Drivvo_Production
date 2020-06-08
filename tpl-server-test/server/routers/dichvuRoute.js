@@ -13,13 +13,12 @@ route.get('/printall', dichvuMethod.printall);
 
 route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
-    const u_email = Auth_IN_OUT.emailFromToken(token);
     const inputFromClient = {odometer, type_of_service, amount, location, note, date, time} = req.body;
     
     const dichvu_UUID = uuid();
     const type_of_form = 'dichvu';
     try {
-        const usr_id = await usersMethod.getUID_byEmail(u_email);
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         //Now. We add a row into dichvu table
         await dichvuMethod.insert(dichvu_UUID, usr_id, inputFromClient);
         

@@ -9,6 +9,5 @@ router.get('/', (req,res) => {
 
 router.get('/printall', usersMethod.printall);
 
-router.post('/insert', usersMethod.insert);
 
 module.exports = router;

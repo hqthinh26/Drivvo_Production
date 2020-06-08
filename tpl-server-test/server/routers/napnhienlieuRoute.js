@@ -14,12 +14,11 @@ router.get('/', (req,res) => {
 router.get('/printall',napNLMethod.printall);
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
-    //Get email from the token
-    const user_email = Auth_IN_OUT.emailFromToken(req.token);
+    
     try {
         //get u_id of the user based on their login email
         //Napnhienlieu table has a foreign key that links to User's ID
-        const usr_id = await usersMethod.getUID_byEmail(user_email);
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     
         //This UUID will be used to insert into 3 tables: NNL Table, All_form_detail Table & All_form Table
         const form_UUID = uuid();

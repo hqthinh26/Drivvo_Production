@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const userMethod = require('../database/usersMethod');
 const tokenMethod = require('../database/tokenMethod');
-const rawpwMethod = require('../database/rawpwMethod');
 
 
 const bcryptJS = require('bcryptjs');
@@ -25,11 +24,6 @@ module.exports = {
 
             //Step 1
             await userMethod.insert(fullname,phone,email,hashedPw);
-
-            //Step 2
-            const u_id = await userMethod.getUID_byEmail(email); //return new u_id to insert to table rawpw
-            console.log(u_id);
-            await rawpwMethod.insert(u_id,pw);
 
             return res.sendStatus(200);
         }

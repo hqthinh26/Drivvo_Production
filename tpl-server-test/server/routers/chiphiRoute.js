@@ -16,12 +16,12 @@ router.get('/printall', chiphiMethod.printall);
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
-    const u_email = Auth_IN_OUT.emailFromToken(token);
 
     //create chiphi_uuid with uuidv4 construction method.
     const chiphi_UUID = uuid();
     try {
-        const usr_id = await usersMethod.getUID_byEmail(u_email);
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        console.log(`usr_id = ${usr_id}`);
         const inputFromUser = {odometer, type_of_expense, amount, location, note, date, time} = req.body;
 
         //import new row to the table chiphi
@@ -38,6 +38,19 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }
 });
 
-//router.post('/insert',chiphiMethod.insert);
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+
+    const inputFromUser = {form_id ,odometer, type_of_expense, amount, location, note, time, date} = req.body;
+
+    try {
+        await chiphiMethod._update(form_id, inputFromUser);
+        res.status(200).send({message: 'successful'});
+    } catch (err) {
+        console.log({message: 'failed at update chiphi', err});
+    }
+
+
+});
+
 
 module.exports = router;

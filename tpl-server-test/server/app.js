@@ -37,7 +37,7 @@ app.use('/users',require('./routers/usersRoute'));
 app.use('/history', require('./routers/historyRoute'));
 
 
-// @ts-ignore
+
 app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })
