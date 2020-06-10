@@ -35,6 +35,7 @@ app.use('/thunhap',require('./routers/thunhapRoute'));
 app.use('/dichvu',require('./routers/dichvuRoute'));
 app.use('/users',require('./routers/usersRoute'));
 app.use('/history', require('./routers/historyRoute'));
+app.use('/quangduong', require('./routers/quangduongRoute'));
 
 
 

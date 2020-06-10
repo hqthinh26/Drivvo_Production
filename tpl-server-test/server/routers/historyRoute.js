@@ -14,7 +14,7 @@ route.get('/printall/:rows', Auth_IN_OUT.extractToken, async (req,res) => {
        console.log(`usr_id : ${usr_id}`)
 
         //historyMethod._return_all_form returns the array of all matched rows
-        const number_of_rows = req.params.rows; // 3 rows of matched results will be choosen to be presented
+        const number_of_rows = req.params.rows; // the number of  rows  will be choosen to be presented
         const result_array_all_form = await historyMethod._return_all_form(usr_id,number_of_rows);
 
         const result_array_detail=  await Promise.all(result_array_all_form.map((each_form) => historyMethod._return_detail_each_form(each_form)));

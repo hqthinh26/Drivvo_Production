@@ -4,6 +4,8 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.sequelize.query(`
         
+        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+
         CREATE TABLE route(
             id uuid PRIMARY KEY,
             usr_id uuid REFERENCES users(u_id) NOT NULL,
@@ -12,7 +14,7 @@ module.exports = {
             start_date date NOT NULL,
             initial_odometer decimal(7,1) NOT NULL,
             destination text NOT NULL,
-            end_time time NOT NULL,
+            end_time timetz NOT NULL,
             end_date date NOT NULL,
             final_odometer decimal(7,1) NOT NULL,
             value_per_km int NOT NULL,
