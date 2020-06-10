@@ -18,7 +18,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     try {
         //get u_id of the user based on their login email
         //Napnhienlieu table has a foreign key that links to User's ID
-        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(req.token);
     
         //This UUID will be used to insert into 3 tables: NNL Table, All_form_detail Table & All_form Table
         const form_UUID = uuid();
