@@ -38,6 +38,10 @@ module.exports = {
             console.log({message: 'this is quangduong',id_private_form});
             return pool.query(`select * from route where id = $1`, [id_private_form]);
         }
+        if (type_of_form === 'nhacnho') {
+            console.log('this is nhac nho');
+            return pool.query(`select * from nhacnho where id = $1`, [id_private_form]);
+        }
         throw new Error('there is an undefined type_of_form');
     },
 
@@ -108,6 +112,19 @@ module.exports = {
             , [usr_id, type_of_form, id_private_form, start_time, start_date]);
         } catch (err) {
             throw new Error('failed at insert history for quang duong');
+        }
+    },
+
+    _all_form_insert_nhacnho: async (usr_id, type_of_form, id_private_form, time_date) => {
+        const {time, date} = time_date;
+        try {
+            await pool.query(`insert into
+            history (usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
+            values ($1, $2, $3, $4, $5)`
+            , [usr_id, type_of_form, id_private_form, time, date]);
+
+        } catch (err) {
+            throw new Error({message: 'failed at all_form_insert_nhacnho history method', err});
         }
     }
 }
