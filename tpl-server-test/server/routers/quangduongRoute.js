@@ -21,26 +21,21 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
     const form_uuid = uuid();
 
-    //Take time and date at the moment the form is created
-    const time = moment().format('LTS'); //HH:MM:SS PM/AM
-    const date = moment().format('L'); // DD/MM/YYYY
-    const time2 = moment().format();
-    console.log({time_now_LTS: time, time_now_format: time2});
-
     try {
         const type_of_form = 'quangduong';
         const usr_id = await Auth_IN_OUT._usr_id_from_token(req.token);
         //Insert a new row to QuangDuong Table
         await quangduongMethod.insert(form_uuid,usr_id, inputFromUser);
 
+        console.log({start_time,start_date});
         //Insert a new row to History Table
-        await historyMethod._all_form_insert_quangduong(usr_id, type_of_form, form_uuid, {time, date});
+        await historyMethod._all_form_insert_quangduong(usr_id, type_of_form, form_uuid, {start_time, start_date});
 
         res.status(200).send('Successful')
 
     } catch (err) {
         console.log({QDuong_ERROR: err});
-        res.send(500).send(err);
+        res.status(500).send(err);
     }
 
 })

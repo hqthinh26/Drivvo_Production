@@ -5,9 +5,11 @@ module.exports = {
    
     _return_all_form: async (usr_id, number_of_rows) => {
         try {
-            const results = await pool.query(`SELECT * FROM history where usr_id = $1 
-                                              ORDER BY created_at_date, created_at_time DESC
+            const results = await pool.query(`SELECT * FROM history 
+                                            where usr_id = $1
+                                              ORDER BY created_at_date DESC
                                               LIMIT $2`, [usr_id, number_of_rows]);
+            console.table(results.rows);
             return results.rows;
         } catch (err) {
             throw new Error('Failed at return_all_form');
@@ -34,7 +36,7 @@ module.exports = {
         }
         if(type_of_form === 'quangduong') {
             console.log({message: 'this is quangduong',id_private_form});
-            return pool.query(`select * from route where id = $1,` [id_private_form]);
+            return pool.query(`select * from route where id = $1`, [id_private_form]);
         }
         throw new Error('there is an undefined type_of_form');
     },
@@ -98,15 +100,12 @@ module.exports = {
     },
 
     _all_form_insert_quangduong: async (usr_id, type_of_form, id_private_form, time_date) => {
-        const {time, date} = time_date;
-
+        const {start_time, start_date} = time_date;
         try {
-
             await pool.query(`insert into 
             history(usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
             values ($1, $2, $3, $4, $5)`
-            , [usr_id, type_of_form, id_private_form, time, date]);
-
+            , [usr_id, type_of_form, id_private_form, start_time, start_date]);
         } catch (err) {
             throw new Error('failed at insert history for quang duong');
         }
