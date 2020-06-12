@@ -7,7 +7,7 @@ module.exports = {
         try {
             const results = await pool.query(`SELECT * FROM history 
                                             where usr_id = $1
-                                              ORDER BY created_at_date DESC
+                                              ORDER BY created_at_date DESC, created_at_time DESC
                                               LIMIT $2`, [usr_id, number_of_rows]);
             console.table(results.rows);
             return results.rows;

@@ -4,6 +4,8 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.sequelize.query(`
         
+        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+        
         CREATE TABLE nhacnho (
             id uuid PRIMARY KEY,
             usr_id uuid REFERENCES users(u_id) NOT NULL,

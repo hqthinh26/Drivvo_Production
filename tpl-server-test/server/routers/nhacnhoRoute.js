@@ -24,12 +24,19 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         // Add to nhac nho table
         await nhacnhoMethod.insert(nhacnho_id, usr_id, inputFromUser);
 
-        //Add to history table
-        const time = moment().format('LTS');
+        
+        //Handling time using momentJS
+        //For an unknown reason. Moment returns the wrong time in VN as UTC +7
+        //Thus, manual editing of time must be executed 
         const date = moment().format('L');
-        const time_date = {time, date};
-        const type_of_form = 'nhacnho';
+        const get_hour_of_time = moment().hour();
+        const time_fixed = moment().set('hour',get_hour_of_time + 7).format('LTS');
+        console.log(time_fixed);
+        
 
+        //Add to history table
+        const time_date = {time: time_fixed, date};
+        const type_of_form = 'nhacnho';
         await historyMethod._all_form_insert_nhacnho(usr_id, type_of_form, nhacnho_id, time_date);
 
         res.status(200).send('Successful')
