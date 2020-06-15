@@ -12,7 +12,7 @@ module.exports = {
             id uuid PRIMARY KEY default uuid_generate_v4(),
             u_id uuid REFERENCES users (u_id),
             date date default now(),
-            time time default now(),
+            time timetz default now(),
             odometer decimal(7,1) NOT NULL,
             type_of_fuel text NOT NULL,
             price_per_unit int NOT NULL,

@@ -23,8 +23,9 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //This UUID will be used to insert into 3 tables: NNL Table, All_form_detail Table & All_form Table
         const form_UUID = uuid();
 
-        const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location, date, time} = req.body;
-    
+        const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location, date, time} 
+        = req.body;
+
         //Insert into NNL Table
         await napNLMethod.insert(form_UUID, usr_id, inputFromClient);
 
@@ -36,7 +37,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }  
     catch (err) {throw new Error('Failed at post add NLL');}
     
-    return  res.sendStatus(200);
+    return  res.status(200).send({message: 'test date successfully'});
    
 });
 
