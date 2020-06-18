@@ -47,4 +47,20 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }
 })
 
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+    const token = req.token;
+    const inputFromUser
+    = {form_id, name_of_reminder, one_time_reminder, repeat_reminder, OTR_km, OTR_date, RR_km, RR_period, note}
+    = req.body;
+
+    try {
+        const u_id = await Auth_IN_OUT._usr_id_from_token(token);
+        await nhacnhoMethod.update(u_id, inputFromUser);
+        res.sendStatus(200);
+    } catch (err) {
+        console.log({message: 'failed at nhacnho update route', err});
+        res.status(403).send({message: 'Failed at nhac nho update route', err});
+    }
+})
+
 module.exports = router;

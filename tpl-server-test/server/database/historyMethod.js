@@ -36,7 +36,7 @@ module.exports = {
         }
         if(type_of_form === 'quangduong') {
             console.log({message: 'this is quangduong',id_private_form});
-            return pool.query(`select * from route where id = $1`, [id_private_form]);
+            return pool.query(`select * from quangduong where id = $1`, [id_private_form]);
         }
         if (type_of_form === 'nhacnho') {
             console.log('this is nhac nho');

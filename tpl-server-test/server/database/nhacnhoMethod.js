@@ -40,6 +40,35 @@ module.exports = {
                 throw new Error({message: 'failed at nhac nhac method where RR === true', err});
             }
         }
+    },
 
-    }
+    update: async (u_id, inputFromUser) => {
+        const {form_id, name_of_reminder, one_time_reminder, repeat_reminder, OTR_km, OTR_date, RR_km, RR_period, note}
+        = inputFromUser;
+
+        if (one_time_reminder === repeat_reminder) return res.status(403).send({message: 'one_time_reminder & repeat_reminder can not be all true of all false'});
+        const one_time_reminderB = (one_time_reminder === 'true') ? true : false;
+        const repeat_reminderB = (repeat_reminder === 'true') ? true : false;
+
+        try {
+            if(one_time_reminderB === true) {
+                const OTR_kmI = parseInt(OTR_km);
+                await pool.query(`update nhacnho
+                                  set name_of_reminder = $1, one_time_reminder = $2 , repeat_reminder = $3, OTR_km = $4, OTR_date = $5, note = $6
+                                  where id = $7 AND usr_id = $8`, 
+                [name_of_reminder, true, false, OTR_kmI, OTR_date, note, form_id, u_id]);
+    
+            } // if one_time_reminder === false  => repeat_reminder === true
+            else {
+                const RR_kmI = parseInt(RR_km);
+                await pool.query(`update nhacnho
+                                  set name_of_reminder = $1, one_time_reminder = $2, repeat_reminder = $3, RR_km = $4, RR_period = $5, note = $6
+                                  where id = $7 AND usr_id = $8`,
+                [name_of_reminder, false, true, RR_kmI, RR_period, note, form_id, u_id]);
+            }
+        }
+        catch (err) {
+            throw new Error('failed at nhac nho method update');
+        }
+    },      
 };

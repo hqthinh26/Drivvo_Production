@@ -37,6 +37,25 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         console.log({QDuong_ERROR: err});
         res.status(500).send(err);
     }
-
 })
+
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+    const token = req.token;
+    
+
+    const inputFromUser 
+    = {form_id, orgin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer, value_per_km, total, reason}
+    = req.body;
+
+    try {
+        const u_id = await Auth_IN_OUT._usr_id_from_token(token);
+        await quangduongMethod.update(u_id, inputFromUser);
+        return res.sendStatus(200);
+
+    } catch (err) {
+        console.log({message: 'fail at quang duong route UPDATE', err})
+        return res.send(403).send({message: 'Failed at quang duong route Update',err});
+    }
+})
+
 module.exports = router;

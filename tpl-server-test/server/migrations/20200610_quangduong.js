@@ -6,7 +6,7 @@ module.exports = {
         
         ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
 
-        CREATE TABLE route(
+        CREATE TABLE quangduong(
             id uuid PRIMARY KEY,
             usr_id uuid REFERENCES users(u_id) NOT NULL,
             origin text NOT NULL,
