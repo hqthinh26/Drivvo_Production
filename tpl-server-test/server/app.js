@@ -19,6 +19,7 @@ const tokenMethod = require('./database/tokenMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
+const reportMethod = require('./database/reportMethod');
 
 //From basicMethod folder
 const Regis_In_Out = require('./basicMethod/Regis_In_Out');
@@ -38,6 +39,16 @@ app.use('/history', require('./routers/historyRoute'));
 app.use('/quangduong', require('./routers/quangduongRoute'));
 app.use('/nhacnho', require('./routers/nhacnhoRoute'));
 
+app.get('/report', Auth_IN_OUT.extractToken, async (req,res) => {
+  const token = req.token;
+
+  try {
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    return res.status(200).send({entry: await reportMethod.balance_sheet(usr_id)});
+  } catch (err) {
+    return res.send(403).send({message: 'failed at report route', err});
+  }
+});
 
 
 app.get('/', (req,res) => {
