@@ -44,9 +44,11 @@ app.get('/report', Auth_IN_OUT.extractToken, async (req,res) => {
 
   try {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    return res.status(200).send({entry: await reportMethod.balance_sheet(usr_id)});
+    const output = await reportMethod.report_NLL(usr_id);
+    res.status(200).send(output);
   } catch (err) {
-    return res.send(403).send({message: 'failed at report route', err});
+    console.log({ERR: err});
+    return res.send({message: 'failed at report route', err});
   }
 });
 
