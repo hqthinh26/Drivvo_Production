@@ -16,6 +16,7 @@ const bcryptjs = require('bcryptjs');
 
 //From database folder 
 const tokenMethod = require('./database/tokenMethod');
+const napNLMethod = require('./database/napNLMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
@@ -52,6 +53,12 @@ app.get('/report', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 });
 
+app.get('/test/nll', Auth_IN_OUT.extractToken, async (req,res) => {
+  const token = req.token;
+  const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+  const data = await napNLMethod._startDay_and_currentDay_refilling_time_precision(usr_id);
+  res.send({token, usr_id, data});
+})
 
 app.get('/', (req,res) => {
   res.send('This is drivvo project');

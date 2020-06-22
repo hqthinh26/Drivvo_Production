@@ -11,8 +11,6 @@ router.get('/', (req,res) => {
     res.status(200).send('this is nap nhien lieu route');
 })
 
-router.get('/printall',napNLMethod.printall);
-
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     
     try {
