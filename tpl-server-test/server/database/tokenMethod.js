@@ -27,6 +27,7 @@ module.exports = {
 
         //If rowCount === 1 -> we found the token which is predefined to be UNIQUE
         console.log(`rount count = ${result.rowCount}`);
+        if(result.rowCount === 0) console.log('Token doesnt exist');
         return result.rowCount === 1? true: false;
     }
 }

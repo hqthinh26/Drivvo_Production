@@ -55,6 +55,10 @@ module.exports = {
 
    _startDay_and_currentDay_refilling_time_precision: async (usr_id) => {
        try {
+
+            const query0 = await pool.query(`SELECT count(id) as number_of_rows FROM napnhienlieu`);
+            const total_entry_nll = parseInt(query0.rows[0].number_of_rows);
+
             const query1 = await pool.query(`
             SELECT min(date)as start_date, max(date) as current_date
             FROM napnhienlieu
@@ -108,6 +112,7 @@ module.exports = {
             return {
                 start_date, 
                 current_date, 
+                total_entry_nll,
                 date_part, //use to compute by_day
                 total_odometer_moved, //use to compute by_km
                 cost: {

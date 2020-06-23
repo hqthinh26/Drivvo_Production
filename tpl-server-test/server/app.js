@@ -20,7 +20,7 @@ const napNLMethod = require('./database/napNLMethod');
 
 //From auth folder
 const Auth_IN_OUT = require('./auth/Auth_IN_OUT');
-const reportMethod = require('./database/reportMethod');
+const napNLReport = require('./report/napNLReport');
 
 //From basicMethod folder
 const Regis_In_Out = require('./basicMethod/Regis_In_Out');
@@ -39,26 +39,7 @@ app.use('/users',require('./routers/usersRoute'));
 app.use('/history', require('./routers/historyRoute'));
 app.use('/quangduong', require('./routers/quangduongRoute'));
 app.use('/nhacnho', require('./routers/nhacnhoRoute'));
-
-app.get('/report', Auth_IN_OUT.extractToken, async (req,res) => {
-  const token = req.token;
-
-  try {
-    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const output = await reportMethod.report_NLL(usr_id);
-    res.status(200).send(output);
-  } catch (err) {
-    console.log({ERR: err});
-    return res.send({message: 'failed at report route', err});
-  }
-});
-
-app.get('/test/nll', Auth_IN_OUT.extractToken, async (req,res) => {
-  const token = req.token;
-  const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-  const data = await napNLMethod._startDay_and_currentDay_refilling_time_precision(usr_id);
-  res.send({token, usr_id, data});
-})
+app.use('/report', require('./routers/reportRoute'));
 
 app.get('/', (req,res) => {
   res.send('This is drivvo project');
