@@ -30,9 +30,23 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const data = await chiphiReport.print_report(usr_id);
-    return res.send({
-      entry_number: data,
-    });
+    return res.send({data});
+     
+    /*this is data: 
+    {
+      entry: {
+          entry_chiphi,
+          start_date,
+          current_date,
+          date_diff
+      },
+      statistics: {
+          total_money,
+          by_day_cost,
+          by_km,
+      } 
+  }*/
+
   } catch (err) {
     console.log({ERR: err});
     res.sendStatus(500);
