@@ -31,7 +31,7 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const data = await chiphiReport.print_report(usr_id);
     return res.send({data});
-     
+
     /*this is data: 
     {
       entry: {
@@ -42,7 +42,7 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
       },
       statistics: {
           total_money,
-          by_day_cost,
+          by_day,
           by_km,
       } 
   }*/
@@ -58,7 +58,7 @@ router.get('/thunhap', Auth_IN_OUT.extractToken, async (req, res) => {
   try {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const data = await thunhapReport.print_report(usr_id);
-    res.send({general_entry: data});
+    res.send({data});
   } catch (err) {
     console.log({Err:err});
     res.send(500);

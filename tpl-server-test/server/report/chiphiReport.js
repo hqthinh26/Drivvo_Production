@@ -25,12 +25,12 @@ get_start_day_and_current_day = async (usr_id) => {
 
 // for the statistic | total money spent on chiphi reasons
 const total_money_spent = async (usr_id) => {
-    const query1 = await pool.query(`SELECT odometer FROM chiphi WHERE u_id = $1`, [usr_id]);
+    const query1 = await pool.query(`SELECT amount FROM chiphi WHERE u_id = $1`, [usr_id]);
     const array_of_chiphi = query1.rows;
 
     let total_money = 0.0;
     for(let i=0; i < query1.rowCount; i++) {
-        total_money = total_money + parseFloat(array_of_chiphi[i].odometer);
+        total_money = total_money + array_of_chiphi[i].amount;
     }
     return {total_money};
 }
@@ -97,11 +97,11 @@ const total_km_driven = async (usr_id) => {
 
     const _2_odometers = array_of_oldest_latest_odometer.map((each_query_value) => parseFloat(each_query_value.rows[0].odometer))
 
-    const total_km_driven_value = _2_odometers[1] - _2_odometers[0];
+    const km_driven = _2_odometers[1] - _2_odometers[0];
     
     //return oldest_and_lastest_forms_of_history;
     //return array_of_oldest_latest_odometer;
-    return total_km_driven_value;
+    return {_2_odometers, km_driven};
 }
 
 
@@ -119,10 +119,10 @@ module.exports = {
         const {total_money} = await total_money_spent(usr_id);
 
         //Step 2: count the DATE DIFF between first day and last day to count BY_DAY (in history table)  CHECK
-        const by_day_cost = parseFloat((total_money / date_diff).toFixed(3));
+        const by_day = parseFloat((total_money / date_diff).toFixed(3));
 
         //Step 3: count the ODOMETER DIFF  between first day and last day to count by_km (in history table)
-        const km_driven = await total_km_driven(usr_id);
+        const {_2_odometers, km_driven} = await total_km_driven(usr_id);
 
         const by_km = parseFloat((total_money / km_driven).toFixed(3));
         return {
@@ -134,7 +134,7 @@ module.exports = {
             },
             statistics: {
                 total_money,
-                by_day_cost,
+                by_day,
                 by_km,
             }
             
