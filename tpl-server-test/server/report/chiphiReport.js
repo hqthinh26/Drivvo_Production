@@ -1,13 +1,9 @@
 const pool = require('../database/pooling');
-const { query } = require('../database/pooling');
-const { _return_detail_each_form } = require('../database/historyMethod');
-
-
 //perform computation on history table
 //Step 1: count the number of rows
 
 const count_row_in_table = async (usr_id) => {
-    const query = await pool.query(`SELECT count(id) as total from chiphi`);
+    const query = await pool.query(`SELECT count(id) as total from chiphi where u_id = $1`,[usr_id]);
     const total_row = parseInt(query.rows[0].total);
     return total_row;
 }
@@ -39,6 +35,7 @@ const total_money_spent = async (usr_id) => {
     return {total_money};
 }
 
+//to get the total_km driven by the user - regardless of what type_of_forms
 const extract_odometer_value = async (a_form_value) => {
     const {type_of_form, id_private_form} = a_form_value;
 
@@ -47,20 +44,20 @@ const extract_odometer_value = async (a_form_value) => {
         return pool.query(`select odometer from napnhienlieu where id = $1`, [id_private_form])
     }
     if(type_of_form === 'chiphi') {
-
+        console.log('this is chi phi');
+        return pool.query(`select odometer from chiphi where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'dichvu') {
-
+        console.log('this is dich vu');
+        return pool.query(`select odometer from chiphi where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'thunhap') {
         console.log('this is thu nhap')
         return pool.query(`select odometer from thunhap where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'quangduong') {
-
-    }
-    if(type_of_form === 'nhacnho') {
-
+        console.log('this is quang duong');
+        return pool.query(`select final_odometer from quangduong where id = $1`, [id_private_form]);
     }
     return console.log('wrong type_of_form in extract_odometer_value')
 

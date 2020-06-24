@@ -1,7 +1,9 @@
 const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
+
 const napNLReport = require('../report/napNLReport');
 const chiphiReport = require('../report/chiphiReport');
+const thunhapReport = require('../report/thunhapReport');
 
 const router = express.Router();
 
@@ -28,12 +30,25 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const data = await chiphiReport.print_report(usr_id);
-    return res.send({data});
+    return res.send({
+      entry_number: data,
+    });
   } catch (err) {
     console.log({ERR: err});
     res.sendStatus(500);
   }
-  
+})
+
+router.get('/thunhap', Auth_IN_OUT.extractToken, async (req, res) => {
+  const token = req.token;
+  try {
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const data = await thunhapReport.print_report(usr_id);
+    res.send({general_entry: data});
+  } catch (err) {
+    console.log({Err:err});
+    res.send(500);
+  }
 })
 
 module.exports = router;
