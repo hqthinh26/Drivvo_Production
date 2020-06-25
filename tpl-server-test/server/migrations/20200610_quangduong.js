@@ -21,7 +21,7 @@ module.exports = {
             total int NOT NULL,
             reason text,
             CONSTRAINT valid_end_date CHECK (end_date >= start_date),
-            CONSTRAINT valid_final_odometer CHECK (final_odometer >= initial_odometer),
+            CONSTRAINT valid_final_odometer CHECK (final_odometer >= initial_odometer)
         );
         
         `, {raw: true});
