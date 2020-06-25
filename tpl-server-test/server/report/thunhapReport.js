@@ -31,7 +31,7 @@ const get_odometer_value =  (one_history_form) => {
     if(type_of_form === 'thunhap')
         return pool.query(`select odometer from thunhap where id = $1`, [id_private_form]);
     if(type_of_form === 'quangduong')
-        return pool.query(`select final_odometer from quangduong where id = $1`, [id_private_form]);
+        return pool.query(`select final_odometer as odometer from quangduong where id = $1`, [id_private_form]);
 }
 
 const total_money_spent = async (usr_id) => {

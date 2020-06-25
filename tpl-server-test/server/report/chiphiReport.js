@@ -57,7 +57,7 @@ const extract_odometer_value = async (a_form_value) => {
     }
     if(type_of_form === 'quangduong') {
         console.log('this is quang duong');
-        return pool.query(`select final_odometer from quangduong where id = $1`, [id_private_form]);
+        return pool.query(`select final_odometer as odometer from quangduong where id = $1`, [id_private_form]);
     }
     return console.log('wrong type_of_form in extract_odometer_value')
 
@@ -122,7 +122,7 @@ module.exports = {
         const by_day = parseFloat((total_money / date_diff).toFixed(3));
 
         //Step 3: count the ODOMETER DIFF  between first day and last day to count by_km (in history table)
-        const {_2_odometers, km_driven} = await total_km_driven(usr_id);
+        const {km_driven} = await total_km_driven(usr_id);
 
         const by_km = parseFloat((total_money / km_driven).toFixed(3));
         return {

@@ -29,7 +29,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
         console.log({start_time,start_date});
         //Insert a new row to History Table
-        await historyMethod._all_form_insert_quangduong(usr_id, type_of_form, form_uuid, {start_time, start_date});
+        await historyMethod._all_form_insert_quangduong(usr_id, type_of_form, form_uuid, {end_time, end_date});
 
         res.status(200).send('Successful')
 

@@ -104,12 +104,12 @@ module.exports = {
     },
 
     _all_form_insert_quangduong: async (usr_id, type_of_form, id_private_form, time_date) => {
-        const {start_time, start_date} = time_date;
+        const {end_time, end_date} = time_date;
         try {
             await pool.query(`insert into 
             history(usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
             values ($1, $2, $3, $4, $5)`
-            , [usr_id, type_of_form, id_private_form, start_time, start_date]);
+            , [usr_id, type_of_form, id_private_form, end_time, end_date]);
         } catch (err) {
             throw new Error('failed at insert history for quang duong');
         }
