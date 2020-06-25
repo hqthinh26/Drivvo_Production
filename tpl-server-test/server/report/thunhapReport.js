@@ -112,7 +112,7 @@ module.exports = {
                     current_date,
                     date_diff,
                 },
-                statistic: {
+                statistics: {
                     total_money: total_money_spentX,
                     by_day,
                     by_km

@@ -10,7 +10,7 @@ const entryDay_and_currentDay = async (usr_id) => {
     const date_diff_query = await pool.query(`SELECT DATE_PART('day', $1::timestamp - $2::timestamp)`, [current_date_general, start_date_general]);
     const date_diff_general = date_diff_query.rows[0].date_part;
 
-    const query2 = await pool.query(`select count(id) as total_entry from history`);
+    const query2 = await pool.query(`select count(id) as total_entry from history where usr_id = $1`, [usr_id]);
     const total_entry = parseInt(query2.rows[0].total_entry);
 
     return {total_entry, start_date_general, current_date_general, date_diff_general};
