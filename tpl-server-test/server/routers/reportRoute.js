@@ -5,8 +5,24 @@ const napNLReport = require('../report/napNLReport');
 const chiphiReport = require('../report/chiphiReport');
 const thunhapReport = require('../report/thunhapReport');
 const dichvuReport = require('../report/dichvuReport');
+const calculationNLL = require('../report/calculationNLL');
 
 const router = express.Router();
+
+
+router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const result_calculation = await calculationNLL.average_nll_each_form(usr_id);
+    res.status(200).send(result_calculation);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
+
 
 router.get('/', (req,res) => {
     res.send('Hello world');
@@ -87,5 +103,7 @@ router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
     console.log({Err: err});
   }
 }) 
+
+
 
 module.exports = router;

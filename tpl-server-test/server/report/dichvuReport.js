@@ -46,25 +46,31 @@ const get_individual_odometer = async (history_form) => {
 };
 
 const total_odometer_driven = async (usr_id, start_date, current_date) => {
-    const query1 = await pool.query(`
-    (SELECT type_of_form, id_private_form, created_at_date
-    FROM history
-    WHERE (usr_id = $1) AND (created_at_date = $2) AND (created_at_time = ( SELECT min(created_at_time)
-                                                                            FROM history 
-                                                                            WHERE usr_id = $1 AND created_at_date = $2  )))
-    UNION
-    (SELECT type_of_form, id_private_form, created_at_date
-    FROM history
-    WHERE (usr_id = $1) AND (created_at_date = $3) AND (created_at_time = ( SELECT max(created_at_time)
-                                                                            FROM history
-                                                                            WHERE usr_id = $1 AND created_at_date = $3  )))
-    ORDER BY created_at_date ASC
-    `, [usr_id, start_date, current_date]);
-    
-    const _2_odometers_promise = await Promise.all(query1.rows.map((each_row) => get_individual_odometer(each_row)));
-    const _2_odometers = _2_odometers_promise.map((each_row) => parseFloat(each_row.rows[0].odometer));
-    const total_odometer_diff = _2_odometers[1] - _2_odometers[0];
-    return total_odometer_diff;
+    try {
+        const query1 = await pool.query(`
+        (SELECT type_of_form, id_private_form, created_at_date
+        FROM history
+        WHERE (usr_id = $1) AND (created_at_date = $2) AND (created_at_time = ( SELECT min(created_at_time)
+                                                                                FROM history 
+                                                                                WHERE usr_id = $1 AND created_at_date = $2  )))
+        UNION
+        (SELECT type_of_form, id_private_form, created_at_date
+        FROM history
+        WHERE (usr_id = $1) AND (created_at_date = $3) AND (created_at_time = ( SELECT max(created_at_time)
+                                                                                FROM history
+                                                                                WHERE usr_id = $1 AND created_at_date = $3  )))
+        ORDER BY created_at_date ASC
+        `, [usr_id, start_date, current_date]);
+
+        if(query1.rowCount !== 2) throw new Error(`Return more than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in DichVu`);
+        
+        const _2_odometers_promise = await Promise.all(query1.rows.map((each_row) => get_individual_odometer(each_row)));
+        const _2_odometers = _2_odometers_promise.map((each_row) => parseFloat(each_row.rows[0].odometer));
+        const total_odometer_diff = _2_odometers[1] - _2_odometers[0];
+        return total_odometer_diff;
+    } catch (err) {
+        throw new Error(err);
+    }
 }
 
 

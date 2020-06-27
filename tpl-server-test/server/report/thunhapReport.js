@@ -50,21 +50,25 @@ const total_km_driven = async (usr_id, start_date, current_date) =>  {
         const query2 = await pool.query(`
         (SELECT type_of_form, id_private_form, created_at_date
         FROM history
-        WHERE (usr_id = $1) AND (created_at_date = $2) AND (created_at_time = (SELECT min(created_at_time)
-                                                                                FROM history
-                                                                                WHERE (usr_id = $1) AND (created_at_date = $2)))
+        WHERE           (usr_id = $1) 
+                    AND (created_at_date = $2) 
+                    AND (created_at_time = (SELECT min(created_at_time)
+                                            FROM history
+                                            WHERE (usr_id = $1) AND (created_at_date = $2)))
         )
         UNION
         (SELECT type_of_form, id_private_form, created_at_date
         FROM history
-        WHERE (usr_id = $1) AND (created_at_date = $3) AND (created_at_time = (SELECT max(created_at_time) 
-                                                                                FROM history 
-                                                                                WHERE (usr_id = $1) AND (created_at_date = $3)))
+        WHERE           (usr_id = $1) 
+                    AND (created_at_date = $3) 
+                    AND (created_at_time = (SELECT max(created_at_time) 
+                                            FROM history 
+                                            WHERE (usr_id = $1) AND (created_at_date = $3)))
         )
         ORDER BY created_at_date ASC
         `, [usr_id, start_date, current_date]);
 
-        if(query2.rowCount !== 2) throw new Error('Return more than 2 rows in oldest_lastest forms for odometer diff');
+        if(query2.rowCount !== 2) throw new Error(`Return more than 2 rows (${query2.rowCount} rows) in oldest_lastest forms for odometer diff in DichVu`);
         
         const oldest_latest_time_date_history_forms = query2.rows;
 
@@ -75,7 +79,6 @@ const total_km_driven = async (usr_id, start_date, current_date) =>  {
         )   
         const _2_value_odometers = _2_value_odometer_promises.map((each_promise_value) => each_promise_value.rows[0].odometer);
         const km_driven = parseFloat(_2_value_odometers[1]) - parseFloat(_2_value_odometers[0]);
-        console.log(typeof(km_driven));
         return km_driven;
         
     } catch (err) {
@@ -94,16 +97,6 @@ module.exports = {
             const total_money_spentX = await total_money_spent(usr_id);
             const by_km = parseFloat(((total_money_spentX / km_driven).toFixed(3)));
             const by_day = parseFloat(((total_money_spentX / date_diff).toFixed(3)));
-            /*return {
-                entry_number,
-                start_date,
-                current_date,
-                date_diff,
-                km_driven,
-                total_money_spentX,
-                by_km,
-                by_day
-            };*/
 
             return {
                 entry: {
