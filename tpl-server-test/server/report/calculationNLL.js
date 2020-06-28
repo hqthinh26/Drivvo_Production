@@ -16,13 +16,14 @@ const return_n_rows_nll = async (usr_id) => {
     }
 }
 
-const loop_throght_map = (current_value, index, arr) => {
+// Parameter of a map method in Count_average_km_l
+const loop_through_map = (current_value, index, arr) => {
     if(index != (arr.length -1)) {
         const odometer_diff = arr[index + 1].odometer - arr[index].odometer;
         const average_km_l = odometer_diff / current_value.total_units;
         return {
             id: current_value.id, 
-            average_km_l, 
+            average_km_l: parseFloat(average_km_l.toFixed(3)), 
         };
     }
     return ({
@@ -32,19 +33,17 @@ const loop_throght_map = (current_value, index, arr) => {
 }
 
 const count_average_km_l = (array_of_nll_rows) => {
-    const average_array = array_of_nll_rows.map(loop_throght_map);
+ 
+    const average_array = array_of_nll_rows.map(loop_through_map);
+    return average_array;
 
-    //each_value = {id, average_km}
-    const final = average_array.map((each_value) => ({
-        ...each_value,
-        average_km_l: parseFloat(each_value.average_km_l.toFixed(3)),
-    }));
-    return final;
 }
 
 module.exports = {
     average_nll_each_form: async (usr_id) => {
         const {number, all_rows} = await return_n_rows_nll(usr_id);
+
+        //an array of 10 nll rows
         const array_of_nll_rows2 = all_rows.map(
             (each_one) => ({
                 ...each_one, 
@@ -52,11 +51,12 @@ module.exports = {
                 odometer: parseFloat(each_one.odometer),
             })
         );
-        const average = count_average_km_l(array_of_nll_rows2);
+        
+        const average_array = count_average_km_l(array_of_nll_rows2);
 
         //Fuel Efficiency
 
-        const array_of_average_only = average.map((each_value) => each_value.average_km_l);
+        const array_of_average_only = average_array.map((each_value) => each_value.average_km_l);
         
         const descending = array_of_average_only.sort(function(a, b){return b-a});
         const max = descending[0];
@@ -66,7 +66,7 @@ module.exports = {
         
         const last = array_of_average_only[(array_of_average_only.length) -2];
         
-        return {number_of_rows: number, array_of_nll_rows2, average, last, max, min};
+        return {number_of_rows: number, average_array, last, max, min};
     },
 }
 

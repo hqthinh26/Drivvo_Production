@@ -1,5 +1,10 @@
 const pool = require('../database/pooling')
+
+//From database folder
 const napNLMethod = require('../database/napNLMethod');
+
+//From report folder
+const napNLReport = require('./fuel_efficiency');
 
 const entryDay_and_currentDay = async (usr_id) => {
     const entry_date_query = await pool.query(`SELECT min(created_at_date) as start_date_general, max(created_at_date) as current_date_general 
@@ -60,10 +65,17 @@ module.exports = {
 
 
            const related_values_nll = await napNLMethod._startDay_and_currentDay_refilling_time_precision(usr_id);
+
+           const {average_array, latest, min, max} = await napNLReport.print_fuel_efficiency(usr_id);
  
             return {
                     Entry: {total_entry ,start_date_general, current_date_general, date_diff_general},
                     related_values_nll,
+                    fuel_efficiency: {
+                        latest,
+                        min,
+                        max
+                    }
                     
             };
         } catch (err) {

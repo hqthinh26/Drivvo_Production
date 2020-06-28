@@ -7,6 +7,8 @@ const thunhapReport = require('../report/thunhapReport');
 const dichvuReport = require('../report/dichvuReport');
 const calculationNLL = require('../report/calculationNLL');
 
+const fuel_efficiency = require('../report/fuel_efficiency');
+
 const router = express.Router();
 
 
@@ -22,6 +24,18 @@ router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 })
 
+router.get('/fuel_efficiency', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const data = await fuel_efficiency.print_fuel_efficiency(usr_id);
+    res.status(200).send({data});
+
+  } catch (err) {
+    console.log({Err: err});
+    res.sendStatus(500);
+  }
+})
 
 
 router.get('/', (req,res) => {
