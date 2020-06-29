@@ -149,17 +149,17 @@ module.exports = {
         },
         Balance: {
           total_balance,
-          by_day: total_balance / date_diff,
+          by_day: parseFloat((total_balance / date_diff).toFixed(3)),
           by_km: parseFloat((total_balance / km_driven).toFixed(3)),
         },
         Cost: {
           total_cost,
-          by_day: total_cost / date_diff,
+          by_day: parseFloat((total_cost / date_diff).toFixed(3)),
           by_km: parseFloat((total_cost / km_driven).toFixed(3)),
         },
         Income: {
           total_income,
-          by_day: total_income / date_diff,
+          by_day: parseFloat((total_income / date_diff).toFixed(3)),
           by_km: parseFloat((total_income / km_driven).toFixed(3)),
         },
         Distance: {
