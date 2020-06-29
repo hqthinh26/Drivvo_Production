@@ -118,9 +118,8 @@ const total_income_all_form = async (usr_id) => {
   if(query1.rowCount === 0) {total_income = 0} else {
     const income_value_array = query1.rows.map((each_row) => each_row.total_cost);
     total_income = income_value_array.reduce((total, value) => total + value);
-    return total_income;
   }
-
+  return total_income;
 }
 
 module.exports = {
