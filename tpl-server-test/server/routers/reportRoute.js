@@ -6,41 +6,31 @@ const chiphiReport = require('../report/chiphiReport');
 const thunhapReport = require('../report/thunhapReport');
 const dichvuReport = require('../report/dichvuReport');
 const calculationNLL = require('../report/calculationNLL');
+const generalReport = require('../report/generalReport');
 
 const fuel_efficiency = require('../report/fuel_efficiency');
 
 const router = express.Router();
 
 
-router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
-  try {
-    const token = req.token;
-    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const result_calculation = await calculationNLL.average_nll_each_form(usr_id);
-    res.status(200).send(result_calculation);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-})
-
-router.get('/fuel_efficiency', Auth_IN_OUT.extractToken, async (req,res) => {
-  try {
-    const token = req.token;
-    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const data = await fuel_efficiency.print_fuel_efficiency(usr_id);
-    res.status(200).send({data});
-
-  } catch (err) {
-    console.log({Err: err});
-    res.sendStatus(500);
-  }
-})
-
-
 router.get('/', (req,res) => {
     res.send('Hello world');
 })
+
+router.get('/general', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+
+    // This is the core function of the API  
+    const general_report = await generalReport.print_general(usr_id);
+
+    res.status(200).send({general_report});
+  } catch (err) { 
+    console.log({ERR:err});
+    res.sendStatus(500);
+  }
+});
 
 router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
@@ -48,6 +38,7 @@ router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
       const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
       const output = await napNLReport.report_NLL(usr_id);
       res.status(200).send(output);
+
     } catch (err) {
       console.log({ERR: err});
       return res.send({message: 'failed at report route', err});
@@ -62,21 +53,6 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const {entry, statistics} = await chiphiReport.print_report(usr_id);
     return res.send({entry, statistics});
-
-    /*this is data: 
-    {
-      entry: {
-          entry_chiphi,
-          start_date,
-          current_date,
-          date_diff
-      },
-      statistics: {
-          total_money,
-          by_day,
-          by_km,
-      } 
-  }*/
 
   } catch (err) {
     console.log({ERR: err});
@@ -118,6 +94,31 @@ router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 }) 
 
+
+router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const result_calculation = await calculationNLL.average_nll_each_form(usr_id);
+    res.status(200).send(result_calculation);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
+router.get('/fuel_efficiency', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const data = await fuel_efficiency.print_fuel_efficiency(usr_id);
+    res.status(200).send({data});
+
+  } catch (err) {
+    console.log({Err: err});
+    res.sendStatus(500);
+  }
+})
 
 
 module.exports = router;
