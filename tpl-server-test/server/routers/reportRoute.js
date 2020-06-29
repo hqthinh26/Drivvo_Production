@@ -5,7 +5,6 @@ const napNLReport = require('../report/napNLReport');
 const chiphiReport = require('../report/chiphiReport');
 const thunhapReport = require('../report/thunhapReport');
 const dichvuReport = require('../report/dichvuReport');
-const calculationNLL = require('../report/calculationNLL');
 const generalReport = require('../report/generalReport');
 
 const fuel_efficiency = require('../report/fuel_efficiency');
