@@ -10,14 +10,16 @@ module.exports = {
         const value_per_kmI = parseInt(value_per_km);
         const totalI = parseInt(total);
 
+        // reason is INT8-typed value => converting FROM STRING to BIGINT
+        const reasonBI = BigInt(reason);
         try {
 
             await pool.query(`insert into quangduong(id, usr_id, origin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer, value_per_km, total, reason)
             values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
-            , [quangduong_id, usr_id, origin, start_time, start_date, initial_odometerF, destination, end_time, end_date, final_odometerF, value_per_km, totalI, reason]);
+            , [quangduong_id, usr_id, origin, start_time, start_date, initial_odometerF, destination, end_time, end_date, final_odometerF, value_per_kmI, totalI, reasonBI]);
 
         } catch (err) {
-            console.log('failed at Quang Duong Method', err); // If an error shows up, i will not be returned on this catch anyway
+            throw new Error({message: 'failed at quangduongMethod', ERR: err});
         }
     },
 

@@ -14,10 +14,12 @@ module.exports = {
             date date NOT NULL default now(),
             time timetz NOT NULL default now(),
             odometer decimal(7,1) NOT NULL,
-            type_of_service text NOT NULL,
+            type_of_service int8 NOT NULL,
             amount int NOT NULL,
-            location text NOT NULL,
-            note text
+            place int8 ,
+            note text,
+            FOREIGN KEY (type_of_service) REFERENCES loaidichvu (ID),
+            FOREIGN KEY (place) REFERENCES diadiem (ID)
         );
         
         `, {raw: true});

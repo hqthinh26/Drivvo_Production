@@ -10,14 +10,19 @@ module.exports = {
 
         CREATE TABLE chiphi (
             id uuid PRIMARY KEY default uuid_generate_v4(),
-            u_id uuid REFERENCES users (u_id),
+            u_id uuid,
             date date NOT NULL default now(),
             time timetz NOT NULL default now(),
-            odometer decimal(7,1),
-            type_of_expense text NOT NULL,
+            odometer decimal(7,1) NOT NULL,
+            type_of_expense int8 NOT NULL,
             amount int NOT NULL,
-            location varchar(50),
-            note text
+            place int8,
+            reason int8,
+            note text,
+            FOREIGN KEY (u_id) REFERENCES users (u_id),
+            FOREIGN KEY (type_of_expense) REFERENCES loaichiphi (ID),
+            FOREIGN KEY (place) REFERENCES diadiem (ID),
+            FOREIGN KEY (reason) REFERENCES lydo (ID)
         );
                
         `,{raw: true});

@@ -31,11 +31,11 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //Insert a new row to History Table
         await historyMethod._all_form_insert_quangduong(usr_id, type_of_form, form_uuid, {end_time, end_date});
 
-        res.status(200).send('Successful')
+        res.sendStatus(200);
 
     } catch (err) {
-        console.log({QDuong_ERROR: err});
-        res.status(500).send(err);
+        console.log(err);
+        res.sendStatus(500);
     }
 })
 

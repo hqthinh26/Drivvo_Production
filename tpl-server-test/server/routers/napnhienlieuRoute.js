@@ -13,6 +13,10 @@ router.get('/', (req,res) => {
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     
+    // IMPORTANT: Below are the list of foreign-key values
+    // => the value must alr exist in the database
+    // They are: type_of_fuel, gas_station,  reason
+    
     try {
         //get u_id of the user based on their login email
         //Napnhienlieu table has a foreign key that links to User's ID
@@ -21,7 +25,9 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //This UUID will be used to insert into 3 tables: NNL Table, All_form_detail Table & All_form Table
         const form_UUID = uuid();
 
-        const inputFromClient = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, location, date, time} 
+        // location is renamed to 'gas_station'
+        const inputFromClient 
+        = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, reason, date, time} 
         = req.body;
 
         //Insert into NNL Table

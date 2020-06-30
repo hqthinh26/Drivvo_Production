@@ -15,14 +15,20 @@ router.get('/', (req,res) => {
 router.get('/printall', chiphiMethod.printall);
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
-    const token = req.token;
+   
+    //IMPORTANT: Below is the list of FOREIGN-KEY values 
+    //=> so that these values must alr exist in the database 
+    // They are: type_of_expense, place, reason
 
     //create chiphi_uuid with uuidv4 construction method.
     const chiphi_UUID = uuid();
     try {
+        const token = req.token;
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         console.log(`usr_id = ${usr_id}`);
-        const inputFromUser = {odometer, type_of_expense, amount, location, note, date, time} = req.body;
+        const inputFromUser 
+        = {odometer, type_of_expense, amount, place, note, reason, date, time}
+        = req.body;
 
         //import new row to the table chiphi
         await chiphiMethod.insert(chiphi_UUID, usr_id, inputFromUser);
@@ -33,8 +39,8 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         return res.sendStatus(200);
     }
     catch (err) {
-        console.log(err.detail);
-        return res.status(403).send({message: 'something is wrong in the insert route', detail: err.detail});
+        console.log(err);
+        return res.sendStatus(500);
     }
 });
 

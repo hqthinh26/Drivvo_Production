@@ -12,8 +12,13 @@ route.get('/', (req,res) => {
 route.get('/printall', dichvuMethod.printall);
 
 route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
+
+    //IMPORTANT: below is the list of foreign key values 
+    // So that these values must alr exist in the database
+    // They are: type_of_service, place
+    
     const token = req.token;
-    const inputFromClient = {odometer, type_of_service, amount, location, note, time, date} = req.body;
+    const inputFromClient = {odometer, type_of_service, amount, place, note, time, date} = req.body;
     
     const dichvu_UUID = uuid();
     const type_of_form = 'dichvu';
@@ -27,8 +32,8 @@ route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
         res.sendStatus(200);
     } catch (err) {
-        console.log({message: err.detail});
-        return res.status(403).send({message: 'something is wrong in the /insert route', detail: err.detail});
+        console.log({ERR: err});
+        return res.sendStatus(500);
     }
 });
 
