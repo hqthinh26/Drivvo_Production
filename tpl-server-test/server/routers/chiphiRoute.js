@@ -1,7 +1,6 @@
 const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const chiphiMethod = require('../database/chiphiMethod');
-const usersMethod = require('../database/usersMethod');
 const historyMethod = require('../database/historyMethod');
 const {uuid} = require('uuidv4');
 

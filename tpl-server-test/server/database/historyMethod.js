@@ -56,7 +56,7 @@ module.exports = {
             values ($1,$2,$3,$4,$5)`, 
             [usr_id, type_of_form, id_private_form, time, date]);
         } catch (err) {
-            console.log({message: 'failed at all_form_insert NLL', err});
+            throw new Error({message: 'failed at all_form_insert NLL', err});
         }
     },
    

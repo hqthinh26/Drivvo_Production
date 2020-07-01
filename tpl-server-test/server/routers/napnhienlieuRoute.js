@@ -2,7 +2,6 @@ const express = require('express');
 const {uuid} = require('uuidv4');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const napNLMethod = require('../database/napNLMethod');
-const usersMethod = require('../database/usersMethod');
 const historyMethod = require('../database/historyMethod');
 
 const router = express.Router();
@@ -37,11 +36,14 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const type_of_form = 'napnhienlieu';
         console.log('current:' + form_UUID);
         await historyMethod._allform_Insert_napnhieulieu(usr_id, type_of_form, form_UUID, {time,date});
-
+        return res.sendStatus(200);
     }  
-    catch (err) {throw new Error('Failed at post add NLL');}
+    catch (err) {
+        console.log(err);
+        return  res.sendStatus(500);
+    }
     
-    return  res.status(200).send({message: 'test date successfully'});
+    
    
 });
 

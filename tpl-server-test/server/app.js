@@ -41,6 +41,15 @@ app.use('/quangduong', require('./routers/quangduongRoute'));
 app.use('/nhacnho', require('./routers/nhacnhoRoute'));
 app.use('/report', require('./routers/reportRoute'));
 
+//Additional Tables | Mini tables
+app.use('/loainhienlieu', require('./additional_routers/loainhienlieuRoute'));
+app.use('/tramxang', require('./additional_routers/tramxangRoute'));
+app.use('/diadiem', require('./additional_routers/diadiemRoute'));
+app.use('/loaidichvu', require('./additional_routers/loaidichvuRoute'));
+app.use('/loaichiphi', require('./additional_routers/loaichiphiRoute'));
+app.use('/loaithunhap', require('./additional_routers/loaithunhapRoute'));
+app.use('/lydo', require('./additional_routers/lydoRoute'));
+
 app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })

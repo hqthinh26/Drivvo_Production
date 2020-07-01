@@ -2,7 +2,6 @@ const express = require('express');
 
 const route = express.Router();
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
-const usersMethod = require('../database/usersMethod');
 const historyMethod = require('../database/historyMethod');
 
 route.get('/printall/:rows', Auth_IN_OUT.extractToken, async (req,res) => {

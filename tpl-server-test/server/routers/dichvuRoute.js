@@ -2,7 +2,6 @@ const route = require('express').Router();
 const {uuid} = require('uuidv4');
 const dichvuMethod = require('../database/dichvuMethod');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
-const usersMethod = require('../database/usersMethod');
 const historyMethod = require('../database/historyMethod');
 
 route.get('/', (req,res) => {
