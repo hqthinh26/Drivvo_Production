@@ -24,9 +24,9 @@ module.exports = {
         const type_of_incomeBI = BigInt(type_of_income);
         try {
             await pool.query(`insert into thunhap(id, u_id, date, time, odometer, type_of_income, amount, note) 
-        values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_incomeBI, amountI, note]);
+            values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_incomeBI, amountI, note]);
         } catch (err) {
-            console.log({message: 'failed at thunhap insert method', ERR: err});
+            throw new Error({message: 'failed at insert thunhapMethod', ERR: err});
         }   
     },
 

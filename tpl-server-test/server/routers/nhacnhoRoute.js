@@ -39,11 +39,11 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const type_of_form = 'nhacnho';
         await historyMethod._all_form_insert_nhacnho(usr_id, type_of_form, nhacnho_id, time_date);
 
-        res.status(200).send('Successful')
+        res.sendStatus(200);
 
     } catch (err) {
-        console.log({message: 'failed at nhac nho route insert', err});
-        res.status(500).send('fail');
+        console.log(err);
+        res.status(500);
     }
 })
 

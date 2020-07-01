@@ -40,11 +40,8 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }  
     catch (err) {
         console.log(err);
-        return  res.sendStatus(500);
+        return res.sendStatus(500);
     }
-    
-    
-   
 });
 
 router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {

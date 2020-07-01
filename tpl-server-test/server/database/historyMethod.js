@@ -42,7 +42,7 @@ module.exports = {
             console.log('this is nhac nho');
             return pool.query(`select * from nhacnho where id = $1`, [id_private_form]);
         }
-        throw new Error('there is an undefined type_of_form');
+        throw new Error({message: 'there is an undefined type_of_form'});
     },
 
     _allform_Insert_napnhieulieu: async (usr_id, type_of_form, id_private_form, time_date) => {
@@ -56,7 +56,7 @@ module.exports = {
             values ($1,$2,$3,$4,$5)`, 
             [usr_id, type_of_form, id_private_form, time, date]);
         } catch (err) {
-            throw new Error({message: 'failed at all_form_insert NLL', err});
+            throw new Error({message: 'failed at all_form_insert NLL', ERR:err});
         }
     },
    
@@ -70,7 +70,7 @@ module.exports = {
             , [usr_id, type_of_form, id_private_form, time, date]);
 
         } catch (err) {
-            console.log({message: 'failed at _all_form_insert_chiphi', err});
+            console.log({message: 'failed at _all_form_insert_chiphi', ERR:err});
         }
     },
 
@@ -84,7 +84,7 @@ module.exports = {
             values ($1,$2,$3,$4,$5)`, [usr_id, type_of_form, id_private_form, time, date]);
 
         } catch (err) {
-            throw new Error({message: 'failed at All_Form_Dich_Vu', err});
+            throw new Error({message: 'failed at All_Form_Dich_Vu', ERR:err});
         }
     },
 
@@ -99,7 +99,7 @@ module.exports = {
             ,[usr_id , type_of_form, id_private_form, time, date]);
 
         } catch (err) {
-            console.log({message: 'Failed in all_form_insert_ThuNhap', err});
+            throw new Error({message: 'Failed at all_form_insert_thunhap in history method', ERR: err});
         }
     },
 
@@ -111,7 +111,7 @@ module.exports = {
             values ($1, $2, $3, $4, $5)`
             , [usr_id, type_of_form, id_private_form, end_time, end_date]);
         } catch (err) {
-            throw new Error('failed at insert history for quang duong');
+            throw new Error({message:'failed at all_form_insert_quangduong in historyMethod',ERR: err});
         }
     },
 
@@ -124,7 +124,7 @@ module.exports = {
             , [usr_id, type_of_form, id_private_form, time, date]);
 
         } catch (err) {
-            throw new Error({message: 'failed at all_form_insert_nhacnho history method', err});
+            throw new Error({message: 'failed at all_form_insert_nhacnho history method', Err:err});
         }
     }
 }

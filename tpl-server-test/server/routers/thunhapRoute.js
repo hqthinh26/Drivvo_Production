@@ -34,7 +34,7 @@ router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
         
         return res.sendStatus(200);
     } catch (err) {
-        console.log({ERR: err});
+        console.log(err);
         return res.sendStatus(500);
     }
 });
