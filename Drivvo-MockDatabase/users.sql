@@ -1,0 +1,1 @@
+INSERT INTO "users"("u_id", "u_fullname", "u_phone", "u_email", "u_pw") VALUES ('17cd4db8-1ff8-48b7-b6cf-0b1ad13148bf', 'huynh quoc thinh', '0967897422', 'quocthinh@gmail.com', '$2a$10$YvN6G0vik0Yx1enSl4P3COrNqZmiluYzIzusGgiC8x.7N32USzKIi');

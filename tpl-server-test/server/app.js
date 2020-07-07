@@ -54,6 +54,22 @@ app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })
 
+
+// For experiment
+const dichvuChart = require('./charts/dichvuChart');
+app.get('/service_chart', Auth_IN_OUT.extractToken, async(req,res) => {
+  try {
+
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const dichvu_chart1 = await dichvuChart.chart_1(usr_id);
+    res.status(200).send({dichvu_chart1});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
 //Check if this users has existed in the system or not? before the registration process
 //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
@@ -65,7 +81,6 @@ app.post('/login', Regis_In_Out.login);
 //Check if the token sent by the customer exists in the system before allowing them to logout
 //Related Files/Folder: BasicMethod - Token Method - Auth_In_Out
 app.post('/logout', Auth_IN_OUT.extractToken, Regis_In_Out.logout);
-
 
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);

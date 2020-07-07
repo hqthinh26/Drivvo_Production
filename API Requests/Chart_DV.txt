@@ -1,0 +1,16 @@
+[
+  {name: 'Bộ lọc khí', population: 21500000,},
+  {name: 'Hệ thống chuyển hướng', population: 8538000,},
+  {name: 'Body Chassis', population: 11920000,},
+  {name: 'Bộ lọc dầu', population: 11920000,},
+];
+
+{
+  //labels: ['Test1', 'Test2', 'Test 3'],
+  legend: ['Tổng dịch vụ'],
+  data: [
+    [60],
+    [30],
+    [40],
+  ],
+};
