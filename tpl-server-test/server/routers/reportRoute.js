@@ -12,6 +12,7 @@ const fuel_efficiency = require('../report/fuel_efficiency');
 const dichvuChart = require('../charts/dichvuChart');
 const chiphiChart = require('../charts/chiphiChart');
 const thunhapChart = require('../charts/thunhapChart');
+const napnhienlieuChart = require('../charts/napnhienlieuChart');
 
 const router = express.Router();
 
@@ -52,6 +53,18 @@ router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
     }
   }
 );
+
+router.get('/nll/pie_chart', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_1 = await napnhienlieuChart.pie_chart(usr_id);
+    res.status(200).send({chart_1});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
 
 //////////////////////////// CHI PHI ///////////////////////////////
 router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
