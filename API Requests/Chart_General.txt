@@ -1,0 +1,25 @@
+General:
+[
+  {name: 'Chí phí', population: 21500000},
+  {name: 'Nạp nhiên liệu', population: 8538000},
+  {name: 'Dịch vụ', population: 11920000},
+];
+
+{
+  //labels: ['Test1', 'Test2'],
+  legend: ['Nạp nhiên liệu', 'Chi phí', 'Dịch vụ'],
+  data: [
+    [60, 60, 60],
+    [30, 30, 60],
+    [60, 60, 60],
+  ],
+};
+
+{
+  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  datasets: [
+    {
+      data: [20.0, 45.0, 28.0, 80.0, 99.0, 43],// hiệu quãng đg mỗi tháng
+    },
+  ],
+}

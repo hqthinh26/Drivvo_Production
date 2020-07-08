@@ -14,12 +14,16 @@ module.exports = {
             date date default now(),
             time timetz default now(),
             odometer decimal(7,1) NOT NULL,
-            type_of_fuel text NOT NULL,
+            type_of_fuel int8 NOT NULL,
             price_per_unit int NOT NULL,
             total_cost int NOT NULL,
             total_units decimal(5,2),
             full_tank bool,
-            location text
+            gas_station int8,
+            reason int8,
+            FOREIGN KEY (type_of_fuel) REFERENCES loainhienlieu (ID),
+            FOREIGN KEY (gas_station) REFERENCES tramxang (ID),
+            FOREIGN KEY (reason) REFERENCES lydo (ID)
         );
         
         ` ,{raw: true});

@@ -19,7 +19,8 @@ module.exports = {
             final_odometer decimal(7,1) NOT NULL,
             value_per_km int NOT NULL,
             total int NOT NULL,
-            reason text,
+            reason int8,
+            FOREIGN KEY (reason) REFERENCES lydo (ID),
             CONSTRAINT valid_end_date CHECK (end_date >= start_date),
             CONSTRAINT valid_final_odometer CHECK (final_odometer >= initial_odometer)
         );

@@ -12,16 +12,26 @@ module.exports = {
     },
 
     insert: async (chiphi_id, usr_id, inputFromClient) => {
-        const {odometer,type_of_expense, amount, location, note, date, time} = inputFromClient;
-        const odometerF = parseFloat(odometer);
-        const amountI = parseInt(amount);
-        console.log({TIME: time});
+        try {
+            // place accepts a INT8-typed NUMBER as it's referencing to diadiem table, which contains the location string.
+            const {odometer,type_of_expense, amount, place, note, reason, date, time} = inputFromClient;
+            const odometerF = parseFloat(odometer);
+            const amountI = parseInt(amount);
 
-        await pool.query(`
-            insert into chiphi (id, u_id, odometer, type_of_expense, amount, location, note, date, time) 
-            values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-        `, [chiphi_id, usr_id, odometerF, type_of_expense, amountI, location, note, date, time]);
-        
+            // type_of_expense, place, reason are INT8-typed NUMBERS 
+            // => converting from STRING to BIGINT
+            const type_of_expenseBI = BigInt(type_of_expense);
+            const placeBI = BigInt(place);
+            const reasonBI = BigInt(reason);
+
+            await pool.query(`
+                insert into chiphi (id, u_id, odometer, type_of_expense, amount, place, reason, note, date, time) 
+                values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+            `, [chiphi_id, usr_id, odometerF, type_of_expenseBI, amountI, placeBI, reasonBI, note, date, time]);
+            
+        } catch (err) {
+            throw new Error({message: 'Failed at insert chiphi method', ERR: err});
+        }
     },
     
     //Only need the id of that specific form and the data needs to replace the old

@@ -15,9 +15,10 @@ module.exports = {
             date date NOT NULL default now(),
             time timetz NOT NULL default now(),
             odometer decimal(7,1) NOT NULL,
-            type_of_income text NOT NULL,
+            type_of_income int8 NOT NULL,
             amount integer NOT NULL,
-            note text
+            note text,
+            FOREIGN KEY (type_of_income) REFERENCES loaithunhap (ID)
         );
 
             

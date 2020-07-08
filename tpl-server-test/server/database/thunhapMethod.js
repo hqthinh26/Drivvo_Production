@@ -19,14 +19,18 @@ module.exports = {
 
         //convert amount(string) to amontI(Integer)
         const amountI = parseInt(amount);
+
+        //type_of_income is INT8-typed value => converting FROM STRING to BIGINT
+        const type_of_incomeBI = BigInt(type_of_income);
         try {
             await pool.query(`insert into thunhap(id, u_id, date, time, odometer, type_of_income, amount, note) 
-        values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_income, amountI, note]);
+            values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_incomeBI, amountI, note]);
         } catch (err) {
-            console.log({message: 'failed at thunhap insert method', err});
+            throw new Error({message: 'failed at insert thunhapMethod', ERR: err});
         }   
     },
 
+    // yet modified type_of_income
     _update: async (form_id, inputFromUser) => {
         const {odometer, type_of_income, amount, note, time, date}
         = inputFromUser;

@@ -6,15 +6,21 @@ const chiphiReport = require('../report/chiphiReport');
 const thunhapReport = require('../report/thunhapReport');
 const dichvuReport = require('../report/dichvuReport');
 const generalReport = require('../report/generalReport');
-
 const fuel_efficiency = require('../report/fuel_efficiency');
 
-const router = express.Router();
+//Import Chart Functions
+const dichvuChart = require('../charts/dichvuChart');
+const chiphiChart = require('../charts/chiphiChart');
+const thunhapChart = require('../charts/thunhapChart');
+const napnhienlieuChart = require('../charts/napnhienlieuChart');
 
+const router = express.Router();
 
 router.get('/', (req,res) => {
     res.send('Hello world');
 })
+
+//////////////////////////// GENERAL ///////////////////////////////
 
 router.get('/general', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
@@ -31,6 +37,9 @@ router.get('/general', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 });
 
+
+
+//////////////////////////// NAP NHIEN LIEU ///////////////////////////////
 router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     try {
@@ -45,6 +54,19 @@ router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 );
 
+router.get('/nll/pie_chart', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_1 = await napnhienlieuChart.pie_chart(usr_id);
+    res.status(200).send({chart_1});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
+
+//////////////////////////// CHI PHI ///////////////////////////////
 router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
 
   const token = req.token;
@@ -59,6 +81,19 @@ router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
   }
 })
 
+router.get('/chiphi/chart_1', Auth_IN_OUT.extractToken, async (req, res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chiphi_chart1 = await chiphiChart.chart_1(usr_id);
+    return res.status(200).send({chiphi_chart1});
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+})
+
+//////////////////////////// THUNHAP ///////////////////////////////
 router.get('/thunhap', Auth_IN_OUT.extractToken, async (req, res) => {
   const token = req.token;
   try {
@@ -71,6 +106,19 @@ router.get('/thunhap', Auth_IN_OUT.extractToken, async (req, res) => {
   }
 })
 
+router.get('/thunhap/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const thunhap_chart1 = await thunhapChart.chart_1(usr_id);
+    res.status(200).send({thunhap_chart1});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
+//////////////////////////// DICH VU ///////////////////////////////
 router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
   const token = req.token;
 
@@ -93,7 +141,19 @@ router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 }) 
 
+router.get('/dichvu/chart_1', Auth_IN_OUT.extractToken, async(req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const dichvu_chart1 = await dichvuChart.chart_1(usr_id);
+    res.status(200).send({dichvu_chart1});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 
+// //////////////////////////// ADDITIONALS ///////////////////////////////
 router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const token = req.token;

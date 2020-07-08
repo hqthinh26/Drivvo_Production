@@ -1,7 +1,6 @@
 const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const thunhapMethod = require('../database/thunhapMethod');
-const usersMethod = require('../database/usersMethod');
 const historyMethod = require('../database/historyMethod');
 const {uuid} = require('uuidv4');
 
@@ -14,6 +13,11 @@ router.get('/', (req,res) => {
 router.get('/printall', thunhapMethod.printall);
 
 router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
+
+    //IMPORTANT: below is the list of foreign-key values 
+    //So that these value must alr exist in the database before being used.
+    // They are: type_of_income
+
     const token = req.token;
     const inputFromUser = {odometer, type_of_income, amount, note, date, time} = req.body;
     const thunhap_UUID = uuid();
@@ -30,8 +34,8 @@ router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
         
         return res.sendStatus(200);
     } catch (err) {
-        console.log(err.detail);
-        return res.status(403).send({message: 'something is wrong in the insert route', detail: err.detail});
+        console.log(err);
+        return res.sendStatus(500);
     }
 });
 
