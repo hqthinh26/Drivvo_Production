@@ -13,6 +13,7 @@ const dichvuChart = require('../charts/dichvuChart');
 const chiphiChart = require('../charts/chiphiChart');
 const thunhapChart = require('../charts/thunhapChart');
 const napnhienlieuChart = require('../charts/napnhienlieuChart');
+const generalChart = require('../charts/generalChart');
 
 const router = express.Router();
 
@@ -33,6 +34,18 @@ router.get('/general', Auth_IN_OUT.extractToken, async (req,res) => {
     res.status(200).send({general_report});
   } catch (err) { 
     console.log({ERR:err});
+    res.sendStatus(500);
+  }
+});
+
+router.get('/general/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const cost_comparison = await generalChart.chart_1(usr_id);
+    res.status(200).send({cost_comparison});
+  } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   }
 });

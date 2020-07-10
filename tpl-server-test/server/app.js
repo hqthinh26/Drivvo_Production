@@ -11,7 +11,6 @@ require('express-async-errors');
 const bodyParser = require('body-parser');
 const PORT = 3000;
 const app = express();
-const pool = require('./database/pooling');
 const bcryptjs = require('bcryptjs');
 
 //From database folder 
@@ -24,6 +23,7 @@ const napNLReport = require('./report/napNLReport');
 
 //From basicMethod folder
 const Regis_In_Out = require('./basicMethod/Regis_In_Out');
+const pool = require('./database/pooling');
 
 app.use(morgan('dev'));
 //app.use(express.json());
@@ -53,7 +53,6 @@ app.use('/lydo', require('./additional_routers/lydoRoute'));
 app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })
-
 
 // For experiment
 const dichvuChart = require('./charts/dichvuChart');
