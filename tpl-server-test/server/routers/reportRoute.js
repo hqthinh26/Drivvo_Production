@@ -50,6 +50,17 @@ router.get('/general/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 });
 
+router.get('/general/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_2 = await generalChart.chart_2(usr_id);
+    res.status(200).send({chart_2});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 
 
 //////////////////////////// NAP NHIEN LIEU ///////////////////////////////
@@ -106,6 +117,17 @@ router.get('/chiphi/chart_1', Auth_IN_OUT.extractToken, async (req, res) => {
   }
 })
 
+router.get('/chiphi/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_2 = await chiphiChart.chart_2(usr_id);
+    res.status(200).send({chart_2});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 //////////////////////////// THUNHAP ///////////////////////////////
 router.get('/thunhap', Auth_IN_OUT.extractToken, async (req, res) => {
   const token = req.token;
@@ -131,6 +153,17 @@ router.get('/thunhap/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 })
 
+router.get('/thunhap/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_2 = await thunhapChart.chart_2(usr_id);
+    res.status(200).send({chart_2});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 //////////////////////////// DICH VU ///////////////////////////////
 router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
   const token = req.token;
@@ -166,6 +199,17 @@ router.get('/dichvu/chart_1', Auth_IN_OUT.extractToken, async(req,res) => {
   }
 })
 
+router.get('/dichvu/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const dichvu_chart2 = await dichvuChart.chart_2(usr_id);
+    res.status(200).send({dichvu_chart2});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 // //////////////////////////// ADDITIONALS ///////////////////////////////
 router.get('/calculation', Auth_IN_OUT.extractToken, async (req,res) => {
   try {

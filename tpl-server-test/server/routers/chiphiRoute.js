@@ -26,7 +26,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         console.log(`usr_id = ${usr_id}`);
         const inputFromUser 
-        = {odometer, type_of_expense, amount, place, note, reason, date, time}
+        = {odometer, type_of_expense, amount, place, reason, note, date, time}
         = req.body;
 
         //import new row to the table chiphi
