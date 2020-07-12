@@ -78,7 +78,7 @@ router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 );
 
-router.get('/nll/pie_chart', Auth_IN_OUT.extractToken, async (req,res) => {
+router.get('/nll/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const token = req.token;
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);

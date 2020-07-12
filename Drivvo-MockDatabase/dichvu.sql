@@ -1,3 +1,0 @@
-INSERT INTO "dichvu"("id", "u_id", "date", "time", "odometer", "type_of_service", "amount", "place", "note") VALUES ('9943450c-2dca-425d-a1b9-7ee6d24fd91c', '17cd4db8-1ff8-48b7-b6cf-0b1ad13148bf', '2020-04-02', '08:00:00+07', '1500.0', 1, 70000, 2, '3');
-INSERT INTO "dichvu"("id", "u_id", "date", "time", "odometer", "type_of_service", "amount", "place", "note") VALUES ('aebccdee-be4b-46a1-ba25-6919dabe5430', '17cd4db8-1ff8-48b7-b6cf-0b1ad13148bf', '2020-04-02', '10:00:00+07', '1600.0', 3, 100000, 4, '1');
-INSERT INTO "dichvu"("id", "u_id", "date", "time", "odometer", "type_of_service", "amount", "place", "note") VALUES ('ec430fea-b3ab-4fb7-a3bb-3e808eaa5b64', '17cd4db8-1ff8-48b7-b6cf-0b1ad13148bf', '2020-04-12', '19:00:00+07', '6000.0', 2, 450000, 4, 'expensive tier');
