@@ -25,26 +25,6 @@ const current_year = async () => {
     return query1.rows[0].current_year;
 };
 
-// const month_that_has_data = async (usr_id, current_year) => {
-//     const query1 = await pool.query(`
-//     SELECT DISTINCT type_of_form, EXTRACT(MONTH FROM created_at_date) as month
-//     FROM history
-//     WHERE       (usr_id = $1) 
-//             AND (EXTRACT(YEAR FROM created_at_date) = $2) 
-//             AND (type_of_form IN ($3,$4,$5))
-//     ORDER BY type_of_form, month
-//     `,[usr_id, current_year,'napnhienlieu','chiphi','dichvu']);
-    
-//     let nll_arr = []; let cp_arr = []; let dv_arr = [];
-//     query1.rows.map(
-//         (each_row) => {
-//             if(each_row.type_of_form === 'napnhienlieu') return nll_arr.push(each_row.month);
-//             if(each_row.type_of_form === 'chiphi') return cp_arr.push(each_row.month);
-//             if(each_row.type_of_form === 'dichvu') return dv_arr.push(each_row.month);
-//         }
-//     );
-//     return {nll_arr, cp_arr, dv_arr}
-// }
 
 const array_parse_INT = (array) => {
     const result = array.map(
@@ -98,11 +78,13 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
     const dichvu_array = array_containing_3_smaller_arrays[2];
 
     const query1 = await pool.query(`
-    SELECT DISTINCT EXTRACT(MONTH FROM created_at_date) as month_has_data
+    SELECT 
+        DISTINCT EXTRACT(MONTH FROM created_at_date) as month_has_data
     FROM history
     WHERE       (usr_id = $1) 
             AND (EXTRACT(YEAR FROM created_at_date) = $2)
             AND (type_of_form IN ($3,$4,$5))
+    ORDER BY    month_has_data
     `, [usr_id, current_year, 'napnhieulieu','chiphi','dichvu']);
 
     const month_has_data= query1.rows.map(

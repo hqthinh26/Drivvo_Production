@@ -12,8 +12,6 @@ module.exports = {
         // +1: Insert new user's raw_password to RAWPASSWORD TABLE.
         
         const {fullname, phone, email, pw} = req.body;
-        console.log({message: 'User info', fullname,phone,email,pw});
-
         try {
             if (await userMethod.doesExist(email) === true){
                 return res.status(404).send({message: 'User has alr existed via Email Validation'});
@@ -21,7 +19,6 @@ module.exports = {
                 
             const salt = await bcryptJS.genSalt(10);
             const hashedPw = await bcryptJS.hash(pw,salt);
-
             //Step 1
             await userMethod.insert(fullname,phone,email,hashedPw);
 
@@ -47,8 +44,8 @@ module.exports = {
             await tokenMethod.insert(u_id,token);
             res.status(200).send({message: 'ok', token: token});
         } catch (err) {
-            console.log({errMess: err});
-            res.status(403).send({err: err});
+            console.log({message: 'failed at login method', ERR:err});
+            res.status(403).send(err);
         }
 
     },

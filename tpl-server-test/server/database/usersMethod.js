@@ -54,7 +54,7 @@ module.exports = {
 
             //STEP 2: Check if the pw is valid
             const hashedPwFromDatabase = one_user_info.rows[0].u_pw;
-            const isValidPw = bcryptjs.compare(pw,hashedPwFromDatabase);
+            const isValidPw = bcryptjs.compareSync(pw,hashedPwFromDatabase);
             if(!isValidPw)  {
                 console.log('email is ok but password is wrong')
                 return false;
