@@ -1,6 +1,7 @@
 const pool = require('../database/pooling');
 const { idleCount } = require('../database/pooling');
 
+// ===================================== CHART 2 ===============================================
 const total_each_type = async (type_array, usr_id) => {
     return Promise.all(
         type_array.map((each_row) => {
@@ -20,7 +21,9 @@ const total_each_type = async (type_array, usr_id) => {
     );
 };
 
-const current_year = async () => {
+// ===================================== CHART 2 ===============================================
+
+const _current_year = async () => {
     const query1 = await pool.query(`SELECT EXTRACT(YEAR FROM now()) as current_year`);
     return query1.rows[0].current_year;
 };
@@ -110,6 +113,45 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
     return {month_has_data,final_result};
 }
 
+// ===================================== CHART 3 ===============================================
+
+const start_current_date = async (usr_id) => {
+    const query1 = await pool.query(`
+    SELECT min(created_at_date) as start_date, max(created_at_date) as current_date
+    FROM history
+    WHERE usr_id = $1
+    `,[usr_id]);
+    if(query1.rowCount === 0) return 0;
+    return query1.rows[0];
+}
+
+const _list_of_nll_cp_dv_inHistory = async (usr_id, current_year) => {
+    try {
+        //Danh sach cac form dc sap xep theo thu tu thoi gian (date -> time)
+        const query1 = await pool.query(`
+        SELECT type_of_form, id_private_form, EXTRACT(MONTH FROM created_at_date) as month
+        FROM history
+        WHERE       (usr_id = $1)
+                AND (EXTRACT(YEAR FROM created_at_date) = $2)
+                AND (type_of_form IN ($3,$4,$5))
+        ORDER BY created_at_date asc, created_at_time asc
+        `,[usr_id, current_year, 'napnhienlieu', 'chiphi', 'dichvu']);
+
+        const array_odometer_raw = await Promise.all(query1.rows.map(mapping_each_type_form));
+        const array_odometer = array_odometer_raw.map((each) => each.rows[0]);
+
+        return array_odometer;
+    } catch  (err) {
+        throw new Error({message: 'failed at list_of_nll_cp_dv_inHistory',err});
+    }
+    
+}
+
+const mapping_each_type_form = (one_row) => {
+    if(one_row.type_of_form === 'napnhienlieu') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM napnhienlieu WHERE id = $1`, [one_row.id_private_form]);
+    if(one_row.type_of_form === 'chiphi') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM chiphi WHERE id = $1`, [one_row.id_private_form]);
+    if(one_row.type_of_form === 'dichvu') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM dichvu WHERE id = $1`,[one_row.id_private_form]);
+}
 module.exports = {
     chart_1: async (usr_id) => {
         const type_array = ['napnhienlieu', 'chiphi', 'dichvu'];
@@ -128,20 +170,34 @@ module.exports = {
     
     chart_2: async (usr_id) => {
         try {
-            const year = await current_year();
+            const current_year = await _current_year();
             
             const all = await Promise.all([
-                total_amount_napnhienlieu_each_month(usr_id, year),
-                total_amount_chiphi_each_month(usr_id, year),
-                total_amount_dichvu_each_month(usr_id, year),
+                total_amount_napnhienlieu_each_month(usr_id, current_year),
+                total_amount_chiphi_each_month(usr_id, current_year),
+                total_amount_dichvu_each_month(usr_id, current_year),
             ]);
             
-            const chart_2 = await chart_2_main_function(all, usr_id, year);
-            return {year, chart_2};
+            const chart_2 = await chart_2_main_function(all, usr_id, current_year);
+            return {current_year, chart_2};
         }
         catch (err) {
             throw new Error({message: 'failed at chart_2 general', err});
         }
-        
+    },
+
+    chart_3: async (usr_id) => {
+        try {
+            // lay timestamp
+            const start_and_current_dates = await start_current_date(usr_id);
+            const current_year = await _current_year();
+            const list_of_nll_cp_dv_inHistory = await _list_of_nll_cp_dv_inHistory(usr_id,current_year);
+            // lay danh sach id cua (NLL, chiphi, dich vu)
+            // lay Month cua tat ca cac form, Odometer cua tat ca cac form
+            //in tat ca ra 1 object duy nhat
+            return {start_and_current_dates, current_year, list_of_nll_cp_dv_inHistory};
+        } catch (err) {
+            throw new Error({message: 'failed at chart_3 GENERAL',err});
+        }
     }
 }

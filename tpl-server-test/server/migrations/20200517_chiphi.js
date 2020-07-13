@@ -11,8 +11,8 @@ module.exports = {
         CREATE TABLE chiphi (
             id uuid PRIMARY KEY default uuid_generate_v4(),
             u_id uuid,
-            date date NOT NULL default now(),
-            time timetz NOT NULL default now(),
+            date date NOT NULL,
+            time timetz NOT NULL,
             odometer decimal(7,1) NOT NULL,
             type_of_expense int8 NOT NULL,
             amount int NOT NULL,

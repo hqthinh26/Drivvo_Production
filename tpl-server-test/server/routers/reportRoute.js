@@ -60,9 +60,20 @@ router.get('/general/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
     console.log(err);
     res.sendStatus(500);
   }
-})
+});
 
 
+router.get('/general/chart_3', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_3 = await generalChart.chart_3(usr_id);
+    res.status(200).send({chart_3});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
 //////////////////////////// NAP NHIEN LIEU ///////////////////////////////
 router.get('/nll', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
@@ -82,7 +93,7 @@ router.get('/nll/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const token = req.token;
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const chart_1 = await napnhienlieuChart.pie_chart(usr_id);
+    const chart_1 = await napnhienlieuChart.chart_1(usr_id);
     res.status(200).send({chart_1});
   } catch (err) {
     console.log(err);
@@ -90,6 +101,41 @@ router.get('/nll/chart_1', Auth_IN_OUT.extractToken, async (req,res) => {
   }
 });
 
+router.get('/nll/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_2 = await napnhienlieuChart.chart_2(usr_id);
+    return res.status(200).send({chart_2});
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(500);
+  }
+})
+
+router.get('/nll/chart_3', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_3 = await napnhienlieuChart.chart_3(usr_id);
+    res.status(200).send({chart_3});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
+router.get('/nll/chart_4', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const chart_4 = await napnhienlieuChart.chart_4(usr_id);
+    res.status(200).send({chart_4});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500)
+  }
+})
 //////////////////////////// CHI PHI ///////////////////////////////
 router.get('/chiphi',Auth_IN_OUT.extractToken, async (req,res) => {
 
