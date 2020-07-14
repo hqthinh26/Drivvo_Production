@@ -3,13 +3,12 @@ const pool = require('./pooling');
 module.exports = {
     // Step 1: Insert Type:text and uuid_id of that particular form in its private table: like napnhieulieu or chi phi table
    
-    _return_all_form: async (usr_id, number_of_rows) => {
+    _return_all_form: async (usr_id) => {
         try {
             const results = await pool.query(`SELECT * FROM history 
                                             where usr_id = $1
                                               ORDER BY created_at_date DESC, created_at_time DESC
-                                              LIMIT $2`, [usr_id, number_of_rows]);
-            console.table(results.rows);
+                                              LIMIT 15`, [usr_id]);
             return results.rows;
         } catch (err) {
             throw new Error({message:'Failed at return_all_form',ERR: err});

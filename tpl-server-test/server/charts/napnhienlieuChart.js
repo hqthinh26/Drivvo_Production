@@ -33,13 +33,21 @@ const _main_function_chart_1 = async (usr_id) => {
 // ================================== CHART 2 - Monthy Odometer Chart ===================================
 const _main_fucntion_chart_2 = async (usr_id, current_year) => {
     const query1 = await pool.query(`
-    SELECT EXTRACT(MONTH FROM date) as month, sum(odometer) as monthly_total
+    SELECT min(odometer) as start_odometer
+    FROM napnhienlieu 
+    WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2`
+    ,[usr_id, current_year]);
+    const start_odometer = query1.rows[0].start_odometer;
+
+    const query2 = await pool.query(`
+    SELECT EXTRACT(MONTH FROM date) as month, max(odometer) as max_odometer_each_month
     FROM napnhienlieu
-    WHERE  u_id = $1  AND EXTRACT(YEAR FROM date) = $2
+    WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
     GROUP BY EXTRACT(MONTH FROM date)
-    ORDER BY month asc
-    `, [usr_id, current_year]);
-    return query1.rows;
+    `,[usr_id, current_year]);
+    const max_odometer_each_month_array = query2.rows;
+
+    return {start_odometer, max_odometer_each_month_array}
 }
 
 // ================================== CHART 3 - Monthy Fuel Price Chart ===================================

@@ -1,13 +1,10 @@
-
 require('dotenv').config();
-
 const express = require('express');
-
 const morgan = require('morgan');
-
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 require('express-async-errors');
+//======================================= >< =======================================
 const bodyParser = require('body-parser');
 const PORT = 3000;
 const app = express();
@@ -54,21 +51,6 @@ app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })
 
-// For experiment
-const dichvuChart = require('./charts/dichvuChart');
-app.get('/service_chart', Auth_IN_OUT.extractToken, async(req,res) => {
-  try {
-
-    const token = req.token;
-    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const dichvu_chart1 = await dichvuChart.chart_1(usr_id);
-    res.status(200).send({dichvu_chart1});
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-})
-
 //Check if this users has existed in the system or not? before the registration process
 //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
@@ -83,18 +65,4 @@ app.post('/logout', Auth_IN_OUT.extractToken, Regis_In_Out.logout);
 
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);
-})
-
-
-app.get('/unhash', (req,res) => {
-  const {hashedString,pw} = req.body;
-  console.log({hash: hashedString, pw});
-  try {
-    bcryptjs.compare(pw,hashedString) ? console.log('successful') : console.log('failed')
-    return res.sendStatus(200);
-  } catch (err) {
-    console.log({mess: err});
-    return res.sendStatus(403);
-  }
-
-})
+});
