@@ -94,7 +94,7 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
         (each_row) => each_row.month_has_data
     );
 
-    const final_result = month_has_data.map(
+    /*const final_result = month_has_data.map(
         (each_month) => {
             let nll; let chiphi; let dichvu;
             const find_nll = nll_array.find((each_row) => each_row.month === each_month);
@@ -109,7 +109,12 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
                 dichvu,
             }
         }
+    );*/
+
+    const chart_2 = month_has_data.map(
+        (each_month) => {}
     );
+    
     return {month_has_data,final_result};
 }
 

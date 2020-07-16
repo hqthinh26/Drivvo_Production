@@ -35,13 +35,17 @@ const chart_2_main_function = async (usr_id, current_year) => {
     GROUP BY EXTRACT(MONTH FROM date)
     ORDER BY month asc
     `,[usr_id, current_year]);
-    const result = query1.rows.map(
-        (each_row) => ({
-            month: `${each_row.month}/${current_year}`,
-            monthly_total: parseInt(each_row.monthly_total),
-        }) 
+    const month_array = query1.rows.map(
+        (each_row) => each_row.month
     );
-    return result;
+    const chart_2 = query1.rows.map(
+        (each_row) => {
+            let tmp_array = [];
+            tmp_array.push(parseInt(each_row.monthly_total));
+            return tmp_array;
+        }
+    );
+    return {month_array,chart_2};
 }
 
 module.exports = {

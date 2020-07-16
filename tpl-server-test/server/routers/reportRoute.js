@@ -164,6 +164,7 @@ router.get('/chiphi/chart_1', Auth_IN_OUT.extractToken, async (req, res) => {
   }
 })
 
+//MODIFIED
 router.get('/chiphi/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
     const token = req.token;
