@@ -59,7 +59,7 @@ const total_amount_chiphi_each_month = async (usr_id, current_year) => {
     GROUP BY EXTRACT(MONTH FROM date)
     ORDER BY month asc
     `, [usr_id, current_year]);
-    const chiphi_monthly = array_parse_INT(query1.rows);
+    const chiphi_monthly = array_parse_INT(query1.rows); // this is an array
     return chiphi_monthly;
 }
 
@@ -76,7 +76,7 @@ const total_amount_dichvu_each_month = async (usr_id, current_year) => {
 }
 
 const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, current_year) => {
-    const nll_array = array_containing_3_smaller_arrays[0];
+    const nll_array = array_containing_3_smaller_arrays[0]; // [{month, monthly_total}, {month, monthly_total}, {month, monthly_total}, ...]
     const chiphi_array = array_containing_3_smaller_arrays[1];
     const dichvu_array = array_containing_3_smaller_arrays[2];
 
@@ -112,10 +112,20 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
     );*/
 
     const chart_2 = month_has_data.map(
-        (each_month) => {}
+        (each_month) => {
+            let nll; let chiphi; let dichvu; let tmp_array = [];
+            const find_nll = nll_array.find((each_row) => each_row.month === each_month);
+            const find_chiphi = chiphi_array.find((each_row) => each_row.month === each_month);
+            const find_dichvu = dichvu_array.find((each_row) => each_row.month === each_month);
+            find_nll === undefined ? nll = 0 : nll = find_nll.monthly_total;
+            find_chiphi === undefined ? chiphi = 0 : chiphi = find_chiphi.monthly_total;
+            find_dichvu === undefined ? dichvu = 0 : dichvu = find_dichvu.monthly_total;
+            tmp_array.push(nll, chiphi, dichvu);
+            return tmp_array; // Order: Nap nhien lieu, chi phi, dich vu
+        }
     );
-    
-    return {month_has_data,final_result};
+
+    return {month_has_data,chart_2};
 }
 
 // ===================================== CHART 3 ===============================================
