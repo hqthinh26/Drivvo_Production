@@ -28,19 +28,25 @@ const extract_year = async () => {
 
 const main_return_chart_2 = async (usr_id, current_year) => {
     const query1 = await pool.query(`
-    SELECT EXTRACT(MONTH FROM date) as month, sum(amount) as total_monthly
+    SELECT EXTRACT(MONTH FROM date) as month, sum(amount) as monthly_total
     FROM chiphi
     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
     GROUP BY EXTRACT(MONTH FROM date)
     ORDER BY month asc
     `, [usr_id, current_year]); // return an array with multiple columes
-    const result = query1.rows.map(
-        (each_row) => ({
-            month: `${each_row.month}/${current_year}`,
-            monthly_total: parseInt(each_row.total_monthly),
-        })
+
+    const query1_array = query1.rows;
+    const month_array = query1_array.map((each_row) => each_row.month);
+
+    const monthly_total_array = query1_array.map(
+        (each_row) => {
+            let temp_array = [];
+            temp_array.push(parseInt(each_row.monthly_total));
+            return temp_array;
+        }
     );
-    return result;
+    
+    return {month_array,monthly_total_array};
 }
 
 module.exports = {
