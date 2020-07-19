@@ -94,23 +94,6 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
         (each_row) => each_row.month_has_data
     );
 
-    /*const final_result = month_has_data.map(
-        (each_month) => {
-            let nll; let chiphi; let dichvu;
-            const find_nll = nll_array.find((each_row) => each_row.month === each_month);
-            const find_chiphi = chiphi_array.find((each_row) => each_row.month === each_month);
-            const find_dichvu = dichvu_array.find((each_row) => each_row.month === each_month);
-            find_nll === undefined ? nll = 0 : nll = find_nll.monthly_total;
-            find_chiphi === undefined? chiphi = 0 : chiphi = find_chiphi.monthly_total;
-            find_dichvu === undefined? dichvu = 0 : dichvu = find_dichvu.monthly_total;
-            return {
-                napnhienlieu: nll,
-                chiphi,
-                dichvu,
-            }
-        }
-    );*/
-
     const chart_2 = month_has_data.map(
         (each_month) => {
             let nll; let chiphi; let dichvu; let tmp_array = [];
@@ -128,45 +111,103 @@ const chart_2_main_function = async (array_containing_3_smaller_arrays, usr_id, 
     return {month_has_data,chart_2};
 }
 
-// ===================================== CHART 3 ===============================================
+// ===================================== CHART 3 Version 2 ===============================================
 
-const start_current_date = async (usr_id) => {
-    const query1 = await pool.query(`
-    SELECT min(created_at_date) as start_date, max(created_at_date) as current_date
+// each_row belongs to more_infor_data array || each_row = {month, infor_min_date, infor_max_date}
+const return_odometers = async (each_row) => {
+    const {month, infor_min_date, infor_max_date} = each_row;
+    const min_date_odometer_query = await query_for_each_date(infor_min_date);
+    const max_date_odometer_query = await query_for_each_date(infor_max_date);
+
+    const min_date_odometer = parseFloat(min_date_odometer_query.rows[0].odometer);
+    const max_date_odometer = parseFloat(max_date_odometer_query.rows[0].odometer);
+    const substract = max_date_odometer - min_date_odometer;
+    return {
+        month, 
+        min_date_odometer,
+        max_date_odometer,
+        substract,
+    };
+}
+
+//date = {type_of_form, id_private_form}
+const query_for_each_date = async (date) => {
+    const {type_of_form, id_private_form } = date;
+    if(type_of_form === 'napnhienlieu') return await pool.query(`SELECT odometer FROM napnhienlieu WHERE id = $1`, [id_private_form]);
+    if(type_of_form === 'chiphi') return await pool.query(`SELECT odometer FROM chiphi WHERE id = $1`, [id_private_form]);
+    if(type_of_form === 'dichvu') return await pool.query(`SELECT odometer FROM dichvu WHERE id = $1`, [id_private_form]);
+};
+
+// each_row = {month, min_date, max_date}
+const find_infor_min_and_max_dates = async (each_row, usr_id) => {
+    const {month, min_date, max_date} = each_row;
+    const min_date_query =  await pool.query(`
+    SELECT type_of_form, id_private_form
     FROM history
-    WHERE usr_id = $1
-    `,[usr_id]);
-    if(query1.rowCount === 0) return 0;
-    return query1.rows[0];
-}
+    WHERE usr_id = $1 AND created_at_date = $2
+    ORDER BY created_at_time asc
+    LIMIT 1
+    `, [usr_id, min_date]);
+    const infor_min_date = min_date_query.rows[0];
 
-const _list_of_nll_cp_dv_inHistory = async (usr_id, current_year) => {
-    try {
-        //Danh sach cac form dc sap xep theo thu tu thoi gian (date -> time)
-        const query1 = await pool.query(`
-        SELECT type_of_form, id_private_form, EXTRACT(MONTH FROM created_at_date) as month
-        FROM history
-        WHERE       (usr_id = $1)
-                AND (EXTRACT(YEAR FROM created_at_date) = $2)
-                AND (type_of_form IN ($3,$4,$5))
-        ORDER BY created_at_date asc, created_at_time asc
-        `,[usr_id, current_year, 'napnhienlieu', 'chiphi', 'dichvu']);
-
-        const array_odometer_raw = await Promise.all(query1.rows.map(mapping_each_type_form));
-        const array_odometer = array_odometer_raw.map((each) => each.rows[0]);
-
-        return array_odometer;
-    } catch  (err) {
-        throw new Error({message: 'failed at list_of_nll_cp_dv_inHistory',err});
-    }
     
+    const max_date_query = await pool.query(`
+    SELECT type_of_form, id_private_form
+    FROM history
+    WHERE usr_id = $1 AND created_at_date = $2
+    ORDER BY created_at_time desc
+    LIMIT 1
+    `, [usr_id, max_date]);
+    const infor_max_date = max_date_query.rows[0];
+
+    return {month, infor_min_date, infor_max_date};  //infor_min_date = {type_of_form, id_private_form}
 }
 
-const mapping_each_type_form = (one_row) => {
-    if(one_row.type_of_form === 'napnhienlieu') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM napnhienlieu WHERE id = $1`, [one_row.id_private_form]);
-    if(one_row.type_of_form === 'chiphi') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM chiphi WHERE id = $1`, [one_row.id_private_form]);
-    if(one_row.type_of_form === 'dichvu') return pool.query(`SELECT EXTRACT(MONTH FROM date) as month, odometer FROM dichvu WHERE id = $1`,[one_row.id_private_form]);
-}
+// =============== THE MAIN STAR ===================
+const chart_3_main_function = async (usr_id, current_year) => {
+
+    // take the first date and last day that users input a form in EACH MONTH
+    const min_max_dates_each_month = await pool.query(`
+    SELECT EXTRACT(MONTH FROM created_at_date) as month, min(created_at_date) as min_date, max(created_at_date) as max_date
+    FROM history
+    WHERE (usr_id = $1) AND (EXTRACT(YEAR FROM created_at_date) = $2) AND (type_of_form IN ($3, $4, $5))
+    GROUP BY EXTRACT(MONTH FROM created_at_date)
+    `,[usr_id, current_year, 'napnhienlieu', 'chiphi', 'dichvu']);
+    
+    // Remove months that only have a single form within 
+    const months_that_have_atleast_2_forms = min_max_dates_each_month.rows.filter(
+        (each_row) => !(JSON.stringify(each_row.min_date) === JSON.stringify(each_row.max_date))
+    );
+    
+    //After knowing the dates - In this step. I find more infor about it (id_private_form and type_of_form)
+    //each_row = {month, min_date, max_date} 
+    const more_infor_data = await Promise.all(
+        months_that_have_atleast_2_forms.map(
+            (each_row) => (find_infor_min_and_max_dates(each_row, usr_id))
+        )
+    );
+    
+    // After knowing the detail => I will find the odometers 
+    //dates_odometers = [{ month, min_date_odometer,max_date_odometer,substract}, { month, min_date_odometer,max_date_odometer,substract}, ... ];
+    const dates_odometers = await Promise.all(
+        more_infor_data.map(
+            (each_row_of_more_infor_data) => return_odometers(each_row_of_more_infor_data)
+        )
+    );
+    
+    // After having the odometer => Steps below . I extract information and send it to the front-end
+    const label = dates_odometers.map(
+        (each_row) => each_row.month
+    );
+    
+    const data = dates_odometers.map(
+        (each_row) => each_row.substract
+    );
+
+    //this is the final result
+    return {label, data};
+};
+
 module.exports = {
     chart_1: async (usr_id) => {
         const type_array = ['napnhienlieu', 'chiphi', 'dichvu'];
@@ -203,14 +244,9 @@ module.exports = {
 
     chart_3: async (usr_id) => {
         try {
-            // lay timestamp
-            const start_and_current_dates = await start_current_date(usr_id);
             const current_year = await _current_year();
-            const list_of_nll_cp_dv_inHistory = await _list_of_nll_cp_dv_inHistory(usr_id,current_year);
-            // lay danh sach id cua (NLL, chiphi, dich vu)
-            // lay Month cua tat ca cac form, Odometer cua tat ca cac form
-            //in tat ca ra 1 object duy nhat
-            return {start_and_current_dates, current_year, list_of_nll_cp_dv_inHistory};
+            const data = await chart_3_main_function(usr_id, current_year);
+            return {current_year, data};
         } catch (err) {
             throw new Error({message: 'failed at chart_3 GENERAL',err});
         }

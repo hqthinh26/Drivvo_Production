@@ -45,7 +45,12 @@ const _main_fucntion_chart_2 = async (usr_id, current_year) => {
     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
     GROUP BY EXTRACT(MONTH FROM date)
     `,[usr_id, current_year]);
-    const max_odometer_each_month_array = query2.rows;
+    const max_odometer_each_month_array = query2.rows.map(
+        (each_row) => ({
+            ...each_row,
+            max_odometer_each_month: parseFloat(each_row.max_odometer_each_month),
+        })
+    );
 
     return {start_odometer, max_odometer_each_month_array}
 }
