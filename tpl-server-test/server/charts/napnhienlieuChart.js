@@ -23,8 +23,8 @@ const _main_function_chart_1 = async (usr_id) => {
     `,[usr_id]);
     const query1_result = query1.rows.map(
         (each_row) => ({
-            ...each_row,
-            total_amount: parseInt(each_row.total_amount),
+            name: each_row.type_of_fuel,
+            population: parseInt(each_row.total_amount),
         })
     );
     return query1_result;
@@ -32,12 +32,12 @@ const _main_function_chart_1 = async (usr_id) => {
 
 // ================================== CHART 2 - Monthy Odometer Chart ===================================
 const _main_fucntion_chart_2 = async (usr_id, current_year) => {
-    const query1 = await pool.query(`
-    SELECT min(odometer) as start_odometer
-    FROM napnhienlieu 
-    WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2`
-    ,[usr_id, current_year]);
-    const start_odometer = query1.rows[0].start_odometer;
+    // const query1 = await pool.query(`
+    // SELECT min(odometer) as start_odometer
+    // FROM napnhienlieu 
+    // WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2`
+    // ,[usr_id, current_year]);
+    // const start_odometer = query1.rows[0].start_odometer;
 
     const query2 = await pool.query(`
     SELECT EXTRACT(MONTH FROM date) as month, max(odometer) as max_odometer_each_month
@@ -45,18 +45,106 @@ const _main_fucntion_chart_2 = async (usr_id, current_year) => {
     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
     GROUP BY EXTRACT(MONTH FROM date)
     `,[usr_id, current_year]);
-    const max_odometer_each_month_array = query2.rows.map(
-        (each_row) => ({
-            ...each_row,
-            max_odometer_each_month: parseFloat(each_row.max_odometer_each_month),
-        })
+
+    let label = [];
+    let data = [];
+    query2.rows.forEach(
+        (each_month) => {
+            label.push(each_month.month);
+            data.push(parseFloat(each_month.max_odometer_each_month));
+        }
     );
 
-    return {start_odometer, max_odometer_each_month_array}
+
+    return {label, data}
 }
 
-// ================================== CHART 3 - Monthy Fuel Price Chart ===================================
+// ================================== CHART 3 - Monthly Average Fuel Price =================================
+
 const _main_function_chart_3 = async (usr_id, current_year) => {
+
+    //Return an array of price_per_unit ORDER BY type_of_fuel
+    const query1 = await pool.query(`
+    SELECT EXTRACT(MONTH FROM date) as month, lnl.name, nll.price_per_unit
+    FROM napnhienlieu as nll, loainhienlieu as lnl
+    WHERE (nll.u_id = $1) AND (EXTRACT(YEAR FROM date) = $2) AND (nll.type_of_fuel = lnl.id) AND (EXTRACT(YEAR FROM date) = $2)
+    GROUP BY EXTRACT(MONTH FROM date), lnl.name, nll.price_per_unit
+    ORDER BY month asc, lnl.name asc, nll.price_per_unit asc
+    `, [usr_id, current_year])
+
+
+    //array_of_main_data = [{month, name, price_per_unit}, {}, {}, ...]
+    const array_of_main_data = query1.rows;
+
+
+    // DISTINCTLY return Names of months in napnhienlieu table in the current year
+    const query2 = await pool.query(`
+    SELECT DISTINCT EXTRACT(MONTH FROM date)  as month
+    FROM napnhienlieu
+    WHERE (u_id = $1) AND (EXTRACT(YEAR FROM date) = $2)
+    `,[usr_id, current_year]);
+
+    //array_of_current_months = [1,2,3,4,5,6,...]
+    const array_of_current_months = query2.rows.map(
+        (each_row) => each_row.month
+    );
+
+    // DISTINCTLY return Names of used type_of_fuel in napnhienlieu table
+    const query3 = await pool.query(`
+    SELECT DISTINCT lnl.name as name
+    FROM napnhienlieu as nll, loainhienlieu as lnl
+    WHERE (nll.type_of_fuel = lnl.id) AND (nll.u_id = $1) AND (EXTRACT(YEAR FROM date) = $2)
+    `, [usr_id, current_year]);
+    
+    //array_of_used_type_of_fuel = ['gasoline','electricity',....]
+    const array_of_used_type_of_fuel = query3.rows.map(
+        (each_row) => each_row.name
+    );
+
+    const data_array = array_of_current_months.map(
+        (each_month) => {
+            const tmp_data_array = array_of_main_data.filter(
+                (month_in_main_data) => month_in_main_data.month === each_month
+            );
+            const test = array_of_used_type_of_fuel.map(
+                (each_type) => {
+                    let count = 0; let total = 0; let average = 0.000;
+                    tmp_data_array.forEach(
+                        (for_each_value) => {
+                            if(for_each_value.name === each_type) {
+                                count++;
+                                total = total + for_each_value.price_per_unit;
+                            }
+                            average = parseFloat((total / count).toFixed(3));
+                            
+                        }
+                    );
+                    count === 0 ? average = 0.000 : average;
+                    return average;
+                }
+            );
+            return test; //[x,y]
+        }
+    )
+    /*
+    month: [1,2,3,4,7], 
+    used_type_of_form: [gasoline, electricity] 
+    data: [
+        [value_of_average_gasoline, value_of_average_electricity]
+        []
+        [],
+        [],
+        []
+    ]
+    */
+
+    //return {array_of_main_data, array_of_current_months, array_of_used_type_of_fuel, data_array}
+    return {array_of_current_months, array_of_used_type_of_fuel, data_array}
+}
+
+
+// ================================== CHART 4 - Monthy Fuel Price Chart ===================================
+const _main_function_chart_4 = async (usr_id, current_year) => {
 
     //query 1 returns a list of all price_per_unit in rows ORDERED BY MONTH
     const query1 = await pool.query(`
@@ -98,13 +186,25 @@ const _main_function_chart_3 = async (usr_id, current_year) => {
             };
         }
     );
+    let label = [];
+    let data = [];
+    let datasets = [];
+    average_price_per_unit_by_month.forEach(
+        (each_month) => {
+            label.push(each_month.month);
+            data.push(each_month.average_price_per_unit);
+        }
+    );
+    
+    datasets.push({data})
 
-    return {average_price_per_unit_by_month};
+    return {label, datasets}
+    
 };
 
-// ================================== CHART 4 - Monthly Expenditure for Refuelling Chart ===================================
+// ================================== CHART 5 - Monthly Expenditure for Refuelling Chart ===================================
 
-const _main_function_chart_4 = async (usr_id, current_year) => {
+const _main_function_chart_5 = async (usr_id, current_year) => {
     const query1 = await pool.query(`
     SELECT EXTRACT(MONTH FROM date) as month, sum(total_cost) as monthly_cost
     FROM napnhienlieu
@@ -131,14 +231,21 @@ module.exports = {
     chart_3: async (usr_id) => {
         const start_current_dates = await _start_current_dates(usr_id);
         const current_year = await _current_year(usr_id);
-        const data = await _main_function_chart_3(usr_id, current_year);
-        return {start_current_dates, current_year, data};
+        const test = await _main_function_chart_3(usr_id, current_year);
+        return {start_current_dates, test};
     },
 
     chart_4: async (usr_id) => {
         const start_current_dates = await _start_current_dates(usr_id);
         const current_year = await _current_year();
         const data = await _main_function_chart_4(usr_id, current_year);
+        return {start_current_dates, current_year, data};
+    },
+
+    chart_5: async (usr_id) => {
+        const start_current_dates = await _start_current_dates(usr_id);
+        const current_year = await _current_year();
+        const data = await _main_function_chart_5(usr_id, current_year);
         return {start_current_dates, current_year, data};
     }
 }
