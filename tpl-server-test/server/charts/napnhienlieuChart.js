@@ -143,77 +143,49 @@ const _main_function_chart_3 = async (usr_id, current_year) => {
 }
 
 
-// // ================================== CHART 4 - Monthy Fuel Price Chart ===================================
-// const _main_function_chart_4 = async (usr_id, current_year) => {
+// ================================== CHART 4 - Monthly Expenditure for Refuelling Chart ===================================
 
-//     //query 1 returns a list of all price_per_unit in rows ORDERED BY MONTH
-//     const query1 = await pool.query(`
-//     SELECT EXTRACT(MONTH FROM date) as month, price_per_unit
-//     FROM napnhienlieu
-//     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
-//     GROUP BY EXTRACT(MONTH FROM date), price_per_unit
-//     ORDER BY month asc
-//     `,[usr_id, current_year]);
-    
-//     const query2 = await pool.query(`
-//     SELECT DISTINCT EXTRACT(MONTH FROM date) as available_month
-//     FROM napnhienlieu
-//     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
-//     ORDER BY available_month asc
-//     `,[usr_id, current_year]);
-
-//     const price_per_unit_rows = query1.rows; // [{month,price_per_unit}, {month,price_per_unit}]
-
-//     // [{available_moth}, {available_month}] //each month is a unique number
-//     const available_months = query2.rows.map((each_row) => each_row.available_month); 
-
-//     const average_price_per_unit_by_month = available_months.map(
-//         (each_unique_month) => {
-
-//             let average = 0;
-//             let count = 0;
-//             price_per_unit_rows.forEach(
-//                 (each_row) => {
-//                     if(each_row.month === each_unique_month){
-//                         count++;
-//                         average = average + each_row.price_per_unit;
-//                     }
-//                 }
-//             );
-//             return {
-//                 month: each_unique_month, 
-//                 average_price_per_unit: parseFloat((average/count).toFixed(3)), //find this something
-//             };
-//         }
-//     );
-//     let label = [];
-//     let data = [];
-//     let datasets = [];
-//     average_price_per_unit_by_month.forEach(
-//         (each_month) => {
-//             label.push(each_month.month);
-//             data.push(each_month.average_price_per_unit);
-//         }
-//     );
-    
-//     datasets.push({data})
-
-//     return {label, datasets}
-    
-// };
-
-// ================================== CHART 5 - Monthly Expenditure for Refuelling Chart ===================================
-
-const _main_function_chart_5 = async (usr_id, current_year) => {
+const _main_function_chart_4 = async (usr_id, current_year) => {
     const query1 = await pool.query(`
     SELECT EXTRACT(MONTH FROM date) as month, sum(total_cost) as monthly_cost
     FROM napnhienlieu
     WHERE u_id = $1 AND (EXTRACT(YEAR FROM date) = $2)
     GROUP BY EXTRACT(MONTH FROM date)
     `, [usr_id, current_year]);
-    return query1.rows;
+    let label = [];
+    let data = [];
+    query1.rows.forEach(
+        (each_row) => {
+            label.push(each_row.month);
+            let decoy_array = [];
+            decoy_array.push(parseFloat(each_row.monthly_cost));
+            data.push(decoy_array);
+        }
+    );
+    return {label, data};
 }
 
+
+// ================================== CHART 5 - Expenditure BASED ON Reasons ===================================
+
+const _main_function_chart_5 = async (usr_id, current_year) => {
+    const query1 = await pool.query(`
+    SELECT ld.name as reason, sum(nll.total_cost) as grand_total_cost
+    FROM napnhienlieu as nll, lydo as ld
+    WHERE (nll.reason = ld.id) AND (nll.u_id = $1) AND (EXTRACT(YEAR FROM nll.date) = $2)
+    GROUP BY ld.name
+    `, [usr_id, current_year]);
+    const test  = query1.rows;
+    let label = [];
+    let data = [];
+    query1.rows.forEach(
+        (each_row) => {
+            label.push(each_row.reason);
+            data.push(parseInt(each_row.grand_total_cost));
+        }
+    );
+    return {label, data}
+}
 module.exports = {
     chart_1: async (usr_id) => {
         const start_current_dates = await _start_current_dates(usr_id);
@@ -222,31 +194,34 @@ module.exports = {
     },
 
     chart_2: async (usr_id) => {
+        const title = 'Havent been modified - DO NOT USE';
         const start_current_dates = await _start_current_dates(usr_id);
         const current_year = await _current_year();
         const data = await _main_fucntion_chart_2(usr_id, current_year);
-        return {start_current_dates, current_year, data}
+        return {title, start_current_dates, current_year, data}
     },
 
     chart_3: async (usr_id) => {
+        const title = 'Average Monthly Fuel Price';
         const start_current_dates = await _start_current_dates(usr_id);
         const current_year = await _current_year(usr_id);
         const test = await _main_function_chart_3(usr_id, current_year);
-        return {start_current_dates, test};
+        return {title, start_current_dates, test};
     },
 
     chart_4: async (usr_id) => {
-        // const start_current_dates = await _start_current_dates(usr_id);
-        // const current_year = await _current_year();
-        // const data = await _main_function_chart_4(usr_id, current_year);
-        // return {start_current_dates, current_year, data};
-        return {message: 'Unavailable currently - Quoc Thinh', reason: 'Chart 3 la phien ban tot hon cua Chart 4 nay'}
+        const title = 'Monthly Expenditure on Refuelling'
+        const start_current_dates = await _start_current_dates(usr_id);
+        const current_year = await _current_year();
+        const main_data = await _main_function_chart_4(usr_id, current_year);
+        return {title, start_current_dates, current_year, main_data};
     },
 
     chart_5: async (usr_id) => {
+        const title = 'TOTAL EXPENDITURE BASED on REASONs';
         const start_current_dates = await _start_current_dates(usr_id);
-        const current_year = await _current_year();
-        const data = await _main_function_chart_5(usr_id, current_year);
-        return {start_current_dates, current_year, data};
+        const current_year = await  _current_year();
+        const main_data = await _main_function_chart_5(usr_id, current_year);
+        return {title, start_current_dates, current_year, main_data}
     }
 }
