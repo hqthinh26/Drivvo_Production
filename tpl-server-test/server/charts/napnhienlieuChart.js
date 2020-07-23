@@ -32,31 +32,29 @@ const _main_function_chart_1 = async (usr_id) => {
 
 // ================================== CHART 2 - Monthy Odometer Chart ===================================
 const _main_fucntion_chart_2 = async (usr_id, current_year) => {
-    // const query1 = await pool.query(`
-    // SELECT min(odometer) as start_odometer
-    // FROM napnhienlieu 
-    // WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2`
-    // ,[usr_id, current_year]);
-    // const start_odometer = query1.rows[0].start_odometer;
-
-    const query2 = await pool.query(`
-    SELECT EXTRACT(MONTH FROM date) as month, max(odometer) as max_odometer_each_month
+    const query1 = await pool.query(`
+    SELECT date, odometer
     FROM napnhienlieu
     WHERE u_id = $1 AND EXTRACT(YEAR FROM date) = $2
-    GROUP BY EXTRACT(MONTH FROM date)
+    ORDER BY date asc
     `,[usr_id, current_year]);
-
-    let label = [];
-    let data = [];
-    query2.rows.forEach(
-        (each_month) => {
-            label.push(each_month.month);
-            data.push(parseFloat(each_month.max_odometer_each_month));
+    let label = []; let odometer_arr = [];
+    query1.rows.forEach(
+        (each_row) => {
+            label.push(each_row.date);
+            odometer_arr.push(parseFloat(each_row.odometer));
         }
     );
-
-
-    return {label, data}
+    const data = odometer_arr.map(
+        (each_row, each_row_index, odometer_arr) => {
+            if(each_row_index === odometer_arr.length -1){
+                return 0.0;
+            }
+            console.log(odometer_arr.length);
+            return odometer_arr[each_row_index+1] - odometer_arr[each_row_index];
+        }
+    );
+    return {label, data};
 }
 
 // ================================== CHART 3 - Monthly Average Fuel Price =================================
@@ -65,16 +63,21 @@ const _main_function_chart_3 = async (usr_id, current_year) => {
 
     //Return an array of price_per_unit ORDER BY type_of_fuel
     const query1 = await pool.query(`
-    SELECT EXTRACT(MONTH FROM date) as month, lnl.name, nll.price_per_unit
+    SELECT EXTRACT(MONTH FROM nll.date) as month, lnl.name, AVG(nll.price_per_unit) as price_per_unit
     FROM napnhienlieu as nll, loainhienlieu as lnl
-    WHERE (nll.u_id = $1) AND (EXTRACT(YEAR FROM date) = $2) AND (nll.type_of_fuel = lnl.id) AND (EXTRACT(YEAR FROM date) = $2)
-    GROUP BY EXTRACT(MONTH FROM date), lnl.name, nll.price_per_unit
-    ORDER BY month asc, lnl.name asc, nll.price_per_unit asc
+    WHERE (nll.u_id = $1) AND (EXTRACT(YEAR FROM date) = $2) AND (nll.type_of_fuel = lnl.id)
+    GROUP BY EXTRACT(MONTH FROM date), lnl.name
+    ORDER BY month asc, lnl.name asc
     `, [usr_id, current_year])
 
 
     //array_of_main_data = [{month, name, price_per_unit}, {}, {}, ...]
-    const array_of_main_data = query1.rows;
+    const array_of_main_data = query1.rows.map(
+        (each_row) => ({
+            ...each_row,
+            price_per_unit: parseInt(each_row.price_per_unit),
+        })
+    );
 
 
     // DISTINCTLY return Names of months in napnhienlieu table in the current year
@@ -101,31 +104,49 @@ const _main_function_chart_3 = async (usr_id, current_year) => {
         (each_row) => each_row.name
     );
 
-    const data_array = array_of_current_months.map(
-        (each_month) => {
-            const tmp_data_array = array_of_main_data.filter(
-                (month_in_main_data) => month_in_main_data.month === each_month
-            );
-            const test = array_of_used_type_of_fuel.map(
-                (each_type) => {
-                    let count = 0; let total = 0; let average = 0.000;
-                    tmp_data_array.forEach(
-                        (for_each_value) => {
-                            if(for_each_value.name === each_type) {
-                                count++;
-                                total = total + for_each_value.price_per_unit;
-                            }
-                            average = parseFloat((total / count).toFixed(3));
+    // const data_array = array_of_current_months.map(
+    //     (each_month) => {
+    //         const tmp_data_array = array_of_main_data.filter(
+    //             (month_in_main_data) => month_in_main_data.month === each_month
+    //         );
+    //         const test = array_of_used_type_of_fuel.map(
+    //             (each_type) => {
+    //                 let count = 0; let total = 0; let average = 0.000;
+    //                 tmp_data_array.forEach(
+    //                     (for_each_value) => {
+    //                         if(for_each_value.name === each_type) {
+    //                             count++;
+    //                             total = total + for_each_value.price_per_unit;
+    //                         }
+    //                         average = parseFloat((total / count).toFixed(3));
                             
-                        }
-                    );
-                    count === 0 ? average = 0.000 : average;
-                    return average;
+    //                     }
+    //                 );
+    //                 count === 0 ? average = 0.000 : average;
+    //                 return average;
+    //             }
+    //         );
+    //         return test; //[x,y]
+    //     }
+    // )
+
+    const data_arr = array_of_used_type_of_fuel.map(
+        (each_type) => {
+            //Data is stored in data_current_each_type [{month, name, price_per_unit}, {}, ....]
+            const data_current_each_type = array_of_main_data.filter((
+                (each_row) => each_type === each_row.name
+            ));
+            const data = array_of_current_months.map(
+                (each_month) => {
+                    const find = data_current_each_type.find((each_row) => each_row.month === each_month);
+                    let result;
+                    find === undefined ? result = 0 : result = find.price_per_unit;
+                    return result;
                 }
             );
-            return test; //[x,y]
+            return data;
         }
-    )
+    );
     /*
     month: [1,2,3,4,7], 
     used_type_of_form: [gasoline, electricity] 
@@ -139,7 +160,7 @@ const _main_function_chart_3 = async (usr_id, current_year) => {
     */
 
     //return {array_of_main_data, array_of_current_months, array_of_used_type_of_fuel, data_array}
-    return {array_of_current_months, array_of_used_type_of_fuel, data_array}
+    return {array_of_current_months, array_of_used_type_of_fuel, data_arr}
 }
 
 
@@ -194,7 +215,7 @@ module.exports = {
     },
 
     chart_2: async (usr_id) => {
-        const title = 'Havent been modified - DO NOT USE';
+        const title = 'Odometer chances by days';
         const start_current_dates = await _start_current_dates(usr_id);
         const current_year = await _current_year();
         const data = await _main_fucntion_chart_2(usr_id, current_year);

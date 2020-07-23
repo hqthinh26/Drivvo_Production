@@ -107,8 +107,7 @@ router.get('/nll/chart_2', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
     const chart_2 = await napnhienlieuChart.chart_2(usr_id);
-    const title = 'Odometer cao nhat moi thang - Ve bieu do duong odometer';
-    return res.status(200).send({title, chart_2});
+    return res.status(200).send({chart_2});
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
