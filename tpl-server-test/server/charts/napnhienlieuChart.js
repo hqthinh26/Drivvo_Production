@@ -202,7 +202,9 @@ const _main_function_chart_5 = async (usr_id, current_year) => {
     query1.rows.forEach(
         (each_row) => {
             label.push(each_row.reason);
-            data.push(parseInt(each_row.grand_total_cost));
+            let each_row_data_arr = [];
+            each_row_data_arr.push((parseInt(each_row.grand_total_cost)));
+            data.push(each_row_data_arr); // An array inside another bigger arr
         }
     );
     return {label, data}
