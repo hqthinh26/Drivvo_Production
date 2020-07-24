@@ -20,10 +20,11 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
 router.get('/print', Auth_IN_OUT.extractToken, async (req,res) => {
     try {
+        const title = 'List of loaidichvu';
         const token = req.token;
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-        const array_of_loaidichvu = await loaidichvuMethod._print(usr_id);
-        res.status(200).send({array_of_loaidichvu});
+        const data = await loaidichvuMethod._print(usr_id);
+        res.status(200).send({title, data});
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

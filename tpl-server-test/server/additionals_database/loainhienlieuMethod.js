@@ -17,7 +17,9 @@ module.exports = {
     _print: async (usr_id) => {
         try {
             const query1 = await pool.query(`
-            SELECT id, name FROM loainhienlieu WHERE usr_id = $1
+            SELECT id, name as loainhienlieu
+            FROM loainhienlieu 
+            WHERE usr_id = $1
             `, [usr_id]);
 
             const array_of_rows = query1.rows;
