@@ -39,7 +39,7 @@ module.exports = {
             console.log({fullname, phone, email});
             //Step 2: Check if the email has been existing
             const checkEmail_existence = await userMethod.doesExist(email);
-            console.log({existOrNOT: checkEmail_existence});
+            console.log({exist: checkEmail_existence});
             //Step 3: If doesn't exist -> Register
             if(!checkEmail_existence) {
                 await userMethod.insert_gg(fullname, phone, email);
@@ -53,7 +53,7 @@ module.exports = {
             await tokenMethod.insert(u_id, token);
             //Step 5: Return like normal {send token to user}
             console.log('SIGNIN GOOGLE');
-            res.status(200).send({message: 'gg ok', token: token});
+            res.status(200).send({message: 'ok', token: token});
         } catch (err) {
             console.log(err);
         }

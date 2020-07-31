@@ -69,6 +69,7 @@ app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
 app.post('/register', Regis_In_Out.register);
 
 app.post('/sign_in_gg', Regis_In_Out.signIN_gg);
+
 // Check if the user has exsited in the system or not? if it has, then send them to token
 //Related Folder: BasicMethod - User Method (check valid user)- Token Method (insert token)
 app.post('/login', Regis_In_Out.login);

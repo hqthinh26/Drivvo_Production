@@ -71,8 +71,6 @@ module.exports = {
 
             const {min, max} = find_min_and_max(average_array);
 
-
-
             return {all_rows_without_timestamp, average_array, latest, min, max};
 
         } catch (err) {

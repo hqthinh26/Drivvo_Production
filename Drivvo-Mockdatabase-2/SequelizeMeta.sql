@@ -1,9 +1,0 @@
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200406103018-init.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200515_napnhienlieu.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200517_chiphi.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200517_dichvu.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200517_thunhap.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200519_token.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200606_history.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200610_quangduong.js');
-INSERT INTO "SequelizeMeta"("name") VALUES ('20200611_nhacnho.js');
