@@ -28,10 +28,16 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //Handling time using momentJS
         //For an unknown reason. Moment returns the wrong time in VN as UTC +7
         //Thus, manual editing of time must be executed 
-        const date = moment().format('L');
+
+
+        //No matter of time format - Postgresql will simply convert the input date form INTO the date form that it wants
+        const date = moment().format('L');  // 07/25/2020  to => 2020/07/25 in postgresql
+        //const date = moment().format('L'); 'July 25, 2020  to => 2020/07/25 in postgresql
+
+
         const get_hour_of_time = moment().hour();
         const time_fixed = moment().set('hour',get_hour_of_time + 7).format('LTS');
-        console.log(time_fixed);
+        console.log({date,time_fixed});
         
 
         //Add to history table

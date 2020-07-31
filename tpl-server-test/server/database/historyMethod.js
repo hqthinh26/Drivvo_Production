@@ -97,7 +97,7 @@ module.exports = {
             history(usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
             values ($1,$2,$3,$4,$5)`
             , [usr_id, type_of_form, id_private_form, time, date]);
-
+            console.log('SUCCCCCCC');
         } catch (err) {
             console.log({message: 'failed at _all_form_insert_chiphi', ERR:err});
         }

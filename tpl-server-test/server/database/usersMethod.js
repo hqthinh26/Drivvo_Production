@@ -17,19 +17,30 @@ module.exports = {
         
         try {
             //Step 1  
-            const server_uuid = uuid();
-            await pool.query(`insert into users(u_id, u_fullname, u_phone, u_email, u_pw)
-            values ($1,$2,$3,$4,$5)`, [server_uuid,fullname,phone,email,hashedPw]);
+            const auto_generated_uuid = uuid();
+            await pool.query(`INSERT INTO users(u_id, u_fullname, u_phone, u_email, u_pw, u_gg)
+            values ($1,$2,$3,$4,$5,$6)`, [auto_generated_uuid,fullname,phone,email,hashedPw, false]);
         } catch (err) {
-            console.log({message: 'insert at users failed', err});
+            throw new Error({message: 'insert at users failed', err});
+        }
+    },
+
+    insert_gg: async (fullname, phone, email) => {
+        try {
+            const auto_generated_uuid = uuid();
+            console.log({automated: auto_generated_uuid});
+            await pool.query(`
+            INSERT INTO users(u_id, u_fullname, u_phone, u_email, u_gg)
+            VALUES ($1, $2, $3, $4, $5)`
+            ,[auto_generated_uuid, fullname , phone, email, true]);
+        } catch (err) {
+            throw new Error({Message: 'Failed at insert_gg', err});
         }
     },
 
     doesExist: async (email) => {
         try {
             const results = await pool.query('select u_email from users');
-            console.log('answers table');
-            console.table(results.rows);
             const resultsArray = results.rows;
             const existed = resultsArray.find(user => user.u_email === email);
             if(existed) return true;

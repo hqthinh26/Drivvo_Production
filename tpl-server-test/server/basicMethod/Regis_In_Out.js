@@ -4,6 +4,8 @@ const tokenMethod = require('../database/tokenMethod');
 
 
 const bcryptJS = require('bcryptjs');
+const { doesExist } = require('../database/usersMethod');
+const pool = require('../database/pooling');
 
 module.exports = {
     register:  async (req,res) => {
@@ -26,6 +28,34 @@ module.exports = {
         }
         catch (err) {
             console.log({message: err});
+        }
+    },
+
+    signIN_gg: async (req,res) => {
+        try {
+
+            // Step 1: Receive fullname, phone and email from client 
+            const {fullname, phone, email} = req.body;
+            console.log({fullname, phone, email});
+            //Step 2: Check if the email has been existing
+            const checkEmail_existence = await userMethod.doesExist(email);
+            console.log({existOrNOT: checkEmail_existence});
+            //Step 3: If doesn't exist -> Register
+            if(!checkEmail_existence) {
+                await userMethod.insert_gg(fullname, phone, email);
+            }
+            //Step 4: Login user
+            const payload = {email};
+            const token = jwt.sign(payload,process.env.SECRET_KEY2);
+            const query1 = await pool.query('SELECT u_id FROM users WHERE u_email = $1',[email]);
+            const u_id = query1.rows[0].u_id;
+            console.log({U_ID: u_id});
+            await tokenMethod.insert(u_id, token);
+            //Step 5: Return like normal {send token to user}
+            console.log('SIGNIN GOOGLE');
+            res.status(200).send({message: 'gg ok', token: token});
+        } catch (err) {
+            console.log(err);
         }
     },
 

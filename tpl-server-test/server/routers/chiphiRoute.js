@@ -34,7 +34,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //import new row to All Form Table
         const type_of_form = 'chiphi';
         await historyMethod._allform_Insert_chiphi(usr_id, type_of_form, chiphi_UUID, {time, date});
-
+        console.log('import chiphi')
         return res.sendStatus(200);
     }
     catch (err) {

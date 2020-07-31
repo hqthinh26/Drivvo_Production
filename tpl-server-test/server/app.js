@@ -21,6 +21,7 @@ const napNLReport = require('./report/napNLReport');
 //From basicMethod folder
 const Regis_In_Out = require('./basicMethod/Regis_In_Out');
 const pool = require('./database/pooling');
+const nhacnhoMethod = require('./database/nhacnhoMethod');
 
 app.use(morgan('dev'));
 //app.use(express.json());
@@ -51,10 +52,23 @@ app.get('/', (req,res) => {
   res.send('This is drivvo project');
 })
 
+app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const date = await nhacnhoMethod.print_1_nhacnho(usr_id);
+    res.status(200).send({title: 'one time nhac nho', date});
+
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
 //Check if this users has existed in the system or not? before the registration process
 //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
-8
+
+app.post('/sign_in_gg', Regis_In_Out.signIN_gg);
 // Check if the user has exsited in the system or not? if it has, then send them to token
 //Related Folder: BasicMethod - User Method (check valid user)- Token Method (insert token)
 app.post('/login', Regis_In_Out.login);

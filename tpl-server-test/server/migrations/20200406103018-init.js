@@ -12,7 +12,8 @@ module.exports = {
         u_fullname text NOT NULL,
         u_phone text NOT NULL,
         u_email text NOT NULL UNIQUE,
-        u_pw text NOT NULL
+        u_pw text,
+        u_gg bool
     );
 
 
