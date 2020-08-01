@@ -22,9 +22,11 @@ module.exports = {
         try {
             const decoded = jwt.verify(token,process.env.SECRET_KEY2);
             const {email} = decoded;
+            
 
             const results = await pool.query(`select u_id from users where u_email = $1`, [email]);
             const usr_id = results.rows[0].u_id;
+            console.log({email_IN_EXTRACT_TOKEN: email, USR_ID: usr_id, tag: '_usr_id_from_token |Auth_IN_OUT.js'});
             return usr_id;
         } catch (err) {
             throw new Error({message: 'failed at usr_id_form_token', err})

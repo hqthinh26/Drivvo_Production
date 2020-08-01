@@ -23,11 +23,12 @@ module.exports = {
     },
 
     tokenExist: async (token) => {
+        console.log({Value_Token_input_IN_TOKEN_EXIST: token});
         const result = await pool.query(`select token_value from token where token_value = $1`,[token]);
 
         //If rowCount === 1 -> we found the token which is predefined to be UNIQUE
         console.log(`rount count = ${result.rowCount}`);
-        if(result.rowCount === 0) console.log('Token doesnt exist');
+        if(result.rowCount === 0) console.log('Token doesnt exist | FROM TOKEN METHOD');
         return result.rowCount === 1? true: false;
     }
 }
