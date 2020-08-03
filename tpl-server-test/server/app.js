@@ -81,3 +81,13 @@ app.post('/logout', Auth_IN_OUT.extractToken, Regis_In_Out.logout);
 app.listen(PORT, () => {
   console.log(`API is running at http://localhost:${PORT}`);
 });
+
+// app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
+//   const usr_id  = await Auth_IN_OUT._usr_id_from_token(req.token);
+//   const query1 = await pool.query(`
+//   SELECT *
+//   FROM dichvu
+//   WHERE u_id = $1`, [usr_id]);
+//   const data = query1.rows;
+//   res.status(500).send({data, row: query1.rowCount});
+// })

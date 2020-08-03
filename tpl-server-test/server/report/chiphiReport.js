@@ -10,7 +10,7 @@ const count_row_in_table = async (usr_id) => {
 
 
 //For the entry | Date_diff helps to compute by_day
-get_start_day_and_current_day = async (usr_id) => {
+const get_start_day_and_current_day = async (usr_id) => {
     const query1 = await pool.query(`SELECT min(created_at_date) as min, max(created_at_date) as max
                                     FROM history
                                     WHERE usr_id = $1`, [usr_id]);
@@ -18,7 +18,8 @@ get_start_day_and_current_day = async (usr_id) => {
     const current_date = query1.rows[0].max;
 
     const query2 = await pool.query(`SELECT DATE_PART('day', $1::timestamp - $2::timestamp) `, [current_date, start_date]);
-    const date_diff = query2.rows[0].date_part;
+    let date_diff = query2.rows[0].date_part;
+    date_diff === 0 ? date_diff = 1 : date_diff = date_diff;
 
     return {start_date, current_date, date_diff};
 }
@@ -32,7 +33,7 @@ const total_money_spent = async (usr_id) => {
     for(let i=0; i < query1.rowCount; i++) {
         total_money = total_money + array_of_chiphi[i].amount;
     }
-    return {total_money};
+    return total_money;
 }
 
 //to get the total_km driven by the user - regardless of what type_of_forms
@@ -49,7 +50,7 @@ const extract_odometer_value = async (a_form_value) => {
     }
     if(type_of_form === 'dichvu') {
         console.log('this is dich vu');
-        return pool.query(`select odometer from chiphi where id = $1`, [id_private_form]);
+        return pool.query(`select odometer from dichvu where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'thunhap') {
         console.log('this is thu nhap')
@@ -69,7 +70,7 @@ const total_km_driven = async (usr_id) => {
         const {start_date, current_date} = await get_start_day_and_current_day(usr_id);
 
         const query1 = await pool.query(`
-            (SELECT type_of_form, id_private_form, created_at_date
+            (SELECT type_of_form, id_private_form, created_at_date, created_at_time
             FROM history 
             WHERE           (usr_id = $1) 
                     AND     (created_at_date = $2) 
@@ -79,7 +80,7 @@ const total_km_driven = async (usr_id) => {
                             )
             )
             UNION
-            (SELECT type_of_form, id_private_form, created_at_date
+            (SELECT type_of_form, id_private_form, created_at_date, created_at_time
             FROM history
             WHERE           (usr_id = $1)
                     AND     (created_at_date = $3)
@@ -88,16 +89,17 @@ const total_km_driven = async (usr_id) => {
                                                 WHERE usr_id = $1 AND created_at_date = $3)
                             )
             )
-            ORDER BY created_at_date ASC
+            ORDER BY created_at_date ASC, created_at_time ASC
             `, [usr_id, start_date, current_date]
         );
     
+        console.log(query1.rows);
         if(query1.rowCount !== 2) throw new Error(`Return more than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in chiphi`);
     
         const oldest_and_lastest_forms_of_history = query1.rows;
        
         const array_of_oldest_latest_odometer = await Promise.all(oldest_and_lastest_forms_of_history.map((each_form) => extract_odometer_value(each_form)))
-    
+        console.log(array_of_oldest_latest_odometer);
         const _2_odometers = array_of_oldest_latest_odometer.map((each_query_value) => parseFloat(each_query_value.rows[0].odometer))
     
         const km_driven = _2_odometers[1] - _2_odometers[0];
@@ -110,12 +112,59 @@ const total_km_driven = async (usr_id) => {
     }
 }
 
-
+const today = async () => {
+    const query1 = await pool.query(`SELECT date_trunc('day', now()) as today`);
+    return query1.rows[0].today;
+}
 module.exports = {
     print_report: async (usr_id) => {
 
         try {
             const entry_chiphi = await count_row_in_table(usr_id);
+
+            //THERE ARE 3 CASES that either happens
+            //The chiphi table has 0 form
+            //The chiphi table has 1 form
+            //The chiphi table has multiple forms => This is where alot of computation is executed.
+
+            if(entry_chiphi === 0 ) {
+                const todayy = await today();
+                return {
+                    entry: {
+                        entry_chiphi,
+                        start_date: todayy,
+                        current_date: todayy,
+                        date_diff: 0
+                    },
+                    statistics: {
+                        total_money: 0,
+                        by_day: 0.000,
+                        by_km: 0.000,
+                    }
+                }
+            }
+
+            if(entry_chiphi === 1) {
+
+                const {start_date, current_date, date_diff} = await get_start_day_and_current_day(usr_id);
+                const total_money = await total_money_spent(usr_id);
+                return {
+                    entry: {
+                        entry_chiphi,
+                        start_date,
+                        current_date,
+                        date_diff
+                    },
+                    statistics: {
+                        total_money,
+                        by_day: 0,
+                        by_km: 0,
+                    }
+                }
+            }
+
+            // When there are multiple forms 
+            
             const {start_date, current_date, date_diff} = await get_start_day_and_current_day(usr_id);
             //Get number of rows in chiphi table + CHECK
 
@@ -123,7 +172,7 @@ module.exports = {
 
             //Count total_cost   & by_day_cost and finally by km_cost (IN PROGRESS)
             //Step 1: count total_cost CHECK
-            const {total_money} = await total_money_spent(usr_id);
+            const total_money = await total_money_spent(usr_id);
 
             //Step 2: count the DATE DIFF between first day and last day to count BY_DAY (in history table)  CHECK
             const by_day = parseFloat((total_money / date_diff).toFixed(3));

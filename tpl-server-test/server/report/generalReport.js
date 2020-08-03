@@ -2,7 +2,7 @@ const pool = require('../database/pooling');
 
 const total_entry_history = async (usr_id) => {
   const query_entry = await pool.query(`SELECT count(id) as total_entry FROM history WHERE usr_id = $1`, [usr_id]);
-  const total_entry = query_entry.rows[0].total_entry;
+  const total_entry = parseInt(query_entry.rows[0].total_entry);
   return total_entry;
 }
 
@@ -15,7 +15,7 @@ const total_km_driven = async (usr_id) => {
     if(type_of_form === 'chiphi') return pool.query(`SELECT odometer from chiphi where id = $1`, [id_private_form]);
     if(type_of_form === 'dichvu') return pool.query(`SELECT odometer from dichvu where id = $1`, [id_private_form]);
     if(type_of_form === 'thunhap') return pool.query(`SELECT odometer from thunhap where id = $1`, [id_private_form]);
-    if(type_of_form === 'quangduong') return pool.query(`SELECT final_odometer as odometer from quangduong where id = $1`, [id_private_form]);
+    // if(type_of_form === 'quangduong') return pool.query(`SELECT final_odometer as odometer from quangduong where id = $1`, [id_private_form]);
     throw new Error('invalid type_of_form');
   }
 
@@ -29,26 +29,28 @@ const total_km_driven = async (usr_id) => {
    const query2 = await pool.query(`
   (SELECT id_private_form, type_of_form, created_at_date, created_at_time 
    FROM history
-   WHERE        usr_id = $1 
-          AND   created_at_date = $2
-          AND   created_at_time = ( SELECT min(created_at_time) 
+   WHERE        (usr_id = $1)
+          AND   (created_at_date = $2)
+          AND   (created_at_time = ( SELECT min(created_at_time) 
                                     FROM history 
-                                    WHERE usr_id = $1 AND created_at_date = $2
-                                  ) 
+                                    WHERE usr_id = $1 AND created_at_date = $2 AND type_of_form NOT IN ($4)
+                                  )) 
+          AND (type_of_form NOT IN ($4))
   )
     UNION
   (SELECT id_private_form, type_of_form, created_at_date, created_at_time
     FROM history
-    WHERE        usr_id = $1
-          AND   created_at_date = $3
-          AND   created_at_time = ( SELECT max(created_at_time) 
+    WHERE        (usr_id = $1)
+          AND   (created_at_date = $3)
+          AND   (created_at_time = ( SELECT max(created_at_time) 
                                     FROM history 
-                                    WHERE usr_id = $1 AND created_at_date = $3
-                                  )       
+                                    WHERE usr_id = $1 AND created_at_date = $3 AND type_of_form NOT IN ($4)
+                                  ))   
+          AND (type_of_form NOT IN ($4))    
   ) 
-  ORDER BY created_at_date asc`
-   ,[usr_id, start_date, current_date]);
-  
+  ORDER BY created_at_date ASC, created_at_time ASC`
+   ,[usr_id, start_date, current_date, 'quangduong']);
+   
    const _array_contains_2_dates = query2.rows;
 
    const _array_contains_2_odometers = await Promise.all(_array_contains_2_dates.map(extract_odometer));
@@ -77,61 +79,79 @@ const total_date_app_used = async (usr_id) => {
 
 const total_cost_all_form = async (usr_id) => {
   //napnhienlieu
-  let cost_nll = 0, cost_chiphi = 0, cost_dichvu = 0, cost_quangduong = 0;
+  let cost_nll = 0, cost_chiphi = 0, cost_dichvu = 0;
 
-  const queryNLL = await pool.query(` SELECT total_cost FROM napnhienlieu WHERE u_id = $1`, [usr_id]);
+  const queryNLL = await pool.query(` SELECT sum(total_cost) as total_cost FROM napnhienlieu WHERE u_id = $1`, [usr_id]);
 
-  const queryChiphi = await pool.query(` SELECT amount as total_cost FROM chiphi WHERE u_id = $1`, [usr_id]);
+  const queryChiphi = await pool.query(` SELECT sum(amount) as total_cost FROM chiphi WHERE u_id = $1`, [usr_id]);
 
-  const queryDichvu = await pool.query(` SELECT amount as total_cost FROM dichvu WHERE u_id = $1`, [usr_id]);
+  const queryDichvu = await pool.query(` SELECT sum(amount) as total_cost FROM dichvu WHERE u_id = $1`, [usr_id]);
 
-  const queryQuangduong = await pool.query(` SELECT total as total_cost FROM quangduong WHERE usr_id = $1`, [usr_id]);
+  
+  queryNLL.rows[0].total_cost === null ? cost_nll = 0 : cost_nll = parseInt(queryNLL.rows[0].total_cost);
 
-  if(queryNLL.rowCount === 0) {cost_nll = 0;} else {
-    const nll_cost_values = queryNLL.rows.map((each_row) => each_row.total_cost);
-    cost_nll = nll_cost_values.reduce((total, value) => total + value);
-  }
+  queryChiphi.rows[0].total_cost === null ? cost_chiphi = 0 : cost_chiphi = parseInt(queryChiphi.rows[0].total_cost);
 
-  if(queryChiphi.rowCount === 0) {cost_chiphi = 0;} else {
-    const chiphi_cost_values = queryChiphi.rows.map((each_row) => each_row.total_cost);
-    cost_chiphi = chiphi_cost_values.reduce((total, value) => total + value);
-  }
+  queryDichvu.rows[0].total_cost === null ? cost_dichvu = 0 : cost_dichvu = parseInt(queryDichvu.rows[0].total_cost);
 
-  if(queryDichvu.rowCount === 0) {cost_dichvu = 0;} else {
-    const dichvu_cost_values = queryDichvu.rows.map((each_row) => each_row.total_cost);
-    cost_dichvu = dichvu_cost_values.reduce((total, value) => total + value);
-  }
-
-  if(queryQuangduong.rowCount === 0) {cost_quangduong = 0;} else {
-    const quangduong_cost_values = queryQuangduong.rows.map((each_row) => each_row.total_cost);
-    cost_quangduong = quangduong_cost_values.reduce((total, value) => total + value);
-  }
-
-  const total_cost = cost_nll + cost_chiphi + cost_dichvu + cost_quangduong;
+  const total_cost = cost_nll + cost_chiphi + cost_dichvu;
   
   return total_cost;
 }
 
 const total_income_all_form = async (usr_id) => {
   let total_income = 0;
-  const query1 = await pool.query(` SELECT amount as total_cost FROM thunhap WHERE u_id = $1`, [usr_id]);
-  if(query1.rowCount === 0) {total_income = 0} else {
-    const income_value_array = query1.rows.map((each_row) => each_row.total_cost);
-    total_income = income_value_array.reduce((total, value) => total + value);
-  }
+  const query1 = await pool.query(` SELECT sum(amount) as total_income  FROM thunhap WHERE u_id = $1`, [usr_id]);
+  // if(query1.rowCount === 0) {total_income = 0} else {
+  //   const income_value_array = query1.rows.map((each_row) => each_row.total_cost);
+  //   total_income = income_value_array.reduce((total, value) => total + value);
+  // }
+  query1.rows[0].total_income === null ? total_income = 0 : total_income = parseInt(query1.rows[0].total_income);
   return total_income;
+}
+
+const today = async () => {
+  const query1 = await pool.query(`
+  SELECT date_trunc('day', now()) as today`);
+  return query1.rows[0].today;
 }
 
 module.exports = {
     print_general: async (usr_id) => {
 
-      // calculate total_entry
       const total_entry = await total_entry_history(usr_id);
-      // Calculate total_km_driven
-      const {start_date, current_date, km_driven} = await total_km_driven(usr_id)
+
+      if (total_entry === 0) { // Neu nguoi dung chua nhap bat ky 1 form gi
+        return {
+          total_entry: 0,
+          dates: {
+            start_date: await today(),
+            current_date: await today(),
+          },
+          Balance: {
+            total_balance: 0, by_day: 0.000, by_km: 000,
+          },
+          Cost: {
+            total_cost: 0, by_day: 0.000, by_km: 0.000
+          },
+          Income: {
+            total_income: 0,
+            by_day: 0.000,
+            by_km: 0.000,
+          },
+          Distance: {
+            total: 0,
+            daily_average: 0.000,
+          }
+        }
+      } 
+      const {start_date, current_date, km_driven} = await total_km_driven(usr_id);
+
 
       // Calculate total_date_app_used
-      const date_diff = await total_date_app_used(usr_id);
+      date_diff = await total_date_app_used(usr_id);
+
+      //5 gia tri chinh: total_entry, total_cost, total_income, date_diff, km_driven
 
       // calculate total cost of (NLL, CHIPHI, DICHVU) TABLES
       const total_cost = await total_cost_all_form(usr_id);
@@ -141,8 +161,9 @@ module.exports = {
 
       // Calculate balanced sheet
       const total_balance = total_cost - total_income;
+
       return {
-        total_entry,
+        total_entry, // gia tri dau tien duoc tinh toan
         dates: {
           start_date,
           current_date,

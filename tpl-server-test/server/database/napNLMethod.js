@@ -68,7 +68,11 @@ module.exports = {
    _startDay_and_currentDay_refilling_time_precision: async (usr_id) => {
        try {
 
-            const query0 = await pool.query(`SELECT count(id) as number_of_rows FROM napnhienlieu`);
+            const query0 = await pool.query(`
+            SELECT count(id) as number_of_rows 
+            FROM napnhienlieu
+            WHERE u_id = $1
+            `, [usr_id]);
             const total_entry_nll = parseInt(query0.rows[0].number_of_rows);
 
             const query1 = await pool.query(`
@@ -107,36 +111,65 @@ module.exports = {
             ORDER BY odometer ASC
             `, [usr_id, start_date,current_date]); 
 
-            const odometer_on_start_date = query3.rows[0].odometer;
-            const odometer_on_current_date = query3.rows[1].odometer;
-            
-            //convert string to float
-            const odometer_on_start_dateF = parseFloat(odometer_on_start_date);
-            const odometer_on_current_dateF = parseFloat(odometer_on_current_date);
-            const total_odometer_moved = odometer_on_current_dateF - odometer_on_start_dateF;
+            // Nghia la chi co 1 form duoc nhap => khong the tinh trung binh quang duong da di va cac thu khac
+            if (query3.rowCount === 1) {
+                // lay gia tri total_cost va total_units cua form duy nhat do
+                const query4 = await pool.query(`
+                SELECT total_cost, total_units
+                FROM napnhienlieu
+                WHERE u_id = $1
+                `, [usr_id]);
+                const total_cost = query4.rows[0].total_cost;
+                const total_unit = parseFloat(query4.rows[0].total_units);
+                return { 
+                    total_entry_nll,
+                    start_date,
+                    current_date,
+                    date_part: 0, //use to compute by_day
+                    total_odometer_moved: 0.0, //use to compute by_km
+                    cost: {
+                        total_cost: total_cost,
+                        by_day: total_cost,
+                        by_km: 0.000,
+                    },
+                    fuel: {
+                        total_volume: `${total_unit} L`,
+                        general_average: `NaN km/L`,
+                    }
+                };
 
-            const  {total_cost, total_unit} = await calculate_total_cost_and_unit(usr_id);
-            
-            const by_day_cost = parseFloat((total_cost / date_part).toFixed(3));
-            const by_km_cost =  parseFloat((total_cost / total_odometer_moved).toFixed(3));
-            const km_per_litter = parseFloat((total_odometer_moved / total_unit).toFixed(3));
+            } else { // Vao else duoc => co nhieu hon hoac bang 2 forms 
+                const odometer_on_start_date = query3.rows[0].odometer;
+                const odometer_on_current_date = query3.rows[1].odometer;
+                
+                //convert string to float
+                const odometer_on_start_dateF = parseFloat(odometer_on_start_date);
+                const odometer_on_current_dateF = parseFloat(odometer_on_current_date);
+                const total_odometer_moved = odometer_on_current_dateF - odometer_on_start_dateF;
 
-            return {
-                start_date, 
-                current_date, 
-                total_entry_nll,
-                date_part, //use to compute by_day
-                total_odometer_moved, //use to compute by_km
-                cost: {
-                    total_cost,
-                    by_day: by_day_cost,
-                    by_km: by_km_cost,
-                },
-                fuel: {
-                    total_volume: `${total_unit} L`,
-                    general_average: `${km_per_litter} km/L`,
-                }
-            };
+                const  {total_cost, total_unit} = await calculate_total_cost_and_unit(usr_id);
+                
+                const by_day_cost = parseFloat((total_cost / date_part).toFixed(3));
+                const by_km_cost =  parseFloat((total_cost / total_odometer_moved).toFixed(3));
+                const km_per_litter = parseFloat((total_odometer_moved / total_unit).toFixed(3));
+
+                return { 
+                    total_entry_nll,
+                    start_date,
+                    current_date,
+                    date_part, //use to compute by_day
+                    total_odometer_moved, //use to compute by_km
+                    cost: {
+                        total_cost,
+                        by_day: by_day_cost,
+                        by_km: by_km_cost,
+                    },
+                    fuel: {
+                        total_volume: `${total_unit} L`,
+                        general_average: `${km_per_litter} km/L`,
+                    }
+                };
+            }
        } catch (err) {
            console.log('Failed at _startDay_and_currentDay_refilling_time_precision in napNLMethod.js');
            throw new Error('failed at _startDay_and_currentDay_refilling_time_precision');

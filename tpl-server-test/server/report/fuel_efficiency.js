@@ -49,6 +49,7 @@ const average_nll_array = (nll_rows) => {
 const find_min_and_max = (average_array) => {
     let min = average_array[0], max = average_array[0];
     
+    //Phan tu cuoi cung cua mang chua co trung binh nen loai ra
     for(let i = 0; i < average_array.length -1; i++) {
         const current_i = average_array[i];
         if(average_array[i].average < min.average ) min = average_array[i];

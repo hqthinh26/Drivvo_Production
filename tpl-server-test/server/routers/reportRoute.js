@@ -249,11 +249,17 @@ router.get('/dichvu', Auth_IN_OUT.extractToken, async (req,res) => {
 
     const {total_entry_time, days, money_spent, by_date, by_km} = entry_time;
 
-    const entry = {entry_dichvu: total_entry_time, start_date: days.start_date, current_date: days.current_date, date_diff: days.date_diff};
+    const entry = {
+      entry_dichvu: total_entry_time, 
+      start_date: days.start_date, 
+      current_date: days.current_date, 
+      date_diff: days.date_diff
+    };
+    
     const statistics = {
       total_money: money_spent, by_date, by_km
     };
-    const data = {entry, statistics}
+    //const data = {entry, statistics}
 
     res.status(200).send({entry, statistics});
     
