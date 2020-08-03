@@ -51,15 +51,22 @@ const total_km_driven = async (usr_id) => {
   ORDER BY created_at_date ASC, created_at_time ASC`
    ,[usr_id, start_date, current_date, 'quangduong']);
    
-   const _array_contains_2_dates = query2.rows;
+   if (query2.rowCount === 1) { // History table chi co 1 form duy nhat thi km_driven = 0
 
-   const _array_contains_2_odometers = await Promise.all(_array_contains_2_dates.map(extract_odometer));
+      const km_driven = 0; 
+      return {km_driven, start_date, current_date};
 
-   const _2_odometers = _array_contains_2_odometers.map((each_row) => each_row.rows[0].odometer);
+   } else { // History table co nhieu hon hoac bang 2 form
+      const _array_contains_2_dates = query2.rows;
 
-   const km_driven = parseFloat(_2_odometers[1]) - parseFloat(_2_odometers[0]);
-
-   return {km_driven, start_date, current_date};
+      const _array_contains_2_odometers = await Promise.all(_array_contains_2_dates.map(extract_odometer));
+  
+      const _2_odometers = _array_contains_2_odometers.map((each_row) => each_row.rows[0].odometer);
+  
+      const km_driven = parseFloat(_2_odometers[1]) - parseFloat(_2_odometers[0]);
+  
+      return {km_driven, start_date, current_date};
+   }  
 }
 
 const total_date_app_used = async (usr_id) => {
@@ -72,8 +79,12 @@ const total_date_app_used = async (usr_id) => {
   const current_date = query1.rows[0].current_date;
 
   const query2 = await pool.query(`
-  SELECT DATE_PART('day', $2::timestamp - $1::timestamp)`, [start_date, current_date]);
-  const date_diff = query2.rows[0].date_part;
+  SELECT DATE_PART('day', $2::timestamp - $1::timestamp) as date_diff`, [start_date, current_date]);
+  let date_diff = parseInt(query2.rows[0].date_diff);
+  
+  //Neu ma chenh lenh ngay la 0 thi tang len do 1 => Ly do: date_diff dùng trong toán chia, do đó, không thể = 0
+  date_diff === 0 ? date_diff = 1 : date_diff = date_diff;
+
   return date_diff;
 }
 
@@ -145,13 +156,9 @@ module.exports = {
           }
         }
       } 
+
       const {start_date, current_date, km_driven} = await total_km_driven(usr_id);
-
-
-      // Calculate total_date_app_used
-      date_diff = await total_date_app_used(usr_id);
-
-      //5 gia tri chinh: total_entry, total_cost, total_income, date_diff, km_driven
+      const date_diff = await total_date_app_used(usr_id);
 
       // calculate total cost of (NLL, CHIPHI, DICHVU) TABLES
       const total_cost = await total_cost_all_form(usr_id);
@@ -162,6 +169,7 @@ module.exports = {
       // Calculate balanced sheet
       const total_balance = total_cost - total_income;
 
+      //Note : Date_diff nghĩa là trong database, các forms có cùng 1 nhãn date (Cùng 1 ngày)
       return {
         total_entry, // gia tri dau tien duoc tinh toan
         dates: {
@@ -170,22 +178,22 @@ module.exports = {
         },
         Balance: {
           total_balance,
-          by_day: parseFloat((total_balance / date_diff).toFixed(3)),
-          by_km: parseFloat((total_balance / km_driven).toFixed(3)),
+          by_day: date_diff === 1 ? parseFloat((total_balance).toFixed(3)) : parseFloat((total_balance / date_diff).toFixed(3)),
+          by_km: km_driven === 0 ? 0.000 : parseFloat((total_balance / km_driven).toFixed(3)),
         },
         Cost: {
           total_cost,
-          by_day: parseFloat((total_cost / date_diff).toFixed(3)),
-          by_km: parseFloat((total_cost / km_driven).toFixed(3)),
+          by_day: date_diff === 1 ? parseFloat((total_cost).toFixed(3)) : parseFloat((total_cost / date_diff).toFixed(3)),
+          by_km: km_driven === 0 ? 0.000 : parseFloat((total_cost / km_driven).toFixed(3)),
         },
         Income: {
           total_income,
-          by_day: parseFloat((total_income / date_diff).toFixed(3)),
-          by_km: parseFloat((total_income / km_driven).toFixed(3)),
+          by_day: date_diff === 1 ? parseFloat((total_income).toFixed(3)) : parseFloat((total_income / date_diff).toFixed(3)),
+          by_km: km_driven === 0 ? 0.000 : parseFloat((total_income / km_driven).toFixed(3)),
         },
         Distance: {
-          total: km_driven,
-          daily_average: Math.floor(km_driven / date_diff),
+          total: km_driven === 0 ? 'NaN' : km_driven,
+          daily_average: km_driven === 0 ? 'NaN' : Math.floor(km_driven / date_diff),
         }
       }
     },

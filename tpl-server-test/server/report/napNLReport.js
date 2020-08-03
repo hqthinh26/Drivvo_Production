@@ -117,7 +117,6 @@ module.exports = {
                     cost,
                     fuel,
                 } = await napNLMethod._startDay_and_currentDay_refilling_time_precision(usr_id);
-                console.log('heelo wolrd')
                 return {
                     related_values_nll: {
                         total_entry_nll: number_of_row,
