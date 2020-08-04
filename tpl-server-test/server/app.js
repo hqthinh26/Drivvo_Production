@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 require('express-async-errors');
 //======================================= >< =======================================
 const bodyParser = require('body-parser');
-const PORT = 3000;
+const PORTX = 3000;
 const app = express();
 const bcryptjs = require('bcryptjs');
 
@@ -78,8 +78,8 @@ app.post('/login', Regis_In_Out.login);
 //Related Files/Folder: BasicMethod - Token Method - Auth_In_Out
 app.post('/logout', Auth_IN_OUT.extractToken, Regis_In_Out.logout);
 
-app.listen(PORT, () => {
-  console.log(`API is running at http://localhost:${PORT}`);
+app.listen(process.env.PORT || PORTX, () => {
+  console.log(`API is running at http://localhost:${process.env.PORT}`);
 });
 
 // app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
