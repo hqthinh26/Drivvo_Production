@@ -4,7 +4,7 @@ const pool = new Pool({
     host: 'db',
     port: 5432,
     user: 'company',
-    database: 'companyx',
+    database: 'company',
     password: 'abcdef1234',
     max: 20,
     connectionTimeoutMillis: 0,
