@@ -1,0 +1,5 @@
+build: 
+    docker:
+        web: ./server/Dockerfile
+run: 
+    web: bash -c "sequelize db:migrate && yarn start"
