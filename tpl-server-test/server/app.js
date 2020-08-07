@@ -49,7 +49,7 @@ app.use('/loaithunhap', require('./additional_routers/loaithunhapRoute'));
 app.use('/lydo', require('./additional_routers/lydoRoute'));
 
 app.get('/', (req,res) => {
-  res.send('This is drivvo project');
+  res.send({message: 'This is drivvo project', port: process.env.PORT});
 })
 
 app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
@@ -64,30 +64,30 @@ app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
     res.sendStatus(500);
   }
 })
-//Check if this users has existed in the system or not? before the registration process
-//related folders: BasicMethod - User Method
+// //Check if this users has existed in the system or not? before the registration process
+// //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
 
 app.post('/sign_in_gg', Regis_In_Out.signIN_gg);
 
-// Check if the user has exsited in the system or not? if it has, then send them to token
-//Related Folder: BasicMethod - User Method (check valid user)- Token Method (insert token)
+// // Check if the user has exsited in the system or not? if it has, then send them to token
+// //Related Folder: BasicMethod - User Method (check valid user)- Token Method (insert token)
 app.post('/login', Regis_In_Out.login);
 
-//Check if the token sent by the customer exists in the system before allowing them to logout
-//Related Files/Folder: BasicMethod - Token Method - Auth_In_Out
+// //Check if the token sent by the customer exists in the system before allowing them to logout
+// //Related Files/Folder: BasicMethod - Token Method - Auth_In_Out
 app.post('/logout', Auth_IN_OUT.extractToken, Regis_In_Out.logout);
 
-app.listen(process.env.PORT || PORTX, () => {
+app.listen(process.env.PORT, () => {
   console.log(`API is running at http://localhost:${process.env.PORT}`);
 });
 
-// app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
-//   const usr_id  = await Auth_IN_OUT._usr_id_from_token(req.token);
-//   const query1 = await pool.query(`
-//   SELECT *
-//   FROM dichvu
-//   WHERE u_id = $1`, [usr_id]);
-//   const data = query1.rows;
-//   res.status(500).send({data, row: query1.rowCount});
-// })
+app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
+  const usr_id  = await Auth_IN_OUT._usr_id_from_token(req.token);
+  const query1 = await pool.query(`
+  SELECT *
+  FROM dichvu
+  WHERE u_id = $1`, [usr_id]);
+  const data = query1.rows;
+  res.status(500).send({data, row: query1.rowCount});
+})
