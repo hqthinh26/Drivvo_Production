@@ -1,3 +1,12 @@
+setup:
+    addons:
+        - plan: heroku-postgresql
+          as: DATABSE
 build:
     docker: 
         web: Dockerfile
+run:
+    #web: yarn run start => ok
+    #web: ["/bin/bash", "-c ","yarn run start"] => not ok => k chap nhan array
+    #web: bash -c "yarn start"
+    web: bash -c "sequelize db:migrate && yarn start"

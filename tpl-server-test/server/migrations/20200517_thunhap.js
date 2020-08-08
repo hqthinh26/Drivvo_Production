@@ -26,11 +26,12 @@ module.exports = {
         `, {raw: true});
     },
 
-    //@ts-ignore
     down: async (queryInterface, Sequelize) => {  
         await queryInterface.sequelize.query(`
-        
-        
-        `, {raw: true});
+      
+      
+
+      
+    `, {raw: true}) 
     },
 };

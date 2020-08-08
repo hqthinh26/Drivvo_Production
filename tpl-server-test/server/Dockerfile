@@ -4,7 +4,6 @@ COPY package.json yarn.lock ./
 RUN yarn install
 COPY ./ .
 RUN yarn global add sequelize sequelize-cli pg nodemon
-ENTRYPOINT [ "yarn run start" ]
 
 #Below is valuable material
 
@@ -27,7 +26,7 @@ ENTRYPOINT [ "yarn run start" ]
 #ENTRYPOINT "yarn run start" => ok
 
 #ENTRYPOINT yarn run start  => not ok
-#ENTRYPOINT bash -c "yarn run start" => abundun 
+#ENTRYPOINT bash -c "yarn run start" => abundun => not ok
 
 
 #ENTRYPOINT ["/bin/bash", "-c", "yarn run start"] => not ok

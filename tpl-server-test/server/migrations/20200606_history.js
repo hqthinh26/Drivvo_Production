@@ -18,6 +18,11 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.sequelize.query(``, {raw: true});
+        await queryInterface.sequelize.query(`
+      
+      
+
+      
+    `, {raw: true}) 
     }
 }
