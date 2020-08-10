@@ -1,13 +1,27 @@
 const pool = require('../database/pooling');
+const e = require('express');
 
+const _now = async () => {
+    const query1 = await pool.query(`SELECT date_trunc('day', now())`);
+    return query1.rows[0].date_trunc;
+}
 const retrieve_start_current_days = async (usr_id) => {
-    const query1 = await pool.query(`
-    SELECT min(created_at_date)as start_date, max(created_at_date) as current_date
-    FROM history
-    WHERE usr_id = $1
-    `,[usr_id]);
-    const result_query1 = query1.rows[0];
-    return result_query1;
+    const query0 = await pool.query(`SELECT count(id) from dichvu where u_id = $1`, [usr_id]);
+    if(query0.rows[0].count == '0') {
+        const now = await _now();
+        return {
+            start_date: now,
+            current_date: now,
+        }
+    } else {
+        const query1 = await pool.query(`
+        SELECT min(created_at_date) as start_date, max(created_at_date) as current_date
+        FROM history
+        WHERE usr_id = $1
+        `,[usr_id]);
+        const result_query1 = query1.rows[0];
+        return result_query1;
+    }
 };
 
 const retrieve_data_service = async (usr_id) => {

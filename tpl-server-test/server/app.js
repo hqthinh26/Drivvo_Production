@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 require('express-async-errors');
+
 //======================================= >< =======================================
 const bodyParser = require('body-parser');
 const PORTX = 3000;
@@ -49,7 +50,7 @@ app.use('/loaithunhap', require('./additional_routers/loaithunhapRoute'));
 app.use('/lydo', require('./additional_routers/lydoRoute'));
 
 app.get('/', (req,res) => {
-  res.send({message: 'This is drivvo project LOL 1998', port: process.env.PORT});
+  res.send({message: 'This is drivvo project LOL 1998', port: process.env.PORT, URL: process.env.DATABASE_URL, alo: process.env.HI});
 })
 
 app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {

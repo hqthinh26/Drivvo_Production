@@ -126,18 +126,6 @@ router.get('/nll/chart_3', Auth_IN_OUT.extractToken, async (req, res) => {
   }
 })
 
-// router.get('/nll/chart_4', Auth_IN_OUT.extractToken, async (req,res) => {
-//   try {
-//     const token = req.token;
-//     const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-//     const chart_4 = await napnhienlieuChart.chart_4(usr_id);
-//     res.status(200).send({chart_4});
-//   } catch (err) {
-//     console.log(err);
-//     res.sendStatus(500);
-//   }
-// })
-
 //Tong chi phi nap nhien lieu tung thang
 router.get('/nll/chart_4', Auth_IN_OUT.extractToken, async (req,res) => {
   try {

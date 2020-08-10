@@ -23,7 +23,7 @@ const pgp = require('util');
 
 const cn = {
   user: 'company',
-  host: 'localhost',
+  host: 'db',
   database: 'company',
   password: 'abcdef1234',
   port: 5432,

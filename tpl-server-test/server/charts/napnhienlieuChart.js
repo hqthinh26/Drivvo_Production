@@ -202,6 +202,7 @@ const _main_function_chart_5 = async (usr_id, current_year) => {
     query1.rows.forEach(
         (each_row) => {
             label.push(each_row.reason);
+            //data.push(parseInt(each_row.grand_total_cost));
             let each_row_data_arr = [];
             each_row_data_arr.push((parseInt(each_row.grand_total_cost)));
             data.push(each_row_data_arr); // An array inside another bigger arr
@@ -209,16 +210,37 @@ const _main_function_chart_5 = async (usr_id, current_year) => {
     );
     return {label, data}
 }
+
+const _now = async () => {
+    const query1 = await pool.query(`SELECT date_trunc('day', now())`);
+    return query1.rows[0].date_trunc;
+}
 module.exports = {
     chart_1: async (usr_id) => {
-        const start_current_dates = await _start_current_dates(usr_id);
+        //==================== condition - handle if no form is in the table ====================
+        const query0 = await pool.query(`SELECT count(id) from napnhienlieu where u_id = $1`, [usr_id]);
+        let start_current_dates;
+        const now = await _now(); 
+        
+        query0.rows[0].count === '0' 
+        ? start_current_dates = {start_date: now,current_date: now}
+        : start_current_dates = await _start_current_dates(usr_id);
+        //========================================================================================
         const data = await _main_function_chart_1(usr_id);
         return {start_current_dates, data};
     },
 
     chart_2: async (usr_id) => {
         const title = 'Odometer chances by days';
-        const start_current_dates = await _start_current_dates(usr_id);
+        //==================== condition - handle if no form is in the table ====================
+        const query0 = await pool.query(`SELECT count(id) from napnhienlieu where u_id = $1`, [usr_id]);
+        let start_current_dates;
+        const now = await _now(); 
+                
+        query0.rows[0].count === '0' 
+        ? start_current_dates = {start_date: now,current_date: now}
+        : start_current_dates = await _start_current_dates(usr_id);
+        //========================================================================================
         const current_year = await _current_year();
         const data = await _main_fucntion_chart_2(usr_id, current_year);
         return {title, start_current_dates, current_year, data}
@@ -226,7 +248,15 @@ module.exports = {
 
     chart_3: async (usr_id) => {
         const title = 'Average Monthly Fuel Price';
-        const start_current_dates = await _start_current_dates(usr_id);
+        //==================== condition - handle if no form is in the table ====================
+        const query0 = await pool.query(`SELECT count(id) from napnhienlieu where u_id = $1`, [usr_id]);
+        let start_current_dates;
+        const now = await _now(); 
+                
+        query0.rows[0].count === '0' 
+        ? start_current_dates = {start_date: now,current_date: now}
+        : start_current_dates = await _start_current_dates(usr_id);
+        //========================================================================================
         const current_year = await _current_year(usr_id);
         const test = await _main_function_chart_3(usr_id, current_year);
         return {title, start_current_dates, test};
@@ -234,7 +264,15 @@ module.exports = {
 
     chart_4: async (usr_id) => {
         const title = 'Monthly Expenditure on Refuelling'
-        const start_current_dates = await _start_current_dates(usr_id);
+        //==================== condition - handle if no form is in the table ====================
+        const query0 = await pool.query(`SELECT count(id) from napnhienlieu where u_id = $1`, [usr_id]);
+        let start_current_dates;
+        const now = await _now(); 
+                
+        query0.rows[0].count === '0' 
+        ? start_current_dates = {start_date: now,current_date: now}
+        : start_current_dates = await _start_current_dates(usr_id);
+        //========================================================================================
         const current_year = await _current_year();
         const main_data = await _main_function_chart_4(usr_id, current_year);
         return {title, start_current_dates, current_year, main_data};
@@ -242,7 +280,15 @@ module.exports = {
 
     chart_5: async (usr_id) => {
         const title = 'TOTAL EXPENDITURE BASED on REASONs';
-        const start_current_dates = await _start_current_dates(usr_id);
+         //==================== condition - handle if no form is in the table ====================
+         const query0 = await pool.query(`SELECT count(id) from napnhienlieu where u_id = $1`, [usr_id]);
+         let start_current_dates;
+         const now = await _now(); 
+                 
+         query0.rows[0].count === '0' 
+         ? start_current_dates = {start_date: now,current_date: now}
+         : start_current_dates = await _start_current_dates(usr_id);
+         //========================================================================================
         const current_year = await  _current_year();
         const main_data = await _main_function_chart_5(usr_id, current_year);
         return {title, start_current_dates, current_year, main_data}
