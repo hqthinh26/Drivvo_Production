@@ -17,9 +17,14 @@ module.exports = {
     },
 
     delete: async (token) => {
+        try {
             await pool.query(`delete from token where token_value = $1`, [token]);
             console.log('successfully delete a row from token');
             return true;
+        } catch (err) {
+            throw new Error({messsage: 'Failed at delete token',err});
+        }
+            
     },
 
     tokenExist: async (token) => {

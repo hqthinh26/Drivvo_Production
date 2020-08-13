@@ -1,6 +1,10 @@
 {
   "development": {
-    "use_env_variable": "DATABASE_URL"
+    "username": "pzjtzfyxirzlbo",
+    "password": "df29fe06f942fe56b71376aafe5582c59c410fd5b353a2c380ce44102f233e32",
+    "database": "d71babp6b76q45",
+    "host": "ec2-52-44-166-58.compute-1.amazonaws.com",
+    "dialect": "postgres"
   },
   "test": {
     "username": "root",

@@ -85,8 +85,7 @@ module.exports = {
         console.log('this is logout method token: ' + token);
         try {
             const checkSuccess = await tokenMethod.delete(token);
-            if (checkSuccess) return res.sendStatus(200);
-            return res.status(403).send('failed to delete token');
+            return res.sendStatus(200);
         }
         catch (err) {
             console.log({message: err});

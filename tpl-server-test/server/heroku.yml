@@ -13,5 +13,4 @@ run:
 #RUN
     #web: yarn run start => ok
     #web: ["/bin/bash", "-c ","yarn run start"] => not ok => k chap nhan array
-    # => ok
     #web: bash -c "sequelize db:migrate && yarn start"
