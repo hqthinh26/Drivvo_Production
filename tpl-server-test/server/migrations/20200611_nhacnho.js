@@ -1,10 +1,10 @@
 'use strict'
-
+//ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.sequelize.query(`
         
-        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+        
         
         CREATE TABLE nhacnho (
             id uuid PRIMARY KEY,

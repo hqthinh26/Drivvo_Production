@@ -1,5 +1,5 @@
 'use strict'
-
+//ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
 module.exports = {
     //@ts-ignore
     up: async (queryInterface, Sequelize) => {
@@ -7,7 +7,7 @@ module.exports = {
         
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-        ALTER DATABASE company SET timezone TO 'Asia/Ho_Chi_Minh';
+        
 
         CREATE TABLE thunhap(
             id uuid PRIMARY KEY default uuid_generate_v4(),

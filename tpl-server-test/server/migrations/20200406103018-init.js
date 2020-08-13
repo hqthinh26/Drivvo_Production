@@ -6,7 +6,8 @@ module.exports = {
   up: async function(queryInterface, Sequelize) {
     await queryInterface.sequelize.query(`
       
-      
+      ALTER DATABASE d71babp6b76q45 SET timezone TO 'Asia/Ho_Chi_Minh';
+
       CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
       CREATE TABLE users(
