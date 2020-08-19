@@ -1,16 +1,16 @@
-const route = require('express').Router();
+const router = require('express').Router();
 const {uuid} = require('uuidv4');
 const dichvuMethod = require('../database/dichvuMethod');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const historyMethod = require('../database/historyMethod');
 
-route.get('/', (req,res) => {
+router.get('/', (req,res) => {
     res.send('Hello, this is dich vu route');
 })
 
-route.get('/printall', dichvuMethod.printall);
+router.get('/printall', dichvuMethod.printall);
 
-route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
+router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
     //IMPORTANT: below is the list of foreign key values 
     // So that these values must alr exist in the database
@@ -36,7 +36,7 @@ route.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }
 });
 
-route.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
+router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
     const inputFromClient
     = {form_id, odometer, type_of_service, amount, location, note, time, date}
     = req.body;
@@ -49,4 +49,16 @@ route.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
     }
 });
 
-module.exports = route;
+router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
+    const token = req.token;
+    const {form_id} = req.body;
+    try {
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const query2 = await dichvuMethod.delete(usr_id, form_id);
+        res.status(200).send({mess: `SUCCESSFUL deletete ${form_id}`});
+    } catch (err) {
+        res.sendStatus(500);
+        console.log({ERR: err});
+    }
+});
+module.exports = router;

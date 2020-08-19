@@ -4,6 +4,7 @@ const nhacnhoMethod = require('../database/nhacnhoMethod');
 const {uuid} = require('uuidv4');
 const moment = require('moment');
 const historyMethod = require('../database/historyMethod');
+const { route } = require('./napnhienlieuRoute');
 
 
 const router = express.Router();
@@ -53,6 +54,18 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     }
 })
 
+router.get('/print', Auth_IN_OUT.extractToken, async (req,res) => {
+    try {
+        const token = req.token;
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const data = await nhacnhoMethod.print(usr_id);
+        res.status(200).send({data});
+    } catch (err) {
+        res.sendStatus(500);
+        console.log({ERR: err});
+    }
+});
+
 router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     const inputFromUser
@@ -67,6 +80,21 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
         console.log({message: 'failed at nhacnho update route', err});
         res.status(403).send({message: 'Failed at nhac nho update route', err});
     }
-})
+});
+
+router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
+    const token = req.token;
+    const {form_id} = req.body;
+    try {
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        await nhacnhoMethod.delete(usr_id, form_id);
+        res.status(200).send('SUCCESSFUL delete nhac nho ' + form_id);
+    } catch (err) {
+        res.sendStatus(500);
+        console.log({ERR: err});
+    }
+});
+
+
 
 module.exports = router;

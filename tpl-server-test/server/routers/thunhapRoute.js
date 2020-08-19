@@ -50,5 +50,18 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
     } catch (err) {
         res.status(500).send({message: 'failed at update thu nhap route', err})
     }
-})
+});
+
+router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
+    const token = req.token;
+    const {form_id} = req.body;
+    try {
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        await thunhapMethod.delete(usr_id, form_id);
+        res.status(200).send('Successfully delete ' + form_id);
+    } catch (err) {
+        console.log({Err: err})
+    }
+});
+
 module.exports = router;

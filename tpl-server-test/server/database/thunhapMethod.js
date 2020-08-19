@@ -46,5 +46,13 @@ module.exports = {
             console.log({err});
             return err;
         }
+    },
+    delete: async (usr_id, form_id) => {
+        try {
+            await pool.query(`DELETE FROM thunhap WHERE u_id = $1 AND id = $2`, [usr_id, form_id]);
+            await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
+        } catch (err) {
+            throw new Error({Err: err});
+        }
     }
 };

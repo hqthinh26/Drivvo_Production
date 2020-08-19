@@ -43,5 +43,13 @@ module.exports = {
        } catch (err) {
            throw new Error({message: 'failed at update method',err});
        }
+    },
+    delete: async (usr_id, form_id) => {
+        try {
+            await pool.query(`DELETE FROM quangduong WHERE usr_id = $1 AND id = $2`, [usr_id, form_id]);
+            await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
+        } catch (err) {
+            throw new Error({message: 'failed at quang duong delete', Err: err});
+        }
     }
 }

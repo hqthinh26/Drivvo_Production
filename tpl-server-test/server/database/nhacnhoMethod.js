@@ -53,6 +53,15 @@ module.exports = {
         }
     },
 
+    print: async (usr_id) => {
+        try {
+            const query1 = await pool.query(`SELECT * FROM nhacnho WHERE usr_id = $1`,[usr_id]);
+            return query1.rows;
+        } catch (err) {
+            throw new Error({message: 'failed at nhacnho print method', err});
+        }
+    },  
+
     update: async (u_id, inputFromUser) => {
         const {form_id, name_of_reminder, one_time_reminder, repeat_reminder, OTR_km, OTR_date, RR_km, RR_period, note}
         = inputFromUser;
@@ -81,5 +90,13 @@ module.exports = {
         catch (err) {
             throw new Error('failed at nhac nho method update');
         }
-    },      
+    },
+    delete: async (usr_id, form_id) => {
+        try {
+            await pool.query(`DELETE FROM nhacnho WHERE usr_id = $1 AND id = $2 `, [usr_id, form_id]);
+            await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2 `, [usr_id, form_id]);
+        } catch (err) {
+            throw new Err({message: 'failed at nhac nho delete', ERR: err});
+        }
+    }
 };
