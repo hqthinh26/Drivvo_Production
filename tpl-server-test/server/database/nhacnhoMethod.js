@@ -48,7 +48,7 @@ module.exports = {
                 ,[nhacnho_id, usr_id, name_of_reminder, one_time_reminderB, repeat_reminderB, RR_kmI, RR_period, note]);
 
             } catch (err) {
-                throw new Error({message: 'failed at nhac nhac method where RR === true', err});
+                throw new Error(err);
             }
         }
     },
@@ -96,7 +96,7 @@ module.exports = {
             await pool.query(`DELETE FROM nhacnho WHERE usr_id = $1 AND id = $2 `, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2 `, [usr_id, form_id]);
         } catch (err) {
-            throw new Err({message: 'failed at nhac nho delete', ERR: err});
+            throw new Err(err);
         }
     }
 };

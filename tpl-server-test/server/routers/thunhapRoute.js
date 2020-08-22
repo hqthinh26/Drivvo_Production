@@ -48,7 +48,8 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
         await thunhapMethod._update(form_id, inputFromUser);
         res.sendStatus(200);
     } catch (err) {
-        res.status(500).send({message: 'failed at update thu nhap route', err})
+        console.log(err);
+        res.status(500).send(err)
     }
 });
 
@@ -60,7 +61,8 @@ router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
         await thunhapMethod.delete(usr_id, form_id);
         res.status(200).send('Successfully delete ' + form_id);
     } catch (err) {
-        console.log({Err: err})
+        console.log(err);
+        res.status(500).send(err);
     }
 });
 

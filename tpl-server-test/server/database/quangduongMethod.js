@@ -19,7 +19,7 @@ module.exports = {
             , [quangduong_id, usr_id, origin, start_time, start_date, initial_odometerF, destination, end_time, end_date, final_odometerF, value_per_kmI, totalI, reasonBI]);
 
         } catch (err) {
-            throw new Error({message: 'failed at quangduongMethod', ERR: err});
+            throw new Error(err);
         }
     },
 
@@ -41,7 +41,7 @@ module.exports = {
             console.log({result_log: result})
 
        } catch (err) {
-           throw new Error({message: 'failed at update method',err});
+           throw new Error(err);
        }
     },
     delete: async (usr_id, form_id) => {
@@ -49,7 +49,7 @@ module.exports = {
             await pool.query(`DELETE FROM quangduong WHERE usr_id = $1 AND id = $2`, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {
-            throw new Error({message: 'failed at quang duong delete', Err: err});
+            throw new Error(err);
         }
     }
 }

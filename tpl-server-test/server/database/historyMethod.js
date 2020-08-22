@@ -50,7 +50,7 @@ module.exports = {
             `, [id_private_form]);
         }
         if(type_of_form === 'thunhap') {
-            console.log({message: 'this is thunhap',id_private_form});
+            console.log('this is thunhap');
             return pool.query(`
             SELECT tn.id, tn.odometer, ltn.name as type_of_income, tn.amount, tn.note, tn.time, tn.date
             FROM thunhap as tn, loaithunhap as ltn
@@ -59,7 +59,7 @@ module.exports = {
             `, [id_private_form]);
         }
         if(type_of_form === 'quangduong') {
-            console.log({message: 'this is quangduong',id_private_form});
+            console.log('this is quangduong');
             return pool.query(`
             SELECT qd.id, qd.origin, qd.start_time, qd.start_date, qd.initial_odometer, qd.destination, qd.end_time, qd.end_date, qd.final_odometer, qd.value_per_km, qd.total, ld.name as reason
             FROM quangduong as qd, lydo as ld

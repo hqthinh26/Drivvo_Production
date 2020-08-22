@@ -63,12 +63,10 @@ const total_odometer_driven = async (usr_id, start_date, current_date) => {
         ORDER BY created_at_date ASC, created_at_time ASC
         `, [usr_id, start_date, current_date]);
 
-        console.log({resultQe: query1.rows});
         //There is only one form in the dichvu table
         if(query1.rowCount !== 2) throw new Error(`Return more/less than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in DichVu`);
         
         const _2_odometers_promise = await Promise.all(query1.rows.map((each_row) => get_individual_odometer(each_row)));
-        console.log(_2_odometers_promise)
         const _2_odometers = _2_odometers_promise.map((each_row) => parseFloat(each_row.rows[0].odometer));
 
         const total_odometer_diff = _2_odometers[1] - _2_odometers[0];
@@ -127,7 +125,6 @@ module.exports = {
         const days = await general_start_current_days(usr_id);
         const {start_date, current_date, date_diff} = days;
 
-        console.log({tag: 'dichvu report.js', start: start_date, curr: current_date});
 
         const money_spent = await total_money_spent(usr_id);
         const total_km_driven = await total_odometer_driven(usr_id, start_date, current_date);

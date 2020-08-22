@@ -70,7 +70,7 @@ module.exports = {
             await pool.query(`DELETE FROM napnhienlieu WHERE u_id = $1 AND id = $2 `, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {
-            throw new Err({message: 'failed at nhac nho delete', ERR: err});
+            throw new Err(err);
         }
     },
 

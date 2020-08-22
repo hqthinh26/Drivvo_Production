@@ -77,8 +77,8 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
         await nhacnhoMethod.update(u_id, inputFromUser);
         res.sendStatus(200);
     } catch (err) {
-        console.log({message: 'failed at nhacnho update route', err});
-        res.status(403).send({message: 'Failed at nhac nho update route', err});
+        console.log(err);
+        res.status(403).send(err);
     }
 });
 
@@ -91,7 +91,7 @@ router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
         res.status(200).send('SUCCESSFUL delete nhac nho ' + form_id);
     } catch (err) {
         res.sendStatus(500);
-        console.log({ERR: err});
+        console.log(err);
     }
 });
 

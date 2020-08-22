@@ -53,7 +53,7 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
         return res.sendStatus(200);
 
     } catch (err) {
-        console.log({message: 'fail at quang duong route UPDATE', err})
+        console.log(err)
         return res.send(403).send({message: 'Failed at quang duong route Update',err});
     }
 })
@@ -68,7 +68,7 @@ router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
         res.status(200).send('Successfully delete ' + form_id);
     } catch (err) {
         res.sendStatus(500);
-        console.log({ERR: err});
+        console.log(err);
     }
 });
 

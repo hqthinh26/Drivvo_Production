@@ -30,7 +30,7 @@ module.exports = {
             `, [chiphi_id, usr_id, odometerF, type_of_expenseBI, amountI, placeBI, reasonBI, note, date, time]);
             
         } catch (err) {
-            throw new Error({message: 'Failed at insert chiphi method', ERR: err});
+            throw new Error(err);
         }
     },
     
@@ -56,7 +56,7 @@ module.exports = {
             await pool.query(`DELETE FROM chiphi WHERE u_id = $1 AND id = $2 `, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {
-            throw new Err({message: 'failed at nhac nho delete', ERR: err});
+            throw new Err(err);
         }
     }
 

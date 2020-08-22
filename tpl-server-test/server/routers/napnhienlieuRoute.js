@@ -53,7 +53,8 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
         await napNLMethod._update(form_id, inputFromUser);
         res.sendStatus(200);
     } catch (err) {
-        res.status(500).send({message: 'failed at update nnl route', err});
+        console.log(err);
+        res.status(500).send(err);
     }
 })
 
@@ -66,7 +67,7 @@ router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
         res.status(200).send('SUCCESSFUL delete nll ' + form_id);
     } catch (err) {
         res.sendStatus(500);
-        console.log({ERR: err});
+        console.log(err);
     }
 });
 

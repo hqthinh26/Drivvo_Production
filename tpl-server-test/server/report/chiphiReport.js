@@ -41,23 +41,18 @@ const extract_odometer_value = async (a_form_value) => {
     const {type_of_form, id_private_form} = a_form_value;
 
     if(type_of_form === 'napnhienlieu'){
-        console.log('this is nll')
         return pool.query(`select odometer from napnhienlieu where id = $1`, [id_private_form])
     }
     if(type_of_form === 'chiphi') {
-        console.log('this is chi phi');
         return pool.query(`select odometer from chiphi where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'dichvu') {
-        console.log('this is dich vu');
         return pool.query(`select odometer from dichvu where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'thunhap') {
-        console.log('this is thu nhap')
         return pool.query(`select odometer from thunhap where id = $1`, [id_private_form]);
     }
     if(type_of_form === 'quangduong') {
-        console.log('this is quang duong');
         return pool.query(`select final_odometer as odometer from quangduong where id = $1`, [id_private_form]);
     }
     return console.log('wrong type_of_form in extract_odometer_value')
@@ -93,14 +88,12 @@ const total_km_driven = async (usr_id) => {
             `, [usr_id, start_date, current_date]
         );
     
-        console.log(query1.rows);
         if(query1.rowCount !== 2) throw new Error(`Return more than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in chiphi`);
     
         const oldest_and_lastest_forms_of_history = query1.rows;
        
-        const array_of_oldest_latest_odometer = await Promise.all(oldest_and_lastest_forms_of_history.map((each_form) => extract_odometer_value(each_form)))
-        console.log(array_of_oldest_latest_odometer);
-        const _2_odometers = array_of_oldest_latest_odometer.map((each_query_value) => parseFloat(each_query_value.rows[0].odometer))
+        const array_of_oldest_latest_odometer = await Promise.all(oldest_and_lastest_forms_of_history.map((each_form) => extract_odometer_value(each_form)));
+        const _2_odometers = array_of_oldest_latest_odometer.map((each_query_value) => parseFloat(each_query_value.rows[0].odometer));
     
         const km_driven = _2_odometers[1] - _2_odometers[0];
         

@@ -26,7 +26,7 @@ module.exports = {
             await pool.query(`insert into thunhap(id, u_id, date, time, odometer, type_of_income, amount, note) 
             values ($1,$2,$3,$4,$5,$6,$7,$8)`, [thunhap_id, usr_id, date, time, odometerF, type_of_incomeBI, amountI, note]);
         } catch (err) {
-            throw new Error({message: 'failed at insert thunhapMethod', ERR: err});
+            throw new Error(err);
         }   
     },
 
@@ -52,7 +52,7 @@ module.exports = {
             await pool.query(`DELETE FROM thunhap WHERE u_id = $1 AND id = $2`, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {
-            throw new Error({Err: err});
+            throw new Error(err);
         }
     }
 };

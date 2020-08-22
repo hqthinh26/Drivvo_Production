@@ -25,7 +25,7 @@ module.exports = {
             values ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
             , [dichvu_id, usr_id, date, time, odometerF, type_of_serviceBI, amountI, placeBI, note]);
         } catch (err) {
-            throw new Error({message:'Failed at dichvu Method', ERR: err});
+            throw new Error(err);
         }
         
     },
@@ -41,7 +41,7 @@ module.exports = {
             where id = $8`, [odometerF, type_of_service, amountI, location, note, time, date, form_id]);
 
         } catch (err) {
-            throw new Error({message: `falied at _update dich vu method`, err});
+            throw new Error(err);
         }
     },
     delete: async (usr_id, form_id) => {
@@ -50,7 +50,7 @@ module.exports = {
             await pool.query(`DELETE FROM dichvu WHERE u_id = $1 AND id = $2 `, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {
-            throw new Err({message: 'failed at nhac nho delete', ERR: err});
+            throw new Err(err);
         }
     }
 }
