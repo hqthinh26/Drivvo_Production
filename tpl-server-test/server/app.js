@@ -103,7 +103,8 @@ app.get('/check_input_qualified', Auth_IN_OUT.extractToken, async (req,res) => {
     const usr_id = await Auth_IN_OUT._usr_id_from_token(req.token);
 
     const result = await input_qualifier.isQualified(odometerF, usr_id, date, time);
-    res.status(200).send({result});
+    //Check by result.status
+    res.status(200).send(result);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

@@ -88,4 +88,14 @@ module.exports = {
         }
     },
 
+    user_name_email: async (usr_id) => {
+        const query = await pool.query(`
+        SELECT u_fullname as fullname, u_email as email
+        FROM users
+        WHERE u_id = $1
+        `,[usr_id]);
+        const {fullname, email} = query.rows[0];
+        return {fullname, email}
+    },
+
 }
