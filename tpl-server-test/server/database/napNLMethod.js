@@ -44,7 +44,7 @@ module.exports = {
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`
         , [form_id, user_id, odometerF,  type_of_fuelBI, price_per_unitI, total_costI, total_unitsF, full_tank, gas_stationBI, reasonBI, date, time]);
         } catch (err) {
-            throw new Error({message: 'Failed to insert NapNL',ERR: err});
+            throw new Error(err);
         }
     },
 

@@ -24,6 +24,8 @@ const Regis_In_Out = require('./basicMethod/Regis_In_Out');
 const pool = require('./database/pooling');
 const nhacnhoMethod = require('./database/nhacnhoMethod');
 
+const input_qualifier = require('./input_qualifier');
+
 app.use(morgan('dev'));
 //app.use(express.json());
 app.use(bodyParser.json());
@@ -50,8 +52,8 @@ app.use('/loaithunhap', require('./additional_routers/loaithunhapRoute'));
 app.use('/lydo', require('./additional_routers/lydoRoute'));
 
 app.get('/', (req,res) => {
-  res.send({message: 'This is drivvo project LOL 1998', port: process.env.PORT, URL: process.env.DATABASE_URL, alo: process.env.HI});
-})
+  res.send({message: 'Welcome to MONEY GEEK'});
+});
 
 app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
   try {
@@ -92,3 +94,43 @@ app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
   const data = query1.rows;
   res.status(500).send({data, row: query1.rowCount});
 })
+
+app.get('/check_input_qualified', Auth_IN_OUT.extractToken, async (req,res) => {
+  
+  const {odometer, date, time} = req.body;
+  try {
+    const odometerF = parseFloat(odometer);
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(req.token);
+
+    const result = await input_qualifier.isQualified(odometerF, usr_id, date, time);
+    res.status(200).send({result});
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+})
+
+// // Add time thong qua Date-Time-Picker in forlder 19082020 NODEJSTechnology
+// app.post('/add_time', async (req,res) => {
+//   const {pickedTime} = req.body;
+//   console.log({input: pickedTime, type: typeof pickedTime});
+//   try {
+//     await pool.query(`INSERT INTO timeonly(time) values ($1)`, [pickedTime]);
+//     console.log('SUCCESS');
+//     res.status(200).send({input: pickedTime, type: typeof pickedTime});
+//   } catch (err) {
+//     res.sendStatus(500);
+//   }
+// });
+
+// //Add time thong qua fetch-node
+// app.post('/timezone_free', async (req,res) => {
+//   const {time} = req.body;
+//   console.log({TIME: time});
+//   try {
+//     await pool.query(`insert into timezonefree(time) values ($1)`, [time]);
+//     res.status(200).send('time zone free added' + time);
+//   } catch (err) {
+//     console.log({ERR: err});
+//   }
+// });

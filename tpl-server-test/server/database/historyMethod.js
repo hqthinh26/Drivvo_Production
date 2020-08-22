@@ -67,11 +67,11 @@ module.exports = {
                     AND (qd.reason = ld.id)
             `, [id_private_form]);
         }
-        if (type_of_form === 'nhacnho') {
-            console.log('this is nhac nho');
-            return pool.query(`select * from nhacnho where id = $1`, [id_private_form]);
-        }
-        throw new Error({message: 'there is an undefined type_of_form'});
+        // if (type_of_form === 'nhacnho') {
+        //     console.log('this is nhac nho');
+        //     return pool.query(`select * from nhacnho where id = $1`, [id_private_form]);
+        // }
+        // throw new Error({message: 'there is an undefined type_of_form'});
     },
 
     _allform_Insert_napnhieulieu: async (usr_id, type_of_form, id_private_form, time_date) => {
