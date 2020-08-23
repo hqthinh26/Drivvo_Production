@@ -115,28 +115,28 @@ module.exports = {
                     },
                     statistics: {
                         total_money: 0,
-                        by_day: 0,
-                        by_km: 0,
+                        by_day: 0.000,
+                        by_km: 0.000,
                     }
                 };
             }
-            if (entry_number === 1) {
-                const {start_date, current_date, date_diff} = await oldest_lastest_time_date_history(usr_id);
-                const total_money_spent_value = await total_money_spent(usr_id);
-                return {
-                    entry: {
-                        entry_thunhap: entry_number,
-                        start_date: start_date,
-                        current_date: current_date,
-                        date_diff: date_diff,
-                    },
-                    statistics: {
-                        total_money: total_money_spent_value,
-                        by_day: 0,
-                        by_km: 0,
-                    }
-                };
-            }
+            // if (entry_number === 1) {
+            //     const {start_date, current_date, date_diff} = await oldest_lastest_time_date_history(usr_id);
+            //     const total_money_spent_value = await total_money_spent(usr_id);
+            //     return {
+            //         entry: {
+            //             entry_thunhap: entry_number,
+            //             start_date: start_date,
+            //             current_date: current_date,
+            //             date_diff: date_diff,
+            //         },
+            //         statistics: {
+            //             total_money: total_money_spent_value,
+            //             by_day: parseFloat((total_money_spent_value/date_diff).toFixed(3)),
+            //             by_km: 0,
+            //         }
+            //     };
+            // }
             const {start_date, current_date, date_diff} = await oldest_lastest_time_date_history(usr_id);
             const km_driven = await total_km_driven(usr_id, start_date, current_date);
             const total_money_spentX = await total_money_spent(usr_id);

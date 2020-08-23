@@ -242,17 +242,17 @@ const isQualified = async (odometer, usr_id, date, time) => {
         if(max_odometer_date_diff === 0 && min_odometer_date_diff !== 0) {
             return (odometer < min_odometer_date_diff) 
             ? {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}  
-            : {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị của odometer phải bé hơn ${min_odometer_date_diff}`,min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff === 0) {
             return (odometer > max_odometer_date_diff) 
             ? {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}
-            : {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị của odometer phải lớn hơn ${min_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff !== 0) {
-            return (min_odometer_date_diff < odometer && odometer < min_odometer_date_diff) 
+            return (max_odometer_date_diff < odometer && odometer < min_odometer_date_diff) 
             ? {message: 'must be in between min & max', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}
-            : {message: 'must be in between min & max', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị odometer: ${max_odometer_date_diff} < odometer < ${min_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
 
     }
@@ -261,7 +261,7 @@ const isQualified = async (odometer, usr_id, date, time) => {
     if (isIdenticalExist_bool === true) {
         console.log('Đã tồn tại form với thời gian trên');
         return {
-            err: 'The form with that exact date time has existed',
+            message: 'Nhãn thời gian trên đã có được sử dụng',
             date: date,
             time: time,
             status: false
@@ -277,17 +277,17 @@ const isQualified = async (odometer, usr_id, date, time) => {
     if(max_odometer_same_date === 0 && min_odometer_same_date !== 0) {
         return (odometer < min_odometer_same_date)  //the message helps client side developers to understand | Not the server coders | if you are a server coder, ignore the message and read the code
         ? {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Gía trị của odometer phải bé hơn ${min_odometer_same_date}`,min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
     if(max_odometer_same_date !== 0 && min_odometer_same_date === 0) {
         return (odometer > max_odometer_same_date) 
         ? {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Giá trị của odometer phải lớn hơn ${max_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
     if(max_odometer_same_date !== 0 && min_odometer_same_date !== 0) {
         return (max_odometer_same_date < odometer && odometer < min_odometer_same_date) 
         ? {message: 'must be in between min & max', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: 'must be in between min & max', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Giá trị của odometer: ${max_odometer_same_date} < odometer < ${min_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
 }
 

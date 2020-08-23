@@ -74,7 +74,7 @@ app.listen(process.env.PORT, () => {
 });
 
 
-app.get('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
+app.post('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
   const {odometer, date, time} = req.body;
   try {
     const odometerF = parseFloat(odometer);

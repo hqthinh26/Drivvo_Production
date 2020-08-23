@@ -170,6 +170,7 @@ module.exports = {
       const total_balance = total_cost - total_income;
 
       //Note : Date_diff nghĩa là trong database, các forms có cùng 1 nhãn date (Cùng 1 ngày)
+      console.log({message: 'alooo', km_driven, date_diff});
       return {
         total_entry, // gia tri dau tien duoc tinh toan
         dates: {

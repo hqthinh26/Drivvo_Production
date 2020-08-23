@@ -26,14 +26,8 @@ const get_start_day_and_current_day = async (usr_id) => {
 
 // for the statistic | total money spent on chiphi reasons
 const total_money_spent = async (usr_id) => {
-    const query1 = await pool.query(`SELECT amount FROM chiphi WHERE u_id = $1`, [usr_id]);
-    const array_of_chiphi = query1.rows;
-
-    let total_money = 0;
-    for(let i=0; i < query1.rowCount; i++) {
-        total_money = total_money + array_of_chiphi[i].amount;
-    }
-    return total_money;
+    const query1 = await pool.query(`SELECT sum(amount) as total_money FROM chiphi WHERE u_id = $1`, [usr_id]);
+    return parseFloat(query1.rows[0].total_money);
 }
 
 //to get the total_km driven by the user - regardless of what type_of_forms
@@ -137,24 +131,24 @@ module.exports = {
                 }
             }
 
-            if(entry_chiphi === 1) {
-
-                const {start_date, current_date, date_diff} = await get_start_day_and_current_day(usr_id);
-                const total_money = await total_money_spent(usr_id);
-                return {
-                    entry: {
-                        entry_chiphi,
-                        start_date,
-                        current_date,
-                        date_diff
-                    },
-                    statistics: {
-                        total_money,
-                        by_day: 0,
-                        by_km: 0,
-                    }
-                }
-            }
+            // if(entry_chiphi === 1) {
+            //     console.log('CHI PHI ENNTRYYY === 1');
+            //     const {start_date, current_date, date_diff} = await get_start_day_and_current_day(usr_id);
+            //     const total_money = await total_money_spent(usr_id);
+            //     return {
+            //         entry: {
+            //             entry_chiphi,
+            //             start_date,
+            //             current_date,
+            //             date_diff
+            //         },
+            //         statistics: {
+            //             total_money,
+            //             by_day: parseFloat((total_money/date_diff).toFixed(3)),
+            //             by_km: 0,
+            //         }
+            //     }
+            // }
 
             // When there are multiple forms 
             
@@ -182,7 +176,7 @@ module.exports = {
                     date_diff
                 },
                 statistics: {
-                    total_money,
+                    total_money: total_money,
                     by_day,
                     by_km,
                 }

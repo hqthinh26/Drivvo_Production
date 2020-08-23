@@ -110,17 +110,18 @@ module.exports = {
             };
         }
 
-        if(total_entry_time === 1) {
-            const days = await general_start_current_days(usr_id); //{start_date, current_date, date_diff}
-            const money_spent = await total_money_spent(usr_id);
-            return {
-                total_entry_time: total_entry_time, 
-                days, 
-                money_spent, 
-                by_date: 0.000, 
-                by_km: 0.000,
-            };
-        }
+        // if(total_entry_time === 1) {
+        //     const days = await general_start_current_days(usr_id); //{start_date, current_date, date_diff}
+        //     const {date_diff} = days;
+        //     const money_spent = await total_money_spent(usr_id);
+        //     return {
+        //         total_entry_time: total_entry_time, 
+        //         days, 
+        //         money_spent, 
+        //         by_date: parseFloat((money_spent/date_diff).toFixed(3)),
+        //         by_km: 0.000,
+        //     };
+        // }
 
         const days = await general_start_current_days(usr_id);
         const {start_date, current_date, date_diff} = days;
