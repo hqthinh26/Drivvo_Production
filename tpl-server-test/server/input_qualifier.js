@@ -236,7 +236,9 @@ const isQualified = async (odometer, usr_id, date, time) => {
         //2 gia tri odometer da duoc parse thanh Float
         const max_odometer_date_diff = await max_Odometer_of_the_smaller_side_DIFF_DATE(usr_id, date); //Min to the client side
         const min_odometer_date_diff = await min_Odometer_of_the_bigger_side_DIFF_DATE(usr_id, date, odometer); //Max to the client side
-
+        if (max_odometer_date_diff === 0 && min_odometer_date_diff === 0) {
+            return {message: 'This is the first time a form is created', status: true};
+        } 
         if(max_odometer_date_diff === 0 && min_odometer_date_diff !== 0) {
             return (odometer < min_odometer_date_diff) 
             ? {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}  

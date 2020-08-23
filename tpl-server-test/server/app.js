@@ -55,18 +55,6 @@ app.get('/', (req,res) => {
   res.send({message: 'Welcome to MONEY GEEK'});
 });
 
-app.get('/nhacnho/test_1', Auth_IN_OUT.extractToken, async (req,res) => {
-  try {
-    const token = req.token;
-    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-    const date = await nhacnhoMethod.print_1_nhacnho(usr_id);
-    res.status(200).send({title: 'one time nhac nho', date});
-
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
-  }
-})
 // //Check if this users has existed in the system or not? before the registration process
 // //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
@@ -85,18 +73,8 @@ app.listen(process.env.PORT, () => {
   console.log(`API is running at http://localhost:${process.env.PORT}`);
 });
 
-app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
-  const usr_id  = await Auth_IN_OUT._usr_id_from_token(req.token);
-  const query1 = await pool.query(`
-  SELECT *
-  FROM dichvu
-  WHERE u_id = $1`, [usr_id]);
-  const data = query1.rows;
-  res.status(500).send({data, row: query1.rowCount});
-})
 
 app.get('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
-  
   const {odometer, date, time} = req.body;
   try {
     const odometerF = parseFloat(odometer);

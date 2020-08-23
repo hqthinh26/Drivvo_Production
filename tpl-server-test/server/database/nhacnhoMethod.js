@@ -1,16 +1,6 @@
 const pool = require('./pooling');
 
 module.exports = {
-    print_1_nhacnho: async (usr_id) => {
-        const query1 = await pool.query(`
-        SELECT one_time_reminder as type, otr_date as date
-        FROM nhacnho
-        WHERE usr_id = $1 AND one_time_reminder = $2
-        ORDER BY otr_date desc
-        LIMIT 1
-        `,[usr_id, true]);
-        return query1.rows[0];
-    },
 
     insert: async (nhacnho_id, usr_id, inputFromUser) => {
         const {name_of_reminder, one_time_reminder, repeat_reminder, OTR_km, OTR_date, RR_km, RR_period, note} 
