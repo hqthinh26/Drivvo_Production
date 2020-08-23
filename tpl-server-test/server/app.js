@@ -95,7 +95,7 @@ app.get('/demo', Auth_IN_OUT.extractToken, async (req,res) => {
   res.status(500).send({data, row: query1.rowCount});
 })
 
-app.get('/check_input_qualified', Auth_IN_OUT.extractToken, async (req,res) => {
+app.get('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
   
   const {odometer, date, time} = req.body;
   try {
