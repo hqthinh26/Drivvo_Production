@@ -60,6 +60,7 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
 router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     const {form_id} = req.body;
+    console.log({X: form_id});
     try {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         await chiphiMethod.delete(usr_id, form_id);
