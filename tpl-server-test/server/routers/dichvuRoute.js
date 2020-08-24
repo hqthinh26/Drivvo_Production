@@ -57,7 +57,7 @@ router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
         const query2 = await dichvuMethod.delete(usr_id, form_id);
         res.status(200).send({mess: `SUCCESSFUL deletete ${form_id}`});
     } catch (err) {
-        res.sendStatus(500).send(err);
+        res.status(500).send(err);
         console.log({ERR: err});
     }
 });

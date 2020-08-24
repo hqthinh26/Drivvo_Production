@@ -46,7 +46,6 @@ module.exports = {
     },
     delete: async (usr_id, form_id) => {
         try {
-            console.log({usr_id, id})
             await pool.query(`DELETE FROM dichvu WHERE u_id = $1 AND id = $2 `, [usr_id, form_id]);
             await pool.query(`DELETE FROM history WHERE usr_id = $1 AND id_private_form = $2`, [usr_id, form_id]);
         } catch (err) {

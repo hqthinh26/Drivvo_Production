@@ -247,7 +247,7 @@ const isQualified = async (odometer, usr_id, date, time) => {
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff === 0) {
             return (odometer > max_odometer_date_diff) 
             ? {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}
-            : {message: `Giá trị của odometer phải lớn hơn ${min_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị của odometer phải lớn hơn ${max_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff !== 0) {
             return (max_odometer_date_diff < odometer && odometer < min_odometer_date_diff) 

@@ -61,7 +61,7 @@ router.put('/update', Auth_IN_OUT.extractToken, async (req,res) => {
 router.delete('/delete', Auth_IN_OUT.extractToken, async (req,res) => {
     const token = req.token;
     
-    const {from_id} = req.body;
+    const {form_id} = req.body;
     try {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         await quangduongMethod.delete(usr_id, form_id);
