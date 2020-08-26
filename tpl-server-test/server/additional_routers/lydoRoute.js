@@ -11,7 +11,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
         const {lydo_name} = req.body;
         await lydoMethod._insert(usr_id, lydo_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công lý do: ${lydo_name}`});;
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

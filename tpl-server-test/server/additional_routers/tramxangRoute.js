@@ -10,10 +10,10 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const {tramxang_name} = req.body;
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         await tramxangMethod._insert(usr_id, tramxang_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công trạm xăng: ${tramxang_name}`});
     } catch (err) {
         console.log(err);
-        res.sendStatus(500);
+        res.sendStatus(500);  
     }
 });
 

@@ -11,7 +11,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
         const {loaichiphi_name} = req.body;
         await loaichiphiMethod._insert(usr_id, loaichiphi_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công loại chi phí: ${loaichiphi_name}`});;
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

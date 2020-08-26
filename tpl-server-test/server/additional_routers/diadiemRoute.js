@@ -11,7 +11,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
         const {diadiem_name} = req.body;
         await diadiemMethod._insert(usr_id, diadiem_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công địa điểm: ${diadiem_name}`});
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

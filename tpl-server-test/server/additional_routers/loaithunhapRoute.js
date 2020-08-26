@@ -11,7 +11,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
         const {loaithunhap_name} = req.body;
         await loaithunhapMethod._insert(usr_id, loaithunhap_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công loại thu nhập: ${loaithunhap_name}`});;
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
