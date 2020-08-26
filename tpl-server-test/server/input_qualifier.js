@@ -237,22 +237,22 @@ const isQualified = async (odometer, usr_id, date, time) => {
         const max_odometer_date_diff = await max_Odometer_of_the_smaller_side_DIFF_DATE(usr_id, date); //Min to the client side
         const min_odometer_date_diff = await min_Odometer_of_the_bigger_side_DIFF_DATE(usr_id, date, odometer); //Max to the client side
         if (max_odometer_date_diff === 0 && min_odometer_date_diff === 0) {
-            return {message: 'This is the first time a form is created', status: true};
+            return {message: 'Cảm ơn bạn đã sử dụng Money Geek', status: true, first_time: true};
         } 
         if(max_odometer_date_diff === 0 && min_odometer_date_diff !== 0) {
             return (odometer < min_odometer_date_diff) 
             ? {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}  
-            : {message: `Giá trị của odometer phải bé hơn ${min_odometer_date_diff}`,min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị của Công tơ mét phải bé hơn ${min_odometer_date_diff}`,min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff === 0) {
             return (odometer > max_odometer_date_diff) 
             ? {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}
-            : {message: `Giá trị của odometer phải lớn hơn ${max_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị của Công tơ mét phải lớn hơn ${max_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
         if(max_odometer_date_diff !== 0 && min_odometer_date_diff !== 0) {
             return (max_odometer_date_diff < odometer && odometer < min_odometer_date_diff) 
             ? {message: 'must be in between min & max', min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: true}
-            : {message: `Giá trị odometer: ${max_odometer_date_diff} < odometer < ${min_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
+            : {message: `Giá trị Công tơ mét: ${max_odometer_date_diff} < odometer < ${min_odometer_date_diff}`, min: max_odometer_date_diff, odometer, max: min_odometer_date_diff, status: false}
         }
 
     }
@@ -277,17 +277,17 @@ const isQualified = async (odometer, usr_id, date, time) => {
     if(max_odometer_same_date === 0 && min_odometer_same_date !== 0) {
         return (odometer < min_odometer_same_date)  //the message helps client side developers to understand | Not the server coders | if you are a server coder, ignore the message and read the code
         ? {message: 'If min = 0 thi odometer only needs to be smaller than max',min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: `Gía trị của odometer phải bé hơn ${min_odometer_same_date}`,min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Gía trị của Công tơ mét phải bé hơn ${min_odometer_same_date}`,min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
     if(max_odometer_same_date !== 0 && min_odometer_same_date === 0) {
         return (odometer > max_odometer_same_date) 
         ? {message: 'If max = 0 thi odometer only needs to be bigger than min', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: `Giá trị của odometer phải lớn hơn ${max_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Giá trị của Công tơ mét phải lớn hơn ${max_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
     if(max_odometer_same_date !== 0 && min_odometer_same_date !== 0) {
         return (max_odometer_same_date < odometer && odometer < min_odometer_same_date) 
         ? {message: 'must be in between min & max', min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: true} 
-        : {message: `Giá trị của odometer: ${max_odometer_same_date} < odometer < ${min_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
+        : {message: `Giá trị của Công tơ mét: ${max_odometer_same_date} < odometer < ${min_odometer_same_date}`, min: max_odometer_same_date, odometer, max: min_odometer_same_date, status: false};
     }
 }
 

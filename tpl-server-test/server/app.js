@@ -25,6 +25,7 @@ const pool = require('./database/pooling');
 const nhacnhoMethod = require('./database/nhacnhoMethod');
 
 const input_qualifier = require('./input_qualifier');
+const findMaxOdometer = require('./findMaxOdometer');
 
 app.use(morgan('dev'));
 //app.use(express.json());
@@ -86,6 +87,17 @@ app.post('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
+  }
+})
+app.get('/max_odometer', Auth_IN_OUT.extractToken, async (req,res) => {
+  try {
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const max_odometer = await findMaxOdometer.maxOdometer(usr_id);
+    return res.status(200).send({max_odometer}); //{max_odometer: 'value'}
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
   }
 })
 

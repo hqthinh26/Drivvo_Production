@@ -144,16 +144,16 @@ module.exports = {
         }
     },
 
-    _all_form_insert_nhacnho: async (usr_id, type_of_form, id_private_form, time_date) => {
-        const {time, date} = time_date;
-        try {
-            await pool.query(`insert into
-            history (usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
-            values ($1, $2, $3, $4, $5)`
-            , [usr_id, type_of_form, id_private_form, time, date]);
+    // _all_form_insert_nhacnho: async (usr_id, type_of_form, id_private_form, time_date) => {
+    //     const {time, date} = time_date;
+    //     try {
+    //         await pool.query(`insert into
+    //         history (usr_id, type_of_form, id_private_form, created_at_time, created_at_date)
+    //         values ($1, $2, $3, $4, $5)`
+    //         , [usr_id, type_of_form, id_private_form, time, date]);
 
-        } catch (err) {
-            throw new Error({message: 'failed at all_form_insert_nhacnho history method', Err:err});
-        }
-    }
+    //     } catch (err) {
+    //         throw new Error({message: 'failed at all_form_insert_nhacnho history method', Err:err});
+    //     }
+    // }
 }

@@ -13,7 +13,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         const {loainhienlieu_name} = req.body;
         await loainhienlieuMethod._insert(usr_id, loainhienlieu_name);
-        res.sendStatus(200);
+        res.status(200).send({message: `Thêm thành công loại nhiên liệu: ${loainhienlieu_name}`});
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
