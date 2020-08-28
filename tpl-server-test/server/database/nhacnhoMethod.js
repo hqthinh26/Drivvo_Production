@@ -1,6 +1,66 @@
 const pool = require("./pooling");
+const { STRING } = require("sequelize");
+
+const check_valid = (type_of_expense, type_of_service) => {
+  let type_of_expenseB;
+  let type_of_serviceB;
+  if(typeof type_of_expense === "boolean") {
+    type_of_expenseB = type_of_expense;
+    console.log({message: 'isValid: expense is boolean', value: type_of_expense});
+  }
+  if(typeof type_of_expense === "string") {
+    type_of_expense === 'true' ? type_of_expenseB = true : type_of_expenseB = false;
+    console.log({message: 'isValid: expense is string', value: type_of_expense});
+  }
+
+  if(typeof type_of_service === "boolean") {
+    type_of_serviceB = type_of_service;
+    console.log({message: 'isValid: service is boolean', value: type_of_service});
+  }
+  if(typeof type_of_service === "string") {
+    type_of_service === 'true' ? type_of_serviceB = true : type_of_serviceB = false; 
+    console.log({message: 'isValid: service is string', value: type_of_service});
+  }
+  
+  return (type_of_expenseB === type_of_serviceB) ? false : true;
+}
+
+const insert = async (nhacnho_id, usr_id, input_From_User) => {
+  try {
+    const {type_of_expense, type_of_service, name_of_nhacnho, is_one_time, OT_at_odometer, OT_at_date, RR_at_km_range, RR_period} 
+    = input_From_User;
+
+    if(check_valid(type_of_expense, type_of_service) === false) throw new Error('bool expense must # bool service');
+
+    const OT_at_odometerF = parseFloat(OT_at_odometer);
+    const RR_at_km_rangeI = parseInt(RR_at_km_range);
+
+    await pool.query(`
+    INSERT INTO nhacnho(id, usr_id, type_of_expense, type_of_service, name_of_nhacnho, is_one_time, OT_at_odometer, OT_at_date, RR_at_km_range, RR_period)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+    `,[nhacnho_id, usr_id, type_of_expense, type_of_service, name_of_nhacnho, is_one_time, OT_at_odometerF, OT_at_date, RR_at_km_rangeI, RR_period]);
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const print = async (usr_id) => {
+  try {
+    const query1 = await pool.query(`
+    SELECT * FROM nhacnho WHERE usr_id = $1
+    `, [usr_id]);
+    return query1.rows;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
 
 module.exports = {
+  insert,
+  print,
+}
+
+/*module.exports = {
   insert: async (nhacnho_id, usr_id, inputFromUser) => {
     try {
         const {
@@ -172,4 +232,4 @@ module.exports = {
       throw new Err(err);
     }
   },
-};
+};*/

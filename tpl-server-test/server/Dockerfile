@@ -5,6 +5,12 @@ RUN yarn install
 COPY ./ .
 RUN yarn global add sequelize sequelize-cli pg nodemon
 
+#CMD bash -c "sequelize db:migrate && yarn run start" => OK but should move this command to the heroku.yml file 
+# as it makes the code more transparent.
+
+#ENTRYPOINT ["sequelize db:migrate", "&&", "yarn run start"] => Failed to build => as there is a command parse error
+#if the command parse error is fixed, this one may work flawlessly as it conplies to the logic that i think i understand correctly
+
 #Below is valuable material
 
 #-c is shell option - not argument
@@ -24,6 +30,7 @@ RUN yarn global add sequelize sequelize-cli pg nodemon
 #----new ENTRYPOINT
 
 #ENTRYPOINT "yarn run start" => ok
+#ENTRYPOINT ["sequelize db:migrate", "&&", "yarn run start"]
 
 #ENTRYPOINT yarn run start  => not ok
 #ENTRYPOINT bash -c "yarn run start" => abundun => not ok

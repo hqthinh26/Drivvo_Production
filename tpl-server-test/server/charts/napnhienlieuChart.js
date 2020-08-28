@@ -191,12 +191,14 @@ const _main_function_chart_4 = async (usr_id, current_year) => {
 
 const _main_function_chart_5 = async (usr_id, current_year) => {
     const query1 = await pool.query(`
-    SELECT ld.name as reason, sum(nll.total_cost) as grand_total_cost
-    FROM napnhienlieu as nll, lydo as ld
-    WHERE (nll.reason = ld.id) AND (nll.u_id = $1) AND (EXTRACT(YEAR FROM nll.date) = $2)
+    SELECT ld.name as reason, sum(nnl.total_cost) as grand_total_cost
+    FROM napnhienlieu as nnl, lydo as ld
+    WHERE (nnl.reason = ld.id) AND (nnl.u_id = $1) AND (EXTRACT(YEAR FROM nnl.date) = $2)
     GROUP BY ld.name
     `, [usr_id, current_year]);
-    const test  = query1.rows;
+    console.log('====================')
+    console.log({chart_5:query1.rows});
+    console.log('====================')
     let label = [];
     let data = [];
     query1.rows.forEach(
