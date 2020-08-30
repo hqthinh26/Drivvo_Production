@@ -18,6 +18,7 @@ module.exports = {
             SELECT id, name as lydo
             FROM lydo 
             WHERE usr_id = $1
+            ORDER BY id desc
             `,[usr_id]);
             const array_of_lydo = query1.rows;
             return array_of_lydo;

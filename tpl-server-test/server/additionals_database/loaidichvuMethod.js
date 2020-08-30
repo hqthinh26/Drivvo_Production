@@ -18,6 +18,7 @@ module.exports = {
             SELECT id, name as loaidichvu
             FROM loaidichvu 
             WHERE usr_id = $1
+            ORDER BY id desc
             `,[usr_id]);
             const array_of_loaidichvu = query1.rows;
             return array_of_loaidichvu;

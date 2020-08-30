@@ -18,7 +18,7 @@ module.exports = {
             SELECT id, name as diadiem
             FROM diadiem 
             WHERE usr_id = $1
-            ORDER BY id asc
+            ORDER BY id desc
             `,[usr_id]);
             const array_of_diadiem = query1.rows;
             return array_of_diadiem;
