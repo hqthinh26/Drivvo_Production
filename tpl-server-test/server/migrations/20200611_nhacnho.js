@@ -15,6 +15,7 @@ module.exports = {
             OT_at_date date,
             RR_at_km_range int,
             RR_period text,
+            note text,
             CONSTRAINT only_one_exists CHECK (type_of_expense != type_of_service)
         );
         `, {raw: true})
