@@ -56,6 +56,9 @@ app.get('/', (req,res) => {
   res.send({message: 'Welcome to MONEY GEEK'});
 });
 
+app.get('/firebase', (req, res) => {
+
+});
 // //Check if this users has existed in the system or not? before the registration process
 // //related folders: BasicMethod - User Method
 app.post('/register', Regis_In_Out.register);
