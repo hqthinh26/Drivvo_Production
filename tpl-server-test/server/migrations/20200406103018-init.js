@@ -83,6 +83,7 @@ module.exports = {
         created_at timestamptz default now(),
         FOREIGN KEY (usr_id) REFERENCES users (u_id)
       );
+
       
     `, {raw: true}) 
   },

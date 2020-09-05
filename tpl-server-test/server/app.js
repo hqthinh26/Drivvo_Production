@@ -27,12 +27,16 @@ const nhacnhoMethod = require('./database/nhacnhoMethod');
 const input_qualifier = require('./input_qualifier');
 const findMaxOdometer = require('./findMaxOdometer');
 
+const app_firebase = require('./database/firebase');
+const schedule = require('node-schedule');
+
 app.use(morgan('dev'));
 //app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //Router
+app.use('/device', require('./routers/deviceRoute'));
 app.use('/napnhienlieu',require('./routers/napnhienlieuRoute'));
 app.use('/chiphi',require('./routers/chiphiRoute'));
 app.use('/thunhap',require('./routers/thunhapRoute'));
@@ -57,7 +61,21 @@ app.get('/', (req,res) => {
 });
 
 app.get('/firebase', (req, res) => {
-
+  const token_1132 = 'dlJxd827RfaJ3rj-PAsv_Q:APA91bFFA23TKUE72kLyDV34MG3MXvKO2Nr3DN6VEyPmdmXI2exvDRhDh26FbamvB2aCzsBfKzJBpM7hA6dC2YJK7VB2wrh3Xyah2MgW8AXBpKBCXExm8dlapv4SXR3yl-tYldn-5A_7';
+  const payload = {
+    token: token_1132,
+    notification: {
+        title: '2020 September, 05 2020:19:18',
+        body: '12:1811',
+    }
+}
+  const date_5s = new Date(Date.now() + 5 * 1000);
+  const job_5s = schedule.scheduleJob(date_5s, function () {
+    console.log('Inside 5s');
+    app_firebase.messaging().send(payload).then(res => console.log(res)).catch(err => console.log(err));
+  })
+  console.log('Outside 5s');
+  res.status(200).send({message: 'hello firebase'});
 });
 // //Check if this users has existed in the system or not? before the registration process
 // //related folders: BasicMethod - User Method
