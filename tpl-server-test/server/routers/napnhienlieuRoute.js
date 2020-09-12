@@ -3,6 +3,7 @@ const {uuid} = require('uuidv4');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const napNLMethod = require('../database/napNLMethod');
 const historyMethod = require('../database/historyMethod');
+const odometer_schedulerMethod = require('../database/odometer_schedulerMethod');
 
 const router = express.Router();
 
@@ -36,6 +37,8 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const type_of_form = 'napnhienlieu';
         console.log('current:' + form_UUID);
         await historyMethod._allform_Insert_napnhieulieu(usr_id, type_of_form, form_UUID, {time,date});
+
+        await odometer_schedulerMethod.push_notification_if_needed(usr_id, odometer);
         return res.sendStatus(200);
     }  
     catch (err) {

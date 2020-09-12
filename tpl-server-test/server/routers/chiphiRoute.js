@@ -2,6 +2,7 @@ const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const chiphiMethod = require('../database/chiphiMethod');
 const historyMethod = require('../database/historyMethod');
+const odometer_schedulerMethod = require('../database/odometer_schedulerMethod');
 const {uuid} = require('uuidv4');
 
 
@@ -34,7 +35,9 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //import new row to All Form Table
         const type_of_form = 'chiphi';
         await historyMethod._allform_Insert_chiphi(usr_id, type_of_form, chiphi_UUID, {time, date});
-        console.log('import chiphi')
+        console.log('import chiphi to history');
+        await odometer_schedulerMethod.push_notification_if_needed(usr_id, odometer);
+
         return res.sendStatus(200);
     }
     catch (err) {

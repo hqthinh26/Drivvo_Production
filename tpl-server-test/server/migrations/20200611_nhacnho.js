@@ -16,6 +16,7 @@ module.exports = {
             RR_at_km_range int,
             RR_period text,
             note text,
+            created_at timestamptz default now(),
             CONSTRAINT only_one_exists CHECK (type_of_expense != type_of_service)
         );
         `, {raw: true})

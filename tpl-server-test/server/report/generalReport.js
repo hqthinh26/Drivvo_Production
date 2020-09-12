@@ -83,7 +83,7 @@ const total_date_app_used = async (usr_id) => {
   let date_diff = parseInt(query2.rows[0].date_diff);
   
   //Neu ma chenh lenh ngay la 0 thi tang len do 1 => Ly do: date_diff dùng trong toán chia, do đó, không thể = 0
-  date_diff === 0 ? date_diff = 1 : date_diff = date_diff;
+  date_diff === 0 ? date_diff = 1 : date_diff = date_diff + 1;
 
   return date_diff;
 }

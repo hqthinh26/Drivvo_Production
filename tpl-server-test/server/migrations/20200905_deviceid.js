@@ -10,7 +10,7 @@ module.exports = {
         CREATE TABLE deviceid(
             ID serial4 PRIMARY KEY,
             usr_id uuid NOT NULL,
-            device_unique_id text UNIQUE,
+            device_unique_id text,
             created_at timestamptz default now(),
             FOREIGN KEY (usr_id) REFERENCES users (u_id)
           );

@@ -3,6 +3,7 @@ const {uuid} = require('uuidv4');
 const dichvuMethod = require('../database/dichvuMethod');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const historyMethod = require('../database/historyMethod');
+const odometer_schedulerMethod = require('../database/odometer_schedulerMethod');
 
 router.get('/', (req,res) => {
     res.send('Hello, this is dich vu route');
@@ -26,8 +27,11 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         //Now. We add a row into dichvu table
         await dichvuMethod.insert(dichvu_UUID, usr_id, inputFromClient);
         
+        
         //Second, Add a new row to All Form Table
         await historyMethod._all_form_insert_dichvu(usr_id, type_of_form, dichvu_UUID, {time, date});
+
+        await odometer_schedulerMethod.push_notification_if_needed(usr_id, odometer);
 
         res.sendStatus(200);
     } catch (err) {

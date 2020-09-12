@@ -178,12 +178,18 @@ const _main_function_chart_4 = async (usr_id, current_year) => {
     query1.rows.forEach(
         (each_row) => {
             label.push(each_row.month);
-            let decoy_array = [];
-            decoy_array.push(parseFloat(each_row.monthly_cost));
-            data.push(decoy_array);
+            data.push(parseFloat(each_row.monthly_cost));
         }
     );
-    return {label, data};
+    // query1.rows.forEach(
+    //     (each_row) => {
+    //         label.push(each_row.month);
+    //         let decoy_array = [];
+    //         decoy_array.push(parseFloat(each_row.monthly_cost));
+    //         data.push(decoy_array);
+    //     }
+    // );
+    return {label, data4: data};
 }
 
 

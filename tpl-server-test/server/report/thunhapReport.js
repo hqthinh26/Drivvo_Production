@@ -18,7 +18,7 @@ const oldest_lastest_time_date_history = async (usr_id) => {
     const current_date = query1.rows[0].max;
     const query3 = await pool.query(`SELECT DATE_PART('day', $1::timestamp - $2::timestamp)`,[current_date,start_date]);
     let date_diff = query3.rows[0].date_part;
-    date_diff === 0 ? date_diff = 1 : date_diff = date_diff;
+    date_diff === 0 ? date_diff = 1 : date_diff = date_diff + 1;
     
     return {start_date, current_date, date_diff};
 };

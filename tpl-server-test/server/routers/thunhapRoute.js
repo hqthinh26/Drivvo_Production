@@ -2,6 +2,7 @@ const express = require('express');
 const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const thunhapMethod = require('../database/thunhapMethod');
 const historyMethod = require('../database/historyMethod');
+const odometer_schedulerMethod = require('../database/odometer_schedulerMethod');
 const {uuid} = require('uuidv4');
 
 const router = express.Router();
@@ -30,7 +31,9 @@ router.post('/insert',Auth_IN_OUT.extractToken, async (req,res) => {
         await thunhapMethod.insert(thunhap_UUID,usr_id,inputFromUser);
 
         // Step 2: Add a new row to All Form Table 
-        await historyMethod._all_form_insert_thunhap(usr_id, type_of_form, thunhap_UUID, inputFromUser)
+        await historyMethod._all_form_insert_thunhap(usr_id, type_of_form, thunhap_UUID, inputFromUser);
+
+        await odometer_schedulerMethod.push_notification_if_needed(usr_id, odometer);
         
         return res.sendStatus(200);
     } catch (err) {

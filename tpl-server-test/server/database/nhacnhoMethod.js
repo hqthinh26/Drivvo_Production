@@ -48,31 +48,58 @@ const insert = async (nhacnho_id, usr_id, input_From_User) => {
 
     //Below is FIREBASE CLOUD MESSAGING
 
-    const binded_object = {
-      nhacnho_id,
-      name_of_nhacnho,
-    };
+
 
     console.log({ISSS_ONEEE_TIME: is_one_time}); //Show if is_one_time value is sent as STRING or BOOLEAN
 
     if (is_one_time === true || is_one_time === 'true') {
       console.log('INSIDE IS ONE');
+      console.log({OT_at_date});
+      //START  -  working with OT_at_date
+      const date = new Date(OT_at_date);
+      //Take time
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes() + 1;
+
+      //Fix date
+      date.setHours(hour);
+      date.setMinutes(minute);
+      console.log({date_fixed: date, type_of_date: typeof date});
+      //END - Working with OT_at_date
       const device_tokens = await deviceMethod.user_tokens(usr_id);
-      const one_token = device_tokens[0];
-      const date_10s_ahead = new Date(Date.now() + 10 * 1000);
+
+      //Task: Delete (require ID), sendMessage (require payload(name_of_nhacnho) and tokens (usr_id))
+      const binded_object = {
+        nhacnho_id,
+        usr_id,
+        name_of_nhacnho,
+        OT_at_date,
+      }
       
-      const scheduled_job = schedule.scheduleJob(date_10s_ahead, async function() {
+      //Start Scheduling - Binded_object = {nhacnho_id, usr_id, name_of_nhacnho, OT_at_date}
+      const scheduled_job = schedule.scheduleJob(date, async function(binded_object) {
+
+        const query_tokens = await pool.query(`
+        SELECT device_unique_id FROM deviceid WHERE usr_id = $1
+        `, [binded_object.usr_id]);
+        const array_tokens = query_tokens.rows.map((each_row) => each_row.device_unique_id);
         const payload = {
-          token: one_token,
+          tokens: array_tokens,
           notification: {
-            title: 'I hope this work well background',
-            body: `${binded_object.name_of_nhacnho}`,
+            title: `Ngày được nhắc nhở: ${binded_object.OT_at_date}`,
+            body: `Nội dung nhắc nhở: ${binded_object.name_of_nhacnho}`,
           },
         };
-        const result = await app_firebase.messaging().send(payload);
-        console.log(`Sucessfully sent: ${result}`);
+
+        // const result = await app_firebase.messaging().send(payload);
+        const result = await app_firebase.messaging().sendMulticast(payload);
+        console.table(`Sucessfully sent: ${result}`);
+        await pool.query(`DELETE FROM nhacnho WHERE id = $1`, [binded_object.nhacnho_id]);
+        console.log(` xoa ${binded_object.name_of_nhacnho} thanh cong`);
       }.bind(null, binded_object));
-    //END FIREBASE CLOUD MESSAGING
+
+    //End Scheduling
     }
   } catch (err) {
     throw new Error(err);
@@ -82,7 +109,7 @@ const insert = async (nhacnho_id, usr_id, input_From_User) => {
 const print = async (usr_id) => {
   try {
     const query1 = await pool.query(`
-    SELECT * FROM nhacnho WHERE usr_id = $1
+    SELECT * FROM nhacnho WHERE usr_id = $1 ORDER BY created_at desc
     `, [usr_id]);
     return query1.rows;
   } catch (err) {

@@ -19,7 +19,7 @@ const get_start_day_and_current_day = async (usr_id) => {
 
     const query2 = await pool.query(`SELECT DATE_PART('day', $1::timestamp - $2::timestamp) `, [current_date, start_date]);
     let date_diff = query2.rows[0].date_part;
-    date_diff === 0 ? date_diff = 1 : date_diff = date_diff;
+    date_diff === 0 ? date_diff = 1 : date_diff = date_diff + 1;
 
     return {start_date, current_date, date_diff};
 }
@@ -162,12 +162,12 @@ module.exports = {
             const total_money = await total_money_spent(usr_id);
 
             //Step 2: count the DATE DIFF between first day and last day to count BY_DAY (in history table)  CHECK
-            const by_day = parseFloat((total_money / date_diff).toFixed(3));
+            const by_day = parseFloat((total_money / date_diff).toFixed(0));
 
             //Step 3: count the ODOMETER DIFF  between first day and last day to count by_km (in history table)
             const {km_driven} = await total_km_driven(usr_id);
 
-            const by_km = parseFloat((total_money / km_driven).toFixed(3));
+            const by_km = parseFloat((total_money / km_driven).toFixed(0));
             return {
                 entry: {
                     entry_chiphi,

@@ -97,7 +97,8 @@ module.exports = {
             SELECT DATE_PART('day', $1::timestamp - $2::timestamp)
             `, [current_date, start_date]);
  
-            const date_part = query2.rows[0].date_part; //INT
+            let date_part = query2.rows[0].date_part; //INT
+            date_part === 0 ? date_part = 1 : date_part = date_part + 1;
 
             //Query 3 will return 2 rows | the first is for the lowest value odometer
             // The second is for the highest value odometer
