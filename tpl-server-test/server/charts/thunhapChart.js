@@ -47,16 +47,15 @@ const chart_2_main_function = async (usr_id, current_year) => {
     GROUP BY EXTRACT(MONTH FROM date)
     ORDER BY month asc
     `,[usr_id, current_year]);
-    const chart_2 = query1.rows.map(
-        (each_row) => {
-            let tmp_array = [];
-            tmp_array.push(parseInt(each_row.monthly_total));
-            return tmp_array;
-        }
-    );
-    const month_array = query1.rows.map(
-        (each_row) => (each_row.month)
-    );
+    // const chart_2 = query1.rows.map(
+    //     (each_row) => {
+    //         let tmp_array = [];
+    //         tmp_array.push(parseInt(each_row.monthly_total));
+    //         return tmp_array;
+    //     }
+    // );
+    const month_array = query1.rows.map(each_row => (each_row.month));
+    const chart_2 = query1.rows.map( each_row => parseInt(each_row.monthly_total));
     return {month_array, chart_2};
 };
 

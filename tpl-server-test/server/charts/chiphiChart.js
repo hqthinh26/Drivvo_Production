@@ -50,15 +50,18 @@ const main_return_chart_2 = async (usr_id, current_year) => {
     `, [usr_id, current_year]); // return an array with multiple columes
 
     const query1_array = query1.rows;
-    const month_array = query1_array.map((each_row) => each_row.month);
+    
 
-    const monthly_total_array = query1_array.map(
-        (each_row) => {
-            let temp_array = [];
-            temp_array.push(parseInt(each_row.monthly_total));
-            return temp_array;
-        }
-    );
+    const month_array = query1_array.map(each_row => each_row.month);
+    const monthly_total_array = query1_array.map(each_row => parseInt(each_row.monthly_total));
+
+    // const monthly_total_array = query1_array.map(
+    //     (each_row) => {
+    //         let temp_array = [];
+    //         temp_array.push(parseInt(each_row.monthly_total));
+    //         return temp_array;
+    //     }
+    // );
     
     return {month_array,monthly_total_array};
 }

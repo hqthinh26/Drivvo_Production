@@ -15,17 +15,49 @@ module.exports = {
     _print: async (usr_id) => {
         try {
             const query1 = await pool.query(`
-            SELECT id, name as loaidichvu
-            FROM loaidichvu 
-            WHERE usr_id = $1
-            ORDER BY id desc
-            `,[usr_id]);
-            const array_of_loaidichvu = query1.rows;
-            return array_of_loaidichvu;
+            SELECT DISTINCT dv.type_of_service as id, ldv.name as loaidichvu
+            FROM dichvu as dv
+            INNER JOIN loaidichvu as ldv
+                ON dv.type_of_service = ldv.id
+            WHERE dv.u_id = $1
+            `, [usr_id])
+            const loaidichvu_IN_dichvuTable = query1.rows;
 
+            const query2 = await pool.query(`
+            SELECT id, name as loaidichvu
+            FROM loaidichvu
+            WHERE usr_id = $1
+            `, [usr_id]);
+            const loaidichvu_IN_loaidichvuTable = query2.rows;
+
+            const reduced_loaidichvu_table = loaidichvu_IN_loaidichvuTable.filter(
+                each_loaidichvu => {
+                    const {loaidichvu} = each_loaidichvu;
+                    const only_names = loaidichvu_IN_dichvuTable.map(each_row => each_row.loaidichvu);
+                    console.table(only_names);
+                    return !only_names.includes(loaidichvu);
+                }
+            );
+            return {used_arr: loaidichvu_IN_dichvuTable, the_rest_arr: reduced_loaidichvu_table};
         } catch (err) {
-            throw new Error({message: 'failed at loaidichvu print method', Err: err});
+            throw new Error(err);
         }
-    },
+    }
+
+    // _print: async (usr_id) => {
+    //     try {
+    //         const query1 = await pool.query(`
+    //         SELECT id, name as loaidichvu
+    //         FROM loaidichvu 
+    //         WHERE usr_id = $1
+    //         ORDER BY id desc
+    //         `,[usr_id]);
+    //         const array_of_loaidichvu = query1.rows;
+    //         return array_of_loaidichvu;
+
+    //     } catch (err) {
+    //         throw new Error({message: 'failed at loaidichvu print method', Err: err});
+    //     }
+    // },
 
 }
