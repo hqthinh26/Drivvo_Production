@@ -1,12 +1,22 @@
 const pool = require('./pooling');
 
 module.exports = {
-    printall: async (req,res) => {
+    print: async (usr_id) => {
         try {
-            const results = await pool.query(`select * from dichvu`);
-            res.status(200).send(results.rows);
+            const query = await pool.query(`
+            SELECT dv.id, dv.odometer, ldv.name as type_of_service, dv.amount, dd.name as place, dv.note ,dv.date, dv.time
+            FROM dichvu as dv
+            INNER JOIN loaidichvu as ldv
+                ON  dv.type_of_service = ldv.id
+            INNER JOIN diadiem as dd
+                ON dv.place = dd.id
+            WHERE dv.u_id = $1
+            ORDER BY dv.date desc, dv.time desc
+            `, [usr_id]);
+            const dichvu_arr = query.rows;
+            return dichvu_arr;
         } catch (err) {
-            res.sendStatus(403);
+            throw new Error(err);
         }
     },
 

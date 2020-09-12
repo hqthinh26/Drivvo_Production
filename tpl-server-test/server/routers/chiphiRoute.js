@@ -12,7 +12,17 @@ router.get('/', (req,res) => {
     res.status(200).send("Hello, this is chiphi Route");
 })
 
-router.get('/printall', chiphiMethod.printall);
+router.get('/print', Auth_IN_OUT.extractToken, async (req, res) => {
+    try {
+        const token = req.token;
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const chiphi_arr = await chiphiMethod.print(usr_id);
+        res.status(200).send({chiphi_arr});
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({err});
+    }
+});
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
    

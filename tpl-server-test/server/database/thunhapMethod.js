@@ -1,13 +1,20 @@
 const pool = require('./pooling');
 
 module.exports = {
-    printall: async (req,res) => {
+    printall: async (usr_id) => {
         try {
-            const results = await pool.query(`select * from thunhap`);
-            res.status(200).send(results.rows);
-        }
-        catch (err) {
-            res.sendStatus(403);
+            const query1 = await pool.query(`
+            SELECT tn.id, tn.odometer, lnl.name as type_of_income, tn.amount, tn.note , tn.date, tn.time
+            FROM thunhap as tn
+            INNER JOIN loainhienlieu as lnl
+            ON tn.type_of_income = lnl.id
+            WHERE tn.u_id = $1
+            ORDER BY date desc, time desc
+            `, [usr_id]);
+            const thunhap_arr = query1.rows;
+            return thunhap_arr;
+        } catch (err) {
+            throw new Error(err);
         }
     },
 

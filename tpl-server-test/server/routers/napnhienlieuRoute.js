@@ -4,6 +4,7 @@ const Auth_IN_OUT = require('../auth/Auth_IN_OUT');
 const napNLMethod = require('../database/napNLMethod');
 const historyMethod = require('../database/historyMethod');
 const odometer_schedulerMethod = require('../database/odometer_schedulerMethod');
+const fuel_efficiency = require('../report/fuel_efficiency');
 
 const router = express.Router();
 
@@ -11,6 +12,29 @@ router.get('/', (req,res) => {
     res.status(200).send('this is nap nhien lieu route');
 })
 
+router.get('/print', Auth_IN_OUT.extractToken, async (req, res) => {
+    try {
+        //Return nll_array
+        const token = req.token;
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const napnhienlieu_arr = await napNLMethod.print(usr_id);
+
+        //Return average_array
+        const {average_array} = await fuel_efficiency.print_fuel_efficiency(usr_id);
+        console.table(average_array);
+        res.status(200).send({
+            napnhienlieu_arr, 
+            average_arr: average_array,
+        });
+
+        //napnhienlieu_arr = []
+        //average_arr = {all_row_without_timestampt: [], average_array: [], lastest/min/max: {id, average}}
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({err});
+    }
+})
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     
     // IMPORTANT: Below are the list of foreign-key values

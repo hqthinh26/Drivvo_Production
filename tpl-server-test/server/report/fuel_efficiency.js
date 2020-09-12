@@ -7,7 +7,8 @@ const return_all_nll_rows = async (usr_id) => {
         SELECT id, date, time, odometer, total_units
         FROM napnhienlieu
         WHERE u_id = $1
-        ORDER BY date asc, time asc`, [usr_id]);
+        ORDER BY date asc, time asc
+        `, [usr_id]);
         const nll_rows = query1.rows;
         return nll_rows;
     } catch (err) {
@@ -40,6 +41,8 @@ const loop_through_function = (each_row, index, array) => {
     }
 }
 
+
+// nll_rows = [{id, odometer, total_units}, {}, {}, ...]
 const average_nll_array = (nll_rows) => {
     // the function inside map method will loop through each row and calculate
     const result_array = nll_rows.map(loop_through_function);
@@ -68,12 +71,19 @@ module.exports = {
 
             const average_array = average_nll_array(all_rows_without_timestamp);
 
-            const latest = average_array[average_array.length -2];
-
-            const {min, max} = find_min_and_max(average_array);
-
-            return {all_rows_without_timestamp, average_array, latest, min, max};
-
+            if (average_array.length <2) {
+                return {
+                    all_rows_without_timestamp, 
+                    average_array, 
+                    latest: {id: 'template', average: 0.000}, 
+                    min:{id: 'template_min', average: 0.000}, 
+                    max:{id: 'template_max', average: 0.000}
+                };
+            } else {
+                const latest = average_array[average_array.length -2];
+                const {min, max} = find_min_and_max(average_array);
+                return {all_rows_without_timestamp, average_array, latest, min, max};
+            }            
         } catch (err) {
             throw new Error(err);
         }

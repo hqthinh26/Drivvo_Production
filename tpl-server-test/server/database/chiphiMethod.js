@@ -1,13 +1,24 @@
 const pool = require('./pooling');
 
 module.exports = {
-    printall: async (req,res) => {
+    print: async (usr_id) => {
         try {
-            const results = await pool.query('select * from chiphi');
-            return res.status(200).send(results.rows);
-        }
-        catch (err) {
-            return res.sendStatus(403);
+            const query1 = await pool.query(`
+            SELECT cp.id, cp.odometer, lcp.name as type_of_expense, cp.amount, dd.name as place, ld.name as reason, cp.note, cp.date, cp.time
+            FROM chiphi as cp
+            INNER JOIN loaichiphi as lcp
+                ON cp.type_of_expense = lcp.id
+            INNER JOIN diadiem as dd
+                ON cp.place = dd.id
+            INNER JOIN lydo as ld
+                ON cp.reason = ld.id
+            WHERE cp.u_id = $1 
+            ORDER BY cp.date desc, cp.time desc
+            `, [usr_id]);
+            const chiphi_arr = query1.rows;
+            return chiphi_arr;
+        } catch (err) {
+            throw new Error(err);
         }
     },
 

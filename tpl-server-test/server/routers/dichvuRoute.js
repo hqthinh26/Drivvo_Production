@@ -9,7 +9,17 @@ router.get('/', (req,res) => {
     res.send('Hello, this is dich vu route');
 })
 
-router.get('/printall', dichvuMethod.printall);
+router.get('/print', Auth_IN_OUT.extractToken, async (req,res) => {
+    try {
+        const token = req.token;
+        const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+        const dichvu_arr = await dichvuMethod.print(usr_id);
+        res.status(200).send({dichvu_arr});
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({err});
+    }
+});
 
 router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 

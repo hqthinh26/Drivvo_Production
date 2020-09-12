@@ -21,6 +21,28 @@ const calculate_total_cost_and_unit = async (usr_id) => {
 
 module.exports = {
 
+    print: async (usr_id) => {
+        try {
+            const query = await pool.query(`
+            SELECT nnl.id, nnl.odometer, lnl.name as type_of_fuel, nnl.price_per_unit, nnl.total_cost, nnl.total_units, tx.name as gas_station, ld.name as reason, nnl.date, nnl.time
+            FROM napnhienlieu as nnl
+            INNER JOIN loainhienlieu as lnl
+                ON nnl.type_of_fuel = lnl.id
+            INNER JOIN tramxang as tx
+                ON nnl.gas_station = tx.id
+            INNER JOIN lydo as ld
+                ON nnl.reason = ld.id
+            WHERE nnl.u_id = $1
+            ORDER BY nnl.date desc, nnl.time desc
+            `, [usr_id]);
+            const napnhienlieu_arr = query.rows;
+            console.table(napnhienlieu_arr);
+            return napnhienlieu_arr;
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+
     insert: async (form_id,user_id,inputFromClient) => {
 
         // remember to send 'reason' as a number | This is a new variable xxw
