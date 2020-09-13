@@ -1,12 +1,29 @@
 const pool = require('../database/pooling');
 
+const is_alr_existing = async (usr_id, loaithunhap_name) => {
+    try {
+        const query1 = await pool.query(`
+        SELECT name
+        FROM loaithunhap
+        WHERE usr_id = $1 AND name = $2
+        `, [usr_id, loaithunhap_name]);
+        return query1.rowCount === 0 ? false : true;
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
 module.exports = {
     _insert: async (usr_id, loaithunhap_name) => {
         try {
-            const query1 = await pool.query(`
-            INSERT INTO loaithunhap (usr_id, name)
-            VALUES ($1, $2)
-            `,[usr_id, loaithunhap_name]);
+            if (await is_alr_existing(usr_id, loaithunhap_name) === false) {
+                const query1 = await pool.query(`
+                INSERT INTO loaithunhap (usr_id, name)
+                VALUES ($1, $2)
+                `,[usr_id, loaithunhap_name]);
+                return true; //Meaning successfully adding the new thu nhap to the database
+            }
+            return false; //Meaning this input name alr stays in the database => preventing duplication
         } catch (err) {
             throw new Error({message: 'failed at loaithunhap insert method', ERR: err});
         }

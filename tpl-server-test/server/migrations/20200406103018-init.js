@@ -40,6 +40,7 @@ module.exports = {
         ID serial8 PRIMARY KEY,
         usr_id uuid NOT NULL,
         name text NOT NULL,
+        is_black_listed boolean default false,
         created_at timestamptz default now(),
         FOREIGN KEY (usr_id) REFERENCES users (u_id)
       );
@@ -48,6 +49,7 @@ module.exports = {
         ID serial8 PRIMARY KEY,
         usr_id uuid NOT NULL,
         name text NOT NULL,
+        is_black_listed boolean default false,
         created_at timestamptz default now(),
         FOREIGN KEY (usr_id) REFERENCES users (u_id)
       );

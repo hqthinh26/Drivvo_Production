@@ -10,8 +10,13 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
 
         const {loaichiphi_name} = req.body;
-        await loaichiphiMethod._insert(usr_id, loaichiphi_name);
-        res.status(200).send({message: `Thêm thành công loại chi phí: ${loaichiphi_name}`});;
+        const trimmed_loaichiphi = loaichiphi_name.trim();
+        const status = await loaichiphiMethod._insert(usr_id, trimmed_loaichiphi);
+        if (status === true) {
+            res.status(200).send({message: `Thêm thành công loại chi phí: ${loaichiphi_name}`});;
+        } else {
+            res.status(400).send({message: `Loại chi phí: ${loaichiphi_name} đã tồn tại` })
+        }
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

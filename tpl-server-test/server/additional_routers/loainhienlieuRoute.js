@@ -12,8 +12,17 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
     try {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
         const {loainhienlieu_name} = req.body;
-        await loainhienlieuMethod._insert(usr_id, loainhienlieu_name);
-        res.status(200).send({message: `Thêm thành công loại nhiên liệu: ${loainhienlieu_name}`});
+
+        //Use method TRIM() to remove whitespaces on the 2 ends
+        const trimmed_loainhienlieu = loainhienlieu_name.trim();
+        console.warn(trimmed_loainhienlieu);
+        const status = await loainhienlieuMethod._insert(usr_id, trimmed_loainhienlieu);
+        if (status === true) {
+            res.status(200).send({message: `Thêm thành công loại nhiên liệu: ${loainhienlieu_name}`});
+        } else {
+            res.status(400).send({message: `Loại nhiên liệu ${loainhienlieu_name} đã tồn tại` })
+        }
+        
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

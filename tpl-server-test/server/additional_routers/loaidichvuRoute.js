@@ -10,8 +10,14 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
 
         const {loaidichvu_name} = req.body;
-        await loaidichvuMethod._insert(usr_id, loaidichvu_name);
-        res.status(200).send({message: `Thêm thành công loại dịch vụ: ${loaidichvu_name}`});;
+        const trimmed_loaidichvu = loaidichvu_name.trim();
+        const status = await loaidichvuMethod._insert(usr_id, trimmed_loaidichvu);
+        if (status === true) {
+            res.status(200).send({message: `Thêm thành công loại dịch vụ: ${loaidichvu_name}`});;
+        } else {
+            res.status(400).send({message: `Loại dịch vụ: ${loaidichvu_name} đã tồn tại` });
+        }
+        
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
