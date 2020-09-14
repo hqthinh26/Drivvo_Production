@@ -20,10 +20,12 @@ module.exports = {
                 const query1 = await pool.query(`
                 INSERT INTO loaithunhap (usr_id, name)
                 VALUES ($1, $2)
+                RETURNING id
                 `,[usr_id, loaithunhap_name]);
-                return true; //Meaning successfully adding the new thu nhap to the database
+                return {status: true, loaithunhap_id: query1.rows[0].id};
+                //Meaning successfully adding the new thu nhap to the database
             }
-            return false; //Meaning this input name alr stays in the database => preventing duplication
+            return {status: false}; //Meaning this input name alr stays in the database => preventing duplication
         } catch (err) {
             throw new Error({message: 'failed at loaithunhap insert method', ERR: err});
         }
@@ -49,9 +51,9 @@ module.exports = {
 
             const reduced_loaithunhapTable = loaithunhap_IN_loaithunhapTable.filter(
                 (each_loaithunhap) => {
-                    const {loaithunhap} = each_loaithunhap;
+                    const {loaithunhap} = each_loaithunhap; //take out the name of the object 
                     const only_names = loaithunhap_IN_thunhapTable.map(each_row => each_row.loaithunhap);
-                    return !only_names.includes(loaithunhap);
+                    return !only_names.includes(loaithunhap); //if the name of this object exists in the only names then dont take this object
                 }
             );
             

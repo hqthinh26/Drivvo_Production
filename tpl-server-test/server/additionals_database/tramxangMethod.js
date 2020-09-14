@@ -20,10 +20,11 @@ module.exports = {
                 const query1 = await pool.query(`
                 INSERT INTO tramxang (usr_id, name)
                 VALUES ($1, $2)
+                RETURNING id
                 `,[usr_id, tramxang_name]);
-                return true;
+                return {status: true, tramxang_id: query1.rows[0].id};
             }
-            return false;
+            return {status: false};
         } catch (err) {
             throw new Error({message: 'failed at tramxang insert method', ERR: err});
         }

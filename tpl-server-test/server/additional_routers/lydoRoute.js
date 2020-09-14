@@ -10,8 +10,14 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
 
         const {lydo_name} = req.body;
-        await lydoMethod._insert(usr_id, lydo_name);
-        res.status(200).send({message: `Thêm thành công lý do: ${lydo_name}`});;
+        const trimmed_lydo = lydo_name.trim();
+
+        const call_insert = await lydoMethod._insert(usr_id, trimmed_lydo);
+        const {status, lydo_id} = call_insert;
+        if (status === true) {
+            res.status(200).send({message: `Thêm thành công lý do: ${lydo_name}`, lydo_id});
+        }
+        res.status(400).send({message: `Lý do: ${trimmed_lydo} đã tồn tại`});
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

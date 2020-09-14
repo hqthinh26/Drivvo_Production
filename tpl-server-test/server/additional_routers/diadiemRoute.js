@@ -10,8 +10,17 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
 
         const {diadiem_name} = req.body;
-        await diadiemMethod._insert(usr_id, diadiem_name);
-        res.status(200).send({message: `Thêm thành công địa điểm: ${diadiem_name}`});
+        const trimmed_diadiem = diadiem_name.trim();
+        const call_insert = await diadiemMethod._insert(usr_id, trimmed_diadiem);
+        
+        const {status, diadiem_id} = call_insert;
+        if(status === true) {
+            res.status(200).send({message: `Thêm thành công địa điểm: ${diadiem_name}`, diadiem_id});
+        }
+        else {
+            res.status(400).send({message: `Địa điểm ${diadiem_name} đã tồn tại`});
+        }
+        
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

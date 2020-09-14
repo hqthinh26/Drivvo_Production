@@ -12,10 +12,12 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
         const {tramxang_name} = req.body;
         const trimmed_tramxang = tramxang_name.trim();
 
-        const status = await tramxangMethod._insert(usr_id, trimmed_tramxang);
+        const call_insert = await tramxangMethod._insert(usr_id, trimmed_tramxang);
+
+        const {status, tramxang_id} = call_insert;
 
         if (status === true) {
-            res.status(200).send({message: `Thêm thành công trạm xăng: ${tramxang_name}`});
+            res.status(200).send({message: `Thêm thành công trạm xăng: ${tramxang_name}`, tramxang_id});
         } else  {
             res.status(400).send({message: `Trạm xăng: ${tramxang_name} đã tồn tại` });
         }

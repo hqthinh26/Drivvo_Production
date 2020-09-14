@@ -11,9 +11,12 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
         const {loaithunhap_name} = req.body;
         const trimmed_loaithunhap = loaithunhap_name.trim();
-        const status = await loaithunhapMethod._insert(usr_id, trimmed_loaithunhap);
+        const call_insert = await loaithunhapMethod._insert(usr_id, trimmed_loaithunhap);
+
+        const {status, loaithunhap_id} = call_insert;
+
         if (status === true) {
-            res.status(200).send({message: `Thêm thành công loại thu nhập: ${loaithunhap_name}`});;
+            res.status(200).send({message: `Thêm thành công loại thu nhập: ${loaithunhap_name}`, loaithunhap_id});;
         } else {
             res.status(400).send({message: `Loại thu nhập: ${loaithunhap_name} đã tồn tại` });
         }

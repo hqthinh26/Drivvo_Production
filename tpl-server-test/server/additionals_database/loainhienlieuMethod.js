@@ -20,10 +20,12 @@ module.exports = {
                 const query1 = await pool.query(`
                 INSERT INTO loainhienlieu(usr_id, name)
                 VALUES ($1, $2)
+                RETURNING id
                 `, [usr_id, loainhienlieu_name]);
-                return true;
+                
+                return {status: true, loainhienlieu_id: query1.rows[0].id};
             }
-            return false;
+            return {status: false};
         } catch (err) {
             throw new Error({message: 'Failed at loainhienlieuMethod', ERR: err});
         }

@@ -19,10 +19,12 @@ module.exports = {
                 const query1 = await pool.query(`
                 INSERT INTO loaichiphi (usr_id, name)
                 VALUES ($1, $2)
+                RETURNING id
                 `,[usr_id, loaichiphi_name]);
-                return true;
+                return {status: true, loaichiphi_id: query1.rows[0].id}
+                //return true;
             }
-            return false;
+            return {status: false};
         } catch (err) {
             throw new Error({message: 'failed at loaichiphi insert method', ERR: err});
         }
