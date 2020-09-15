@@ -75,9 +75,15 @@ module.exports = {
                 return {
                     all_rows_without_timestamp, 
                     average_array, 
-                    latest: {id: 'template', average: 0.000}, 
-                    min:{id: 'template_min', average: 0.000}, 
-                    max:{id: 'template_max', average: 0.000}
+                    latest: average_array.length === 0 
+                        ? {id: 'ZERO NLL FORM', average: 0.000}
+                        : {id: average_array[0].id, average: 0.000}, 
+                    min: average_array.length === 0 
+                        ? {id: 'ZERO NLL FORM', average: 0.000}
+                        : {id: average_array[0].id, average: 0.000}, 
+                    max: average_array.length === 0 
+                        ? {id: 'ZERO NLL FORM', average: 0.000}
+                        : {id: average_array[0].id, average: 0.000}
                 };
             } else {
                 const latest = average_array[average_array.length -2];

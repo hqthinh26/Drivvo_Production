@@ -33,17 +33,51 @@ module.exports = {
 
     _print: async (usr_id) => {
         try {
+            //Take diadiem in chiphi table
+
             const query1 = await pool.query(`
-            SELECT id, name as diadiem
-            FROM diadiem 
-            WHERE usr_id = $1
-            ORDER BY id desc
+            SELECT DISTINCT cp.place as id, dd.name as diadiem
+            FROM chiphi as cp
+            INNER JOIN diadiem as dd
+                ON cp.place = dd.id
+            WHERE cp.u_id = $1 AND cp.place IS NOT NULL
             `,[usr_id]);
-            const array_of_diadiem = query1.rows;
-            return array_of_diadiem;
+            
+            //Take diadiem in dichvu table
+            const query2 = await pool.query(`
+            SELECT DISTINCT dv.place as id, dd.name as diadiem
+            FROM dichvu as dv
+            INNER JOIN diadiem as dd
+                ON dv.place = dd.id
+            WHERE dv.u_id = $1 AND dv.place IS NOT NULL
+            `, [usr_id]);
+            
+            //Take diadiem in diadiem table
+            const query3 = await pool.query(`
+            SELECT id, name as diadiem
+            FROM diadiem
+            WHERE usr_id = $1 AND is_black_listed = 'no'
+            `, [usr_id]);
+            
+            //the filtering process
+            const cp_diadiem_name = query1.rows.map(each_row => each_row.diadiem);
+            const dv_diadiem_name = query2.rows.map(each_row => each_row.diadiem);
+
+            let used_arr = []; let the_rest_arr = [];
+            
+            query3.rows.forEach(
+                each_row => {
+                    const {diadiem} = each_row;
+                    if (cp_diadiem_name.includes(diadiem)) return used_arr.push(each_row);
+                    if (dv_diadiem_name.includes(diadiem)) return used_arr.push(each_row);
+                    return the_rest_arr.push(each_row);
+                }
+            );
+            
+            return {used_arr, the_rest_arr};
 
         } catch (err) {
-            throw new Error({message: 'failed at diadiem print method', Err: err});
+            throw new Error(err);
         }
     },
 

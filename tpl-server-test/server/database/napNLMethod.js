@@ -36,7 +36,7 @@ module.exports = {
             ORDER BY nnl.date desc, nnl.time desc
             `, [usr_id]);
             const napnhienlieu_arr = query.rows;
-            console.table(napnhienlieu_arr);
+            //console.table(napnhienlieu_arr);
             return napnhienlieu_arr;
         } catch (err) {
             throw new Error(err);
@@ -45,8 +45,10 @@ module.exports = {
 
     insert: async (form_id,user_id,inputFromClient) => {
 
+        //deliberately omit the reason field by not inserting it
+
         // remember to send 'reason' as a number | This is a new variable xxw
-        const {date, time, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, reason} = inputFromClient;
+        const {date, time, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station} = inputFromClient;
         const odometerF = parseFloat(odometer);
         const price_per_unitI = parseInt(price_per_unit);
         const total_costI = parseInt(total_cost);
@@ -58,13 +60,13 @@ module.exports = {
         //Reason now accepts an INT8-typed NUMBER instead of a TEXT-typed VALUE
         const type_of_fuelBI = BigInt(type_of_fuel);
         const gas_stationBI = BigInt(gas_station);
-        const reasonBI = BigInt(reason);
+        //const reasonBI = BigInt(reason);
 
         try{
             await pool.query(`
-        INSERT INTO napnhienlieu(id, u_id, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, reason, date, time)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`
-        , [form_id, user_id, odometerF,  type_of_fuelBI, price_per_unitI, total_costI, total_unitsF, full_tank, gas_stationBI, reasonBI, date, time]);
+            INSERT INTO napnhienlieu(id, u_id, odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, date, time)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`
+            , [form_id, user_id, odometerF,  type_of_fuelBI, price_per_unitI, total_costI, total_unitsF, full_tank, gas_stationBI, date, time]);
         } catch (err) {
             throw new Error(err);
         }

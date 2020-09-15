@@ -21,10 +21,23 @@ router.get('/print', Auth_IN_OUT.extractToken, async (req, res) => {
 
         //Return average_array
         const {average_array} = await fuel_efficiency.print_fuel_efficiency(usr_id);
-        console.table(average_array);
+        
+        //Combining
+        const arr_length = napnhienlieu_arr.length - 1;
+
+        const combined_arr = napnhienlieu_arr.map(
+            (each_report_NLL, index) => {
+                const desired_index = arr_length - index;
+                return ({
+                    ...each_report_NLL,
+                    average_kml: average_array[desired_index],
+                })
+            }
+        );
         res.status(200).send({
-            napnhienlieu_arr, 
-            average_arr: average_array,
+            message: 'Chỉ số average có tên là: average_kml trong từng object NLL',
+            napnhienlieu_arr: combined_arr,
+            average_array,
         });
 
         //napnhienlieu_arr = []

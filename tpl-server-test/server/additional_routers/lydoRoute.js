@@ -26,11 +26,11 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req, res) => {
 
 router.get('/print', Auth_IN_OUT.extractToken, async (req,res) => {
     try {
-        const title = 'List of diadiem';
+        const title = 'List of lydo updating';
         const token = req.token;
         const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
-        const data = await lydoMethod._print(usr_id);
-        res.status(200).send({title, data});
+        const {used_arr, the_rest_arr} = await lydoMethod._print(usr_id);
+        res.status(200).send({title, used_arr, the_rest_arr});
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

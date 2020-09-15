@@ -60,22 +60,17 @@ app.get('/', (req,res) => {
   res.send({message: 'Welcome to MONEY GEEK'});
 });
 
-app.get('/firebase', (req, res) => {
-  const token_1132 = 'dlJxd827RfaJ3rj-PAsv_Q:APA91bFFA23TKUE72kLyDV34MG3MXvKO2Nr3DN6VEyPmdmXI2exvDRhDh26FbamvB2aCzsBfKzJBpM7hA6dC2YJK7VB2wrh3Xyah2MgW8AXBpKBCXExm8dlapv4SXR3yl-tYldn-5A_7';
-  const payload = {
-    token: token_1132,
-    notification: {
-        title: '2020 September, 05 2020:19:18',
-        body: '12:1811',
-    }
-}
-  const date_5s = new Date(Date.now() + 5 * 1000);
-  const job_5s = schedule.scheduleJob(date_5s, function () {
-    console.log('Inside 5s');
-    app_firebase.messaging().send(payload).then(res => console.log(res)).catch(err => console.log(err));
-  })
-  console.log('Outside 5s');
-  res.status(200).send({message: 'hello firebase'});
+app.get('/check_null', async (req,res) => {
+  try {
+    const {usr_id} = req.body;
+    const query1 = await pool.query(`
+    SELECT * FROM napnhienlieu
+    WHERE u_id = $1 AND reason IS NOT NULL
+    `, [usr_id]);
+    res.status(200).send({result: query1.rows});
+  } catch (err) {
+    console.log(err);
+  }
 });
 // //Check if this users has existed in the system or not? before the registration process
 // //related folders: BasicMethod - User Method
