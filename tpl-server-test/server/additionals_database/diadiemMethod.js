@@ -81,4 +81,46 @@ module.exports = {
         }
     },
 
+    _print_black_list: async (usr_id) => {
+        try {
+            const query1 = await pool.query(`
+            SELECT id, name as diadiem
+            FROM diadiem
+            WHERE usr_id = $1 AND is_black_listed = 't'
+            `, [usr_id]);
+            return query1.rows;
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+
+    _add_to_black_list: async (usr_id, diadiem_id) => {
+        try {
+            const diadiem_idF = parseFloat(diadiem_id);
+            const query1 = await pool.query(`
+            UPDATE diadiem
+            SET is_black_listed = 'true'
+            WHERE usr_id = $1 AND id = $2
+            RETURNING is_black_listed
+            `, [usr_id, diadiem_idF]);
+            return query1.rows[0].is_black_listed
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
+
+    _remove_from_black_list: async (usr_id, diadiem_id) => {
+        const diadiem_idF = parseFloat(diadiem_id);
+        try {
+            const query1 = await pool.query(`
+            UPDATE diadiem
+            SET is_black_listed = false
+            WHERE usr_id = $1 AND id = $2
+            RETURNING is_black_listed
+            `, [usr_id, diadiem_idF]);
+            return query1.rows[0].is_black_listed;
+        } catch (err) {
+            throw new Error(err);
+        }
+    },
 }
