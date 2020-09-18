@@ -90,6 +90,19 @@ app.listen(process.env.PORT, () => {
   console.log(`API is running at http://localhost:${process.env.PORT}`);
 });
 
+app.get('/is_valid_token', async (req, res) => {
+  const header = req.headers['authorization'];
+  if (!header) return res.status(403).send({message: 'Missing Authorized Token'});
+  const token = header.split(' ')[1];
+
+  const result = await pool.query(`SELECT id FROM token WHERE token_value = $1`, [token]);
+  const status = result.rowCount === 1 ? true : false;
+  if (status === true) {
+    res.status(200).send({message: 'hop le'});
+  } else {
+    res.status(400).send({message: 'Khong hop le'});
+  }
+})
 
 app.post('/input_qualifier', Auth_IN_OUT.extractToken, async (req,res) => {
   const {odometer, date, time} = req.body;

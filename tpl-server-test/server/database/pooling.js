@@ -1,15 +1,15 @@
 const {Pool} = require('pg');
 
-const pool = new Pool({
-    host: 'db',
-    port: 5432,
-    user: 'company',
-    database: 'company',
-    password: 'abcdef1234',
-    max: 20,
-    connectionTimeoutMillis: 0,
-    idleTimeoutMillis: 1000,
-});
+// const pool = new Pool({
+//     host: 'db',
+//     port: 5432,
+//     user: 'company',
+//     database: 'company',
+//     password: 'abcdef1234',
+//     max: 20,
+//     connectionTimeoutMillis: 0,
+//     idleTimeoutMillis: 1000,
+// });
 
 // const pool = new Pool({
 //     host: 'ec2-52-44-166-58.compute-1.amazonaws.com',
@@ -22,16 +22,15 @@ const pool = new Pool({
 //     idleTimeoutMillis: 1000,
 // });
 
-// const pool = new Pool({
-//     host: process.env.PGS_HOST,
-//     port: process.env.PGS_PORT,
-//     user: process.env.PGS_USER,
-//     database: process.env.PGS_DATABASE,
-//     password: process.env.PGS_PW,
-//     max: 40,
-//     connectionTimeoutMillis: 0,
-//     idleTimeoutMillis: 1000,
-// });
+const pool = new Pool({
+    host: process.env.PGS_HOST,
+    port: process.env.PGS_PORT,
+    user: process.env.PGS_USER,
+    database: process.env.PGS_DATABASE,
+    password: process.env.PGS_PW,
+    connectionTimeoutMillis: 0,
+    idleTimeoutMillis: 1000,
+});
 
 
 module.exports = pool;

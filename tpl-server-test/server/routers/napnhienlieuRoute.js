@@ -64,7 +64,7 @@ router.post('/insert', Auth_IN_OUT.extractToken, async (req,res) => {
 
         // location is renamed to 'gas_station'
         const inputFromClient 
-        = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, reason, date, time} 
+        = {odometer, type_of_fuel, price_per_unit, total_cost, total_units, full_tank, gas_station, date, time} 
         = req.body;
 
         //Insert into NNL Table

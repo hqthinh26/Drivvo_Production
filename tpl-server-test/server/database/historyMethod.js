@@ -20,56 +20,67 @@ module.exports = {
         if (type_of_form === 'napnhienlieu') {
             console.log('this is nll');
             return pool.query(`
-            SELECT nll.id, nll.odometer, lnl.name as type_of_fuel, nll.price_per_unit, nll.total_cost, nll.total_units, nll.full_tank, tx.name as gas_station, ld.name as reason, nll.time, nll.date 
-            FROM napnhienlieu as nll, loainhienlieu as lnl, tramxang as tx, lydo as ld
-            WHERE       (nll.id = $1)
-                    AND (nll.type_of_fuel = lnl.id)
-                    AND (nll.gas_station = tx.id)
-                    AND (nll.reason = ld.id)
+            SELECT nnl.id, nnl.odometer, lnl.name as type_of_fuel, nnl.price_per_unit, nnl.total_cost, nnl.total_units, nnl.full_tank, tx.name as gas_station, ld.name as reason, nnl.time, nnl.date 
+            FROM napnhienlieu as nnl
+            INNER JOIN loainhienlieu lnl
+                ON nnl.type_of_fuel = lnl.id
+            INNER JOIN tramxang tx
+                ON nnl.gas_station = tx.id
+            LEFT JOIN lydo ld
+                ON nnl.reason = ld.id
+            WHERE nnl.id = $1
             `, [id_private_form]);
         }
+        // 
         if (type_of_form === 'chiphi') {
             console.log('this is chiphi');
             return pool.query(`
             SELECT cp.id, cp.odometer, lcp.name as type_of_expense, cp.amount, dd.name as place, ld.name as reason, cp.note, cp.time, cp.date
-            FROM chiphi as cp, loaichiphi as lcp, diadiem as dd, lydo as ld
-            WHERE       (cp.id = $1)
-                    AND (cp.type_of_expense = lcp.id)
-                    AND (cp.place = dd.id)
-                    AND (cp.reason = ld.id)
+            FROM chiphi cp
+            INNER JOIN loaichiphi lcp
+                ON cp.type_of_expense = lcp.id
+            LEFT JOIN diadiem dd
+                ON cp.place = dd.id
+            LEFT JOIN lydo ld
+                ON cp.reason = ld.id
+            WHERE cp.id = $1
             `, [id_private_form]);
         }
         if (type_of_form === 'dichvu') {
             console.log('this is dichvu');
             return pool.query(`
             SELECT dv.id, dv.odometer, ldv.name as type_of_service, dv.amount, dd.name as place, dv.note, dv.time, dv.date
-            FROM dichvu as dv, loaidichvu as ldv, diadiem as dd
-            WHERE       (dv.id = $1)
-                    AND (dv.type_of_service = ldv.id)
-                    AND (dv.place = dd.id)
+            FROM dichvu dv
+            INNER JOIN loaidichvu ldv
+                ON dv.type_of_service = ldv.id
+            LEFT JOIN diadiem dd
+                ON dv.place = dd.id
+            WHERE dv.id = $1
             `, [id_private_form]);
         }
         if(type_of_form === 'thunhap') {
             console.log('this is thunhap');
             return pool.query(`
             SELECT tn.id, tn.odometer, ltn.name as type_of_income, tn.amount, tn.note, tn.time, tn.date
-            FROM thunhap as tn, loaithunhap as ltn
-            WHERE       (tn.id = $1)
-                    AND (tn.type_of_income = ltn.id) 
+            FROM thunhap tn
+            INNER JOIN loaithunhap ltn
+                ON tn.type_of_income = ltn.id
+            WHERE tn.id = $1
             `, [id_private_form]);
+                        // FROM thunhap as tn, loaithunhap as ltn
+            // WHERE       (tn.id = $1)
+            //         AND (tn.type_of_income = ltn.id) 
         }
         if(type_of_form === 'quangduong') {
             console.log('this is quangduong');
             return pool.query(`
             SELECT qd.id, qd.origin, qd.start_time, qd.start_date, qd.initial_odometer, qd.destination, qd.end_time, qd.end_date, qd.final_odometer, qd.value_per_km, qd.total, ld.name as reason
-            FROM quangduong as qd, lydo as ld
-            WHERE       (qd.id = $1)
-                    AND (qd.reason = ld.id)
+            FROM quangduong qd
+            LEFT JOIN lydo ld
+                ON qd.reason = ld.id
+            WHERE qd.id = $1
             `, [id_private_form]);
         }
-        // if (type_of_form === 'nhacnho') {
-        //     console.log('this is nhac nho');
-        //     return pool.query(`select * from nhacnho where id = $1`, [id_private_form]);
         // }
         // throw new Error({message: 'there is an undefined type_of_form'});
     },
