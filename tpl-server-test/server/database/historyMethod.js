@@ -6,9 +6,9 @@ module.exports = {
     _return_all_form: async (usr_id) => {
         try {
             const results = await pool.query(`SELECT * FROM history 
-                                            where usr_id = $1
-                                              ORDER BY created_at_date DESC, created_at_time DESC
-                                              LIMIT 15`, [usr_id]);
+                                            WHERE usr_id = $1 and type_of_form <> 'quangduong'
+                                            ORDER BY created_at_date DESC, created_at_time DESC
+                                            LIMIT 15`, [usr_id]);
             return results.rows;
         } catch (err) {
             throw new Error({message:'Failed at return_all_form',ERR: err});

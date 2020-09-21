@@ -82,7 +82,11 @@ const total_km_driven = async (usr_id) => {
             `, [usr_id, start_date, current_date]
         );
     
-        if(query1.rowCount !== 2) throw new Error(`Return more than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in chiphi`);
+        if(query1.rowCount !== 2) {
+            console.table(query1.rows);
+            throw new Error(`Return more than 2 rows (${query1.rowCount} rows) in oldest_lastest forms for odometer diff in chiphi`);
+        }
+        
     
         const oldest_and_lastest_forms_of_history = query1.rows;
        

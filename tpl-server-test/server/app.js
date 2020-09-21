@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
+const {uuid} = require('uuidv4');
 require('express-async-errors');
 
 //======================================= >< =======================================
@@ -60,16 +61,30 @@ app.get('/', (req,res) => {
   res.send({message: 'Welcome to MONEY GEEK'});
 });
 
-app.get('/check_null', async (req,res) => {
+app.post('/dich_vu_diadiem_null', Auth_IN_OUT.extractToken, async (req, res) => {
   try {
-    const {usr_id} = req.body;
+    const token = req.token;
+    const usr_id = await Auth_IN_OUT._usr_id_from_token(token);
+    const new_form_id = uuid();
+
+    const {odometer, type_of_service, amount, place, note, date, time} = req.body;
+
+    const odometerF = parseFloat(odometer);
+    const type_of_serviceB = BigInt(type_of_service); // !== NULL
+    const amountI = parseInt(amount);
+    const placeB = place === null ? null : BigInt(place);
+
+    console.log({PLACE: place, PLACEB: placeB});
+
     const query1 = await pool.query(`
-    SELECT * FROM napnhienlieu
-    WHERE u_id = $1 AND reason IS NOT NULL
-    `, [usr_id]);
-    res.status(200).send({result: query1.rows});
+    INSERT INTO dichvu(id, u_id, odometer, type_of_service, amount, place, note, date, time)
+    VALUES ($1, $2, $3, $4,$5, $6, $7, $8, $9)
+    `, [new_form_id, usr_id, odometerF, type_of_serviceB, amountI, placeB, note, date, time]);
+
+    res.status(200).send({message: `Them thanh vao dich vu voi Place: ${place}`});
+
   } catch (err) {
-    console.log(err);
+    res.status(400).send({err});
   }
 });
 // //Check if this users has existed in the system or not? before the registration process

@@ -30,7 +30,7 @@ module.exports = {
                 ON nnl.type_of_fuel = lnl.id
             INNER JOIN tramxang as tx
                 ON nnl.gas_station = tx.id
-            INNER JOIN lydo as ld
+            LEFT JOIN lydo as ld
                 ON nnl.reason = ld.id
             WHERE nnl.u_id = $1
             ORDER BY nnl.date desc, nnl.time desc

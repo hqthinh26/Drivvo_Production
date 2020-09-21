@@ -1,22 +1,45 @@
 const pool = require('./pooling');
 
 module.exports = {
+
+    print: async (usr_id) => {
+        const query1 = await pool.query(`
+        SELECT qd.id, qd.origin, qd.start_date, qd.destination, qd.end_date, qd.final_odometer - qd.initial_odometer as km_committed, qd.total as total_money_spent, qd.total / (qd.final_odometer - qd.initial_odometer) as value_per_km_calculated,ld.name as reason
+        FROM quangduong qd
+        LEFT JOIN lydo ld
+            ON qd.reason = ld.id
+        WHERE qd.usr_id = $1
+        ORDER BY qd.start_date desc
+        `, [usr_id]);
+        return query1.rows;
+    },
+    
     insert: async (quangduong_id, usr_id, inputFromUser) => {
-        const {origin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer, value_per_km, total, reason} 
+        const {origin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer, total, reason} 
         = inputFromUser;
+
+
+        console.log('======== INPUT VALUE - QuangDUong============');
+        console.table(inputFromUser);
+       
 
         const initial_odometerF = parseFloat(initial_odometer);
         const final_odometerF = parseFloat(final_odometer);
-        const value_per_kmI = parseInt(value_per_km);
+        //const value_per_kmI = parseInt(value_per_km);
         const totalI = parseInt(total);
+        
 
         // reason is INT8-typed value => converting FROM STRING to BIGINT
-        const reasonBI = BigInt(reason);
+        const reasonBI = reason === null ? null : BigInt(reason);
+        console.log({reason, reasonBI});
+        console.log('============================');
+
+        console.log({reasonBI});
         try {
 
-            await pool.query(`insert into quangduong(id, usr_id, origin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer, value_per_km, total, reason)
-            values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
-            , [quangduong_id, usr_id, origin, start_time, start_date, initial_odometerF, destination, end_time, end_date, final_odometerF, value_per_kmI, totalI, reasonBI]);
+            await pool.query(`insert into quangduong(id, usr_id, origin, start_time, start_date, initial_odometer, destination, end_time, end_date, final_odometer,total, reason)
+            values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
+            , [quangduong_id, usr_id, origin, start_time, start_date, initial_odometerF, destination, end_time, end_date, final_odometerF, totalI, reasonBI]);
 
         } catch (err) {
             throw new Error(err);

@@ -10,7 +10,7 @@ module.exports = {
                 ON cp.type_of_expense = lcp.id
             INNER JOIN diadiem as dd
                 ON cp.place = dd.id
-            INNER JOIN lydo as ld
+            LEFT JOIN lydo as ld
                 ON cp.reason = ld.id
             WHERE cp.u_id = $1 
             ORDER BY cp.date desc, cp.time desc
@@ -31,9 +31,16 @@ module.exports = {
 
             // type_of_expense, place, reason are INT8-typed NUMBERS 
             // => converting from STRING to BIGINT
+            console.log('======== INPUT VALUE - CHI PHI============');
+            console.table(inputFromClient);
+
             const type_of_expenseBI = BigInt(type_of_expense);
             const placeBI = BigInt(place);
-            const reasonBI = BigInt(reason);
+            const reasonBI = reason === null  ? null : BigInt(reason);
+
+            console.log({reason, reasonBI});
+
+            console.log('\n============================');
 
             await pool.query(`
                 insert into chiphi (id, u_id, odometer, type_of_expense, amount, place, reason, note, date, time) 
